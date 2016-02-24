@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="14F1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="q4m-xg-4WX" customClass="EnterTextTableViewCell" customModule="FleaMarket" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="q4m-xg-4WX" id="DX9-wv-BXL">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="标题" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bhs-P1-jpU">
+                        <rect key="frame" x="0.0" y="0.0" width="80" height="43"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="43" id="GIT-SZ-OlS"/>
+                            <constraint firstAttribute="width" constant="80" id="lyy-cS-QmO"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="kAj-ER-fjV">
+                        <rect key="frame" x="88" y="7" width="194" height="28"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                        <textInputTraits key="textInputTraits"/>
+                    </textField>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="kAj-ER-fjV" firstAttribute="leading" secondItem="Bhs-P1-jpU" secondAttribute="trailing" constant="8" symbolic="YES" id="8EK-WL-0IG"/>
+                    <constraint firstItem="kAj-ER-fjV" firstAttribute="bottom" secondItem="DX9-wv-BXL" secondAttribute="bottomMargin" id="KzA-oQ-bpd"/>
+                    <constraint firstItem="Bhs-P1-jpU" firstAttribute="leading" secondItem="DX9-wv-BXL" secondAttribute="leading" id="M0a-ZT-gjS"/>
+                    <constraint firstItem="kAj-ER-fjV" firstAttribute="centerY" secondItem="Bhs-P1-jpU" secondAttribute="centerY" id="OWZ-rg-y2w"/>
+                    <constraint firstItem="Bhs-P1-jpU" firstAttribute="centerY" secondItem="kAj-ER-fjV" secondAttribute="centerY" id="cPw-hM-ud1"/>
+                    <constraint firstItem="kAj-ER-fjV" firstAttribute="trailing" secondItem="DX9-wv-BXL" secondAttribute="trailingMargin" constant="-30" id="cdi-Y8-gcH"/>
+                    <constraint firstAttribute="bottom" secondItem="Bhs-P1-jpU" secondAttribute="bottom" id="o8p-a6-IoY"/>
+                    <constraint firstItem="Bhs-P1-jpU" firstAttribute="top" secondItem="DX9-wv-BXL" secondAttribute="top" id="t8B-uI-few"/>
+                </constraints>
+                <variation key="default">
+                    <mask key="constraints">
+                        <exclude reference="OWZ-rg-y2w"/>
+                    </mask>
+                </variation>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="textField" destination="kAj-ER-fjV" id="5OS-c1-Qbt"/>
+                <outlet property="titleLabel" destination="Bhs-P1-jpU" id="N1n-7C-adH"/>
+            </connections>
+            <point key="canvasLocation" x="239" y="221"/>
+        </tableViewCell>
+    </objects>
+</document>

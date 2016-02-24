@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="14F1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="249" id="5nQ-Er-52G" customClass="CategoryTableViewCell" customModule="FleaMarket" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="390" height="249"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="5nQ-Er-52G" id="1i0-o5-PMY">
+                <rect key="frame" x="0.0" y="0.0" width="390" height="248"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" hidesForSinglePage="YES" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="32N-dM-78O">
+                        <rect key="frame" x="176" y="220" width="39" height="20"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="20" id="2Nk-E3-uAK"/>
+                            <constraint firstAttribute="height" constant="20" id="jc8-PG-uZ7"/>
+                        </constraints>
+                        <color key="pageIndicatorTintColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="currentPageIndicatorTintColor" red="1" green="0.5" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="jc8-PG-uZ7"/>
+                            </mask>
+                        </variation>
+                    </pageControl>
+                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="hKE-CU-DJL">
+                        <rect key="frame" x="0.0" y="8" width="390" height="156"/>
+                        <constraints>
+                            <constraint firstAttribute="width" secondItem="hKE-CU-DJL" secondAttribute="height" multiplier="5:2" id="F6W-ZQ-RE3"/>
+                        </constraints>
+                        <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="7ZD-RU-mpL">
+                            <size key="itemSize" width="50" height="50"/>
+                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        </collectionViewFlowLayout>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="F6W-ZQ-RE3"/>
+                            </mask>
+                        </variation>
+                    </collectionView>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="trailing" secondItem="hKE-CU-DJL" secondAttribute="trailing" id="97E-eu-mYn"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="32N-dM-78O" secondAttribute="bottom" id="Cf4-UT-J5I"/>
+                    <constraint firstItem="32N-dM-78O" firstAttribute="centerX" secondItem="hKE-CU-DJL" secondAttribute="centerX" id="S6h-Zp-nTj"/>
+                    <constraint firstItem="hKE-CU-DJL" firstAttribute="leading" secondItem="1i0-o5-PMY" secondAttribute="leading" id="gnH-YQ-P8l"/>
+                    <constraint firstItem="32N-dM-78O" firstAttribute="top" secondItem="hKE-CU-DJL" secondAttribute="bottom" constant="8" symbolic="YES" id="iOQ-X7-YA6"/>
+                    <constraint firstItem="hKE-CU-DJL" firstAttribute="top" secondItem="1i0-o5-PMY" secondAttribute="top" constant="8" id="oeu-Pv-YC4"/>
+                    <constraint firstItem="32N-dM-78O" firstAttribute="top" secondItem="hKE-CU-DJL" secondAttribute="bottom" constant="8" id="zuZ-2s-pe2"/>
+                </constraints>
+                <variation key="default">
+                    <mask key="constraints">
+                        <exclude reference="iOQ-X7-YA6"/>
+                    </mask>
+                </variation>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="collectionView" destination="hKE-CU-DJL" id="XHS-1r-lll"/>
+                <outlet property="pageControl" destination="32N-dM-78O" id="yRX-NR-zxB"/>
+            </connections>
+            <point key="canvasLocation" x="229" y="284.5"/>
+        </tableViewCell>
+    </objects>
+</document>

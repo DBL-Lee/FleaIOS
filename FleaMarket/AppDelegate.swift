@@ -8,6 +8,10 @@
 
 import UIKit
 import CoreData
+import AWSCore
+import AWSS3
+import Alamofire
+import SwiftyJSON
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -16,7 +20,57 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        // Override point for customization after application launch.
+        //AWSLogger.defaultLogger().logLevel = .Verbose
+        
+        let credentialsProvider = AWSCognitoCredentialsProvider(regionType: CognitoRegionType, identityPoolId: CognitoIdentityPoolId)
+        let configuration = AWSServiceConfiguration(region:DefaultServiceRegionType, credentialsProvider:credentialsProvider)
+        
+        AWSServiceManager.defaultServiceManager().defaultServiceConfiguration = configuration
+        
+        //create upload and download directories
+        let error = NSErrorPointer()
+        do {
+            try NSFileManager.defaultManager().createDirectoryAtURL(
+                LocalUploadDirectory,
+                withIntermediateDirectories: true,
+                attributes: nil)
+        } catch let error1 as NSError {
+            error.memory = error1
+            print("Creating 'upload' directory failed. Error: \(error)")
+        }
+        
+        do {
+            try NSFileManager.defaultManager().createDirectoryAtURL(
+                LocalDownloadDirectory,
+                withIntermediateDirectories: true,
+                attributes: nil)
+        } catch let error1 as NSError {
+            error.memory = error1
+            print("Creating 'upload' directory failed. Error: \(error)")
+        }
+        
+        //remove saved imagesuuid from last session
+        if let res = NSUserDefaults.standardUserDefaults().objectForKey("GLOBAL_imagesUUID")  {
+            let imagesUUID = res as! [String]
+            let remove = AWSS3Remove()
+            var objectids = [AWSS3ObjectIdentifier]()
+            for uuid in imagesUUID{
+                let object = AWSS3ObjectIdentifier()
+                object.key = uuid
+                objectids.append(object)
+            }
+            remove.objects = objectids
+            
+            let deleteRequest = AWSS3DeleteObjectsRequest()
+            deleteRequest.bucket = S3BucketName
+            deleteRequest.remove = remove
+            
+            AWSS3.defaultS3().deleteObjects(deleteRequest)
+        }
+        
+       
+        
+        
         return true
     }
 
@@ -39,8 +93,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationWillTerminate(application: UIApplication) {
-        // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-        // Saves changes in the application's managed object context before the application terminates.
+        NSUserDefaults.standardUserDefaults().setObject(GLOBAL_imagesUUID, forKey: "GLOBAL_imagesUUID")
+        
         self.saveContext()
     }
 

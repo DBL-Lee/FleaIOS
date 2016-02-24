@@ -1,4 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="Test1.xcdatamodel" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1" systemVersion="11A491" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
-    <elements/>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="9525" systemVersion="14F1021" minimumToolsVersion="Automatic">
+    <entity name="PrimaryCategory" syncable="YES">
+        <attribute name="iconPath" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="secondary" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SecondaryCategory" inverseName="primary" inverseEntity="SecondaryCategory" syncable="YES"/>
+    </entity>
+    <entity name="SearchHistory" syncable="YES">
+        <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="SecondaryCategory" syncable="YES">
+        <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="primary" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="PrimaryCategory" inverseName="secondary" inverseEntity="PrimaryCategory" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="PrimaryCategory" positionX="-245" positionY="-252" width="128" height="105"/>
+        <element name="SecondaryCategory" positionX="-54" positionY="-9" width="128" height="90"/>
+        <element name="SearchHistory" positionX="-153" positionY="-99" width="128" height="75"/>
+    </elements>
 </model>
