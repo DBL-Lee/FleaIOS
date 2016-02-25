@@ -10,31 +10,35 @@ import UIKit
 import Alamofire
 import SwiftyJSON
 
-class SearchResultViewController: UIViewController,UITableViewDataSource,UITableViewDelegate,UIScrollViewDelegate,UISearchBarDelegate {
+class SearchResultViewController: UIViewController,UITableViewDataSource,UITableViewDelegate,UIScrollViewDelegate,UISearchBarDelegate,UIGestureRecognizerDelegate {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var topPanel: UIView!
 
     @IBOutlet weak var categoryBtn: UIButton!
-    let categoryText = "分类 "
+    var categoryText = "分类 "
     var categoryAttr:NSMutableAttributedString!
     var categoryAttrChosen:NSMutableAttributedString!
     
     var categoryView:CategoryDropDownTableView!
     
     @IBOutlet weak var sortBtn: UIButton!
-    let sortText = "排序 "
+    var sortText = "排序 "
     var sortAttr:NSMutableAttributedString!
     var sortAttrChosen:NSMutableAttributedString!
     @IBOutlet weak var filterBtn: UIButton!
-    let filterText = "筛选 "
+    var filterText = "筛选 "
     var filterAttr:NSMutableAttributedString!
     var filterAttrChosen:NSMutableAttributedString!
+    
+    var upAttach:NSAttributedString!
+    var downAttach:NSAttributedString!
     
     var searchController = UISearchController()
     
     @IBOutlet weak var dropDownOverlay:UIView!
     
     var footerLabel:UILabel = UILabel()
+    var fetchRequest:FetchProductRequest!
     var nextURL:String = ""{
         didSet{
             if nextURL == ""{
@@ -44,7 +48,7 @@ class SearchResultViewController: UIViewController,UITableViewDataSource,UITable
             }
         }
     }
-    var searchText = ""
+    var searchText = "请输入宝贝关键字或@卖家名"
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -66,28 +70,28 @@ class SearchResultViewController: UIViewController,UITableViewDataSource,UITable
         let height:CGFloat = 30*0.5
         let scale = height/im.size.height
         downattachment.image = UIImage(CGImage: im.CGImage!, scale: 1/scale, orientation: .Up)
-        let downAttr = NSAttributedString(attachment: downattachment)
+        downAttach = NSAttributedString(attachment: downattachment)
         
         let upattachment = NSTextAttachment()
         let im2 = UIImage(named: "dropup.png")!
         upattachment.image = UIImage(CGImage: im2.CGImage!, scale: 1/scale, orientation: .Up)
-        let upAttr = NSAttributedString(attachment: upattachment)
+        upAttach = NSAttributedString(attachment: upattachment)
         
         categoryAttr = NSMutableAttributedString(string: categoryText)
         categoryAttrChosen = NSMutableAttributedString(string: categoryText)
-        categoryAttr.appendAttributedString(downAttr)
-        categoryAttrChosen.appendAttributedString(upAttr)
+        categoryAttr.appendAttributedString(downAttach)
+        categoryAttrChosen.appendAttributedString(upAttach)
         
         sortAttr = NSMutableAttributedString(string: sortText)
         sortAttrChosen = NSMutableAttributedString(string: sortText)
-        sortAttr.appendAttributedString(downAttr)
-        sortAttrChosen.appendAttributedString(upAttr)
+        sortAttr.appendAttributedString(downAttach)
+        sortAttrChosen.appendAttributedString(upAttach)
         
         
         filterAttr = NSMutableAttributedString(string: filterText)
         filterAttrChosen = NSMutableAttributedString(string: filterText)
-        filterAttr.appendAttributedString(downAttr)
-        filterAttrChosen.appendAttributedString(upAttr)
+        filterAttr.appendAttributedString(downAttach)
+        filterAttrChosen.appendAttributedString(upAttach)
         
         categoryBtn.setAttributedTitle(categoryAttr, forState: .Normal)
         categoryBtn.setAttributedTitle(categoryAttrChosen, forState: .Selected)
@@ -111,10 +115,29 @@ class SearchResultViewController: UIViewController,UITableViewDataSource,UITable
         
         self.dropDownOverlay.backgroundColor = UIColor(white: 0, alpha: 0.5)
         self.dropDownOverlay.clipsToBounds = true
+        let tap = UITapGestureRecognizer(target: self, action: "tapOnOverlay:")
+        tap.delegate = self
+        self.dropDownOverlay.addGestureRecognizer(tap)
+    }
+    
+    func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool {
+        if touch.view!.isDescendantOfView(categoryView){
+            return false
+        }
+        return true
+    }
+    
+    func tapOnOverlay(tap:UITapGestureRecognizer){
+        if categorySubviewShowing{
+            categorySubviewShowing = false
+            removeCategorySubview()
+        }
     }
     
     var categorySubviewShowing = false
+    
     func tapCategory(){
+        categoryBtn.selected = !categoryBtn.selected
         if categorySubviewShowing{
             categorySubviewShowing = false
             removeCategorySubview()
@@ -127,6 +150,7 @@ class SearchResultViewController: UIViewController,UITableViewDataSource,UITable
     
     func searchBarShouldBeginEditing(searchBar: UISearchBar) -> Bool {
         let vc = SearchViewController()
+        vc.fetchRequest = self.fetchRequest
         self.navigationController?.pushViewController(vc, animated: false)
         return false
     }
@@ -150,6 +174,7 @@ class SearchResultViewController: UIViewController,UITableViewDataSource,UITable
         self.dropDownOverlay.hidden = true
         
         let height = dropDownOverlay.frame.height*0.8
+        
         self.categoryView = CategoryDropDownTableView(frame: CGRect(x: 0, y: 0, width: dropDownOverlay.frame.width, height: height), callback: categoryChosen)
         categoryView.autoresizingMask = [.FlexibleWidth,.FlexibleHeight]
         self.categoryView.transform = CGAffineTransformMakeTranslation(0, -self.categoryView.frame.height)
@@ -175,7 +200,14 @@ class SearchResultViewController: UIViewController,UITableViewDataSource,UITable
         
         tableView.tableFooterView = footerLabel
         
-        self.loadMore()
+        fetchRequest.request(parseRequest)
+    }
+    
+    func parseRequest(_:String,next:String,p:[Product]){
+        self.nextURL = next
+        self.loadingMore = false
+        self.products = p
+        self.tableView.reloadData()
     }
     
     func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
@@ -190,8 +222,6 @@ class SearchResultViewController: UIViewController,UITableViewDataSource,UITable
     
     func loadMore(){
         if nextURL != "" && !loadingMore{
-            //encode chinese characters
-            nextURL = nextURL.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!
             loadingMore = true
             Alamofire.request(.GET, nextURL).responseJSON{
                 response in
@@ -211,7 +241,28 @@ class SearchResultViewController: UIViewController,UITableViewDataSource,UITable
         }
     }
     
-    func categoryChosen(id:Int){
+    func categoryChosen(primary:Bool,id:Int,name:String){
+        categoryBtn.selected = false
+        if primary{
+            if id == -1{
+                fetchRequest.primarycategory = nil
+            }else{
+                fetchRequest.primarycategory = id
+            }
+            fetchRequest.secondarycategory = nil
+        }else{
+            fetchRequest.primarycategory = nil
+            fetchRequest.secondarycategory = id
+        }
+        fetchRequest.request(parseRequest)
+        let d = NSMutableAttributedString(string: name+" ")
+        d.appendAttributedString(downAttach)
+        categoryAttr = d
+        let u = NSMutableAttributedString(string: name+" ")
+        u.appendAttributedString(upAttach)
+        categoryAttrChosen = d
+        categoryBtn.setAttributedTitle(categoryAttr, forState: .Normal)
+        categoryBtn.setAttributedTitle(categoryAttrChosen, forState: .Selected)
         removeCategorySubview()
     }
     

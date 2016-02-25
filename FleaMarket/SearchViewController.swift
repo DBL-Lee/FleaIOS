@@ -12,6 +12,7 @@ class SearchViewController: UITableViewController,UISearchBarDelegate,UISearchRe
     
     var searchController:CustomSearchController!
     var clearButton:UIButton!
+    var fetchRequest = FetchProductRequest()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -106,7 +107,8 @@ class SearchViewController: UITableViewController,UISearchBarDelegate,UISearchRe
     func continueSearching(searchText:String){
         CoreDataHandler.instance.addSearchHistoryToCoreData(searchText)
         let vc = SearchResultViewController()
-        vc.nextURL = getProductURL+"?title="+searchText
+        fetchRequest.title = searchText
+        vc.fetchRequest = fetchRequest
         vc.searchText = searchText
         self.navigationController?.pushViewController(vc, animated: true)
         

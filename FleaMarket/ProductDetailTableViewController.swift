@@ -71,20 +71,24 @@ class ProductDetailTableViewController: UITableViewController {
             let cell = tableView.dequeueReusableCellWithIdentifier("ProductDetailImageTableViewCell", forIndexPath: indexPath) as! ProductDetailImageTableViewCell
             cell.width = self.view.frame.width
             cell.callback = presentPreviewVC
+            cell.selectionStyle = .None
             cell.setupCell(product.imageUUID)
             return cell
         case 概述:
             let cell = tableView.dequeueReusableCellWithIdentifier("ProductDetailTitleTableViewCell", forIndexPath: indexPath) as! ProductDetailTitleTableViewCell
             cell.setupCell(product.title, price: product.getCurrentPriceWithCurrency(), originalprice: product.getOriginalPriceWithCurrency(), location: product.getLocation())
+            cell.selectionStyle = .None
             return cell
         case 卖家:
             let cell = tableView.dequeueReusableCellWithIdentifier("ProductDetailSellerTableViewCell", forIndexPath: indexPath) as!
             ProductDetailSellerTableViewCell
             cell.setupCell(UIImage(named: "avatar.png")!, sellername: "DBL_Lee", soldItemCount: 107, goodFeedBack: 100)
+            cell.selectionStyle = .None
             return cell
         case 信息:
             let cell = tableView.dequeueReusableCellWithIdentifier("ProductDetailDetailTableViewCell", forIndexPath: indexPath) as! ProductDetailDetailTableViewCell
             cell.setupCell(product.amount, date: product.postedTime, brandNew: product.brandNew, bargain: product.bargain, exchange: product.exchange)
+            cell.selectionStyle = .None
             return cell
         case 描述:
             let cell = tableView.dequeueReusableCellWithIdentifier("ProductDetailDescriptionTableViewCell", forIndexPath: indexPath) as! ProductDetailDescriptionTableViewCell
@@ -98,6 +102,7 @@ class ProductDetailTableViewController: UITableViewController {
             label.text = "信息"
             cell.contentView.addSubview(label)
             cell.backgroundColor = UIColor.groupTableViewBackgroundColor()
+            cell.selectionStyle = .None
             return cell
         case let a where a==separator[1]:
             let cell = UITableViewCell()
@@ -107,6 +112,7 @@ class ProductDetailTableViewController: UITableViewController {
             label.text = "描述"
             cell.contentView.addSubview(label)
             cell.backgroundColor = UIColor.groupTableViewBackgroundColor()
+            cell.selectionStyle = .None
             return cell
         default:break
         }

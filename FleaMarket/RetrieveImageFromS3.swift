@@ -9,6 +9,7 @@
 import Foundation
 import AWSS3
 import AWSCore
+import KDCircularProgress
 
 class RetrieveImageFromS3{
     static func retrieveImage(imageUUID:String,percentageHandler:Int->Void = {_ in},completion:()->Void){
@@ -28,8 +29,7 @@ class RetrieveImageFromS3{
             dispatch_async(dispatch_get_main_queue(), {
                 if totalBytesExpected>0{
                     let percentage = Int(100*Double(totalBytesDownloaded)/Double(totalBytesExpected))
-                    
-                    percentageHandler(percentage)
+                        percentageHandler(percentage)
                 }
             })
         }

@@ -14,7 +14,9 @@ class ProductDetailDescriptionTableViewCell: UITableViewCell {
     @IBOutlet weak var heightConstraint: NSLayoutConstraint!
     override func awakeFromNib() {
         super.awakeFromNib()
+        self.textView.selectable = true
         self.textView.font = UIFont.systemFontOfSize(17)
+        self.textView.selectable = false
     }
 
     func setupCell(text:String){

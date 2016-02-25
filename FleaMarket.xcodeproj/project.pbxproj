@@ -79,6 +79,7 @@
 		9B7208731C5BCCA300F22983 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B7208721C5BCCA300F22983 /* AVFoundation.framework */; };
 		9B791EA31C6D1FB500AF2BEE /* constantURLs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B791EA21C6D1FB500AF2BEE /* constantURLs.swift */; };
 		9B791EA61C70F53400AF2BEE /* CoreDataHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B791EA51C70F53400AF2BEE /* CoreDataHandler.swift */; };
+		9B7A24131C7F29C20026AC43 /* FilterDropDownTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B7A24121C7F29C20026AC43 /* FilterDropDownTableView.swift */; };
 		9B8267781C60E40F008E1096 /* PreviewImagesCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B8267761C60E40F008E1096 /* PreviewImagesCollectionViewCell.swift */; };
 		9B8267791C60E40F008E1096 /* PreviewImagesCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9B8267771C60E40F008E1096 /* PreviewImagesCollectionViewCell.xib */; };
 		9B82677D1C60F393008E1096 /* ProductDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B82677B1C60F393008E1096 /* ProductDetailTableViewController.swift */; };
@@ -112,6 +113,7 @@
 		9BE248231C5E58A400A119A4 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BE248221C5E58A400A119A4 /* Util.swift */; };
 		9BE2482A1C5F80F300A119A4 /* PostDescriptionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BE248281C5F80F300A119A4 /* PostDescriptionTableViewCell.swift */; };
 		9BE2482B1C5F80F300A119A4 /* PostDescriptionTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9BE248291C5F80F300A119A4 /* PostDescriptionTableViewCell.xib */; };
+		9BEF24781C7E0EFF000F5582 /* FetchProductRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BEF24771C7E0EFF000F5582 /* FetchProductRequest.swift */; };
 		C7443E72C7D9F223B59AB7D9 /* Pods_FleaMarket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91F6B3B1F9673DB345C78D7D /* Pods_FleaMarket.framework */; };
 /* End PBXBuildFile section */
 
@@ -214,6 +216,7 @@
 		9B7208721C5BCCA300F22983 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		9B791EA21C6D1FB500AF2BEE /* constantURLs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = constantURLs.swift; sourceTree = "<group>"; };
 		9B791EA51C70F53400AF2BEE /* CoreDataHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CoreDataHandler.swift; path = ../CoreDataHandler.swift; sourceTree = "<group>"; };
+		9B7A24121C7F29C20026AC43 /* FilterDropDownTableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterDropDownTableView.swift; sourceTree = "<group>"; };
 		9B8267761C60E40F008E1096 /* PreviewImagesCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewImagesCollectionViewCell.swift; sourceTree = "<group>"; };
 		9B8267771C60E40F008E1096 /* PreviewImagesCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PreviewImagesCollectionViewCell.xib; sourceTree = "<group>"; };
 		9B82677B1C60F393008E1096 /* ProductDetailTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProductDetailTableViewController.swift; sourceTree = "<group>"; };
@@ -248,6 +251,7 @@
 		9BE248221C5E58A400A119A4 /* Util.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		9BE248281C5F80F300A119A4 /* PostDescriptionTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostDescriptionTableViewCell.swift; sourceTree = "<group>"; };
 		9BE248291C5F80F300A119A4 /* PostDescriptionTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PostDescriptionTableViewCell.xib; sourceTree = "<group>"; };
+		9BEF24771C7E0EFF000F5582 /* FetchProductRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchProductRequest.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -431,6 +435,7 @@
 				9BCA08161C7220660006DECA /* RetrieveImageFromS3.swift */,
 				9B6F902D1C539AB3006B2514 /* Product.swift */,
 				9B6F90341C53A881006B2514 /* Currency.swift */,
+				9BEF24771C7E0EFF000F5582 /* FetchProductRequest.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -564,6 +569,7 @@
 				9B91CBB31C7A55BA004F44C3 /* SearchResultTableViewCell.swift */,
 				9B91CBB41C7A55BA004F44C3 /* SearchResultTableViewCell.xib */,
 				9B998D7F1C7C908900F51609 /* CategoryDropDownTableView.swift */,
+				9B7A24121C7F29C20026AC43 /* FilterDropDownTableView.swift */,
 			);
 			name = Search;
 			sourceTree = "<group>";
@@ -829,6 +835,7 @@
 				9B6F8FDB1C50FE37006B2514 /* AppDelegate.swift in Sources */,
 				9B6F90271C52A861006B2514 /* HorizontalPagingLayout.swift in Sources */,
 				9B6F902E1C539AB3006B2514 /* Product.swift in Sources */,
+				9BEF24781C7E0EFF000F5582 /* FetchProductRequest.swift in Sources */,
 				9B72081B1C5647EE00F22983 /* PostCategoryViewController.swift in Sources */,
 				9B8267811C60F6ED008E1096 /* ProductDetailImageTableViewCell.swift in Sources */,
 				9B72081F1C564C5A00F22983 /* PostCategoryTableViewCell.swift in Sources */,
@@ -837,6 +844,7 @@
 				9B82678D1C662533008E1096 /* ProductDetailDetailTableViewCell.swift in Sources */,
 				9B6F901E1C5249D8006B2514 /* CategoryCollectionViewCell.swift in Sources */,
 				9B7208631C592CCF00F22983 /* GlobalConstants.swift in Sources */,
+				9B7A24131C7F29C20026AC43 /* FilterDropDownTableView.swift in Sources */,
 				9B7208511C5834B300F22983 /* PhotoThumbnailCollectionViewCell.swift in Sources */,
 				9B7208651C59344900F22983 /* PostImagePreviewViewController.swift in Sources */,
 				9B6F901A1C5244AE006B2514 /* CategoryTableViewCell.swift in Sources */,

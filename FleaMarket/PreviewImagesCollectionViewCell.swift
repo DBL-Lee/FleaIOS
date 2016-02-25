@@ -12,13 +12,12 @@ import KDCircularProgress
 class PreviewImagesCollectionViewCell: UICollectionViewCell {
 
     @IBOutlet weak var imageView: UIImageView!
-    var roundIndicator:KDCircularProgress!
+    var roundIndicator:KDCircularProgress = KDCircularProgress()
     
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
         self.imageView.contentMode = .ScaleAspectFit
-        roundIndicator = KDCircularProgress()
         roundIndicator.startAngle = -90
         roundIndicator.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
         roundIndicator.autoresizingMask = [.FlexibleTopMargin,.FlexibleBottomMargin,.FlexibleLeftMargin,.FlexibleRightMargin]

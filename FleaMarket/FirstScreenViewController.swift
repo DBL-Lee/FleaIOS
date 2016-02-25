@@ -244,8 +244,10 @@ class FirstScreenViewController: UIViewController,UITableViewDelegate,UITableVie
     
     func categoryChosen(categoryID:Int,categoryName:String){
         let vc = SearchResultViewController()
-        vc.nextURL = getProductURL+"?primarycategory=\(categoryID)"
-        vc.searchText = categoryName
+        let fetchRequest = FetchProductRequest()
+        fetchRequest.primarycategory = categoryID
+        vc.fetchRequest = fetchRequest
+        vc.categoryText = categoryName
         self.navigationController?.pushViewController(vc, animated: true)
     }
 

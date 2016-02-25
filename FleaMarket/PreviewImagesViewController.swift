@@ -108,7 +108,11 @@ class PreviewImagesViewController: UIViewController,UICollectionViewDataSource,U
         }else{
             downloadPercentage[index] = percentage
         }
-        (imagesCollectionView.dequeueReusableCellWithReuseIdentifier("PreviewImagesCollectionViewCell", forIndexPath: NSIndexPath(forItem: index, inSection: 0)) as! PreviewImagesCollectionViewCell).setupProgressIndicator(downloadPercentage[index])
+        //only need to refresh those cells on screen
+        let cells = imagesCollectionView.visibleCells() as! [PreviewImagesCollectionViewCell]
+        for cell in cells{
+            cell.setupProgressIndicator(downloadPercentage[(imagesCollectionView.indexPathForCell(cell))!.row])
+        }
     }
     
     func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
