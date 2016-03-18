@@ -26,7 +26,6 @@ class CategoryDropDownTableView: UIView,UITableViewDelegate,UITableViewDataSourc
         self.backgroundColor = UIColor.whiteColor()
         primaryTableView = UITableView(frame: CGRect(origin: CGPoint.zero, size: frame.size))
         secondaryTableView = UITableView(frame: CGRect(x: 100, y: 0, width: frame.width-100, height: frame.height))
-        primaryTableView.backgroundColor = UIColor.groupTableViewBackgroundColor()
         secondaryTableView.tableFooterView = UIView()
         primaryTableView.tableFooterView = UIView()
         self.addSubview(primaryTableView)

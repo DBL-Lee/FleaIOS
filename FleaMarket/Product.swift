@@ -14,6 +14,10 @@ import SwiftyJSON
 class Product{
     var id:Int!
     
+    var userid:Int!
+    var usernickname:String!
+    var useravatar:String!
+    
     var locale:NSLocale!
     var imageUUID:[String]!
     var thumbnailUUID:[String]!
@@ -26,6 +30,8 @@ class Product{
     var city:String!
     var country:String!
     var mainimage:Int!
+    var latitude:Double!
+    var longitude:Double!
     
     var postedTime:NSDate!
     
@@ -52,10 +58,8 @@ class Product{
         let localeIdentifier = NSLocale.localeIdentifierFromComponents(components)
         let locale = NSLocale(localeIdentifier: localeIdentifier)
         
-        let coor = json["gps"].stringValue
-        let split = coor.characters.split(" ")
-        let latitude = Double(String(split[0]))!
-        let longitude =  Double(String(split[1]))!
+        let latitude = json["latitude"].doubleValue
+        let longitude = json["longitude"].doubleValue
         let location = CLLocation(latitude: latitude, longitude: longitude)
         let city = json["city"].stringValue
         let country = json["country"].stringValue
@@ -68,28 +72,37 @@ class Product{
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSZ"
         dateFormatter.timeZone = NSTimeZone(name: "UTC")
         let date = dateFormatter.dateFromString(timestring)!
-        let product = Product(id: id, images: images, title: title,mainimage: mainimage, currentPrice: currentPrice, categoryID: categoryID, city: city, country: country, amount: amount, postedTime: date, originalPrice: json["originalPrice"].string, brandNew: json["brandNew"].bool, bargain: json["bargain"].bool, exchange: json["exchange"].bool, description: json["description"].string,locale:locale)
         
-        CLGeocoder().reverseGeocodeLocation(location){(placemarks, error) -> Void in
-            if error != nil {
-                print("Reverse geocoder failed with error" + error!.localizedDescription)
-                return
-            }
-            if placemarks!.count > 0 {
-                placemark = placemarks![0]
-                product.location = placemark
-            }
-        }
+        let userid = json["userid"].intValue
+        let usernickname = json["usernickname"].stringValue
+        let useravatar = json["useravatar"].stringValue
+        
+        let product = Product(id: id, images: images, title: title,mainimage: mainimage, currentPrice: currentPrice, categoryID: categoryID, city: city, country: country, amount: amount, postedTime: date, originalPrice: json["originalPrice"].string, brandNew: json["brandNew"].bool, bargain: json["bargain"].bool, exchange: json["exchange"].bool, description: json["description"].string,locale:locale,latitude:latitude,longitude:longitude,userid: userid, usernickname: usernickname, useravatar:useravatar)
+        
+//        CLGeocoder().reverseGeocodeLocation(location){(placemarks, error) -> Void in
+//            if error != nil {
+//                print("Reverse geocoder failed with error" + error!.localizedDescription)
+//                return
+//            }
+//            if placemarks!.count > 0 {
+//                placemark = placemarks![0]
+//                product.location = placemark
+//            }
+//        }
         
         return product
     }
     
-    init(id:Int,images:[String],title:String,mainimage:Int,currentPrice:String,categoryID:Int,city:String,country:String,amount:Int,postedTime:NSDate,originalPrice:String?, brandNew:Bool?, bargain:Bool?, exchange:Bool?, description:String?,locale:NSLocale){
+    init(id:Int,images:[String],title:String,mainimage:Int,currentPrice:String,categoryID:Int,city:String,country:String,amount:Int,postedTime:NSDate,originalPrice:String?, brandNew:Bool?, bargain:Bool?, exchange:Bool?, description:String?,locale:NSLocale,latitude:Double,longitude:Double,userid:Int,usernickname:String,useravatar:String){
         self.id = id
         self.imageUUID = images
         self.title = title
         self.currentPrice = currentPrice
         self.mainimage = mainimage
+        
+        self.userid = userid
+        self.usernickname = usernickname
+        self.useravatar = useravatar
         
         self.city = city
         self.country = country
@@ -104,6 +117,8 @@ class Product{
         self.description = description
         
         self.locale = locale
+        self.latitude = latitude
+        self.longitude = longitude
     }
     
     func getCity()->String{

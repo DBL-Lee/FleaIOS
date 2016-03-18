@@ -12,6 +12,7 @@ target 'FleaMarket' do
  pod 'KDCircularProgress'
  pod 'Alamofire'
  pod 'SwiftyJSON', :git => 'https://github.com/SwiftyJSON/SwiftyJSON.git'
+ pod 'SimpleKeychain'
 end
 
 target 'FleaMarketTests' do

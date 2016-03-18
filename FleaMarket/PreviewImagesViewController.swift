@@ -49,7 +49,7 @@ class PreviewImagesViewController: UIViewController,UICollectionViewDataSource,U
         
         downloadPercentage = [Int](count: imagesUUID.count, repeatedValue: 0)
         for i in 0..<imagesUUID.count{
-            RetrieveImageFromS3.retrieveImage(imagesUUID[i],percentageHandler: {
+            RetrieveImageFromS3.retrieveImage(imagesUUID[i],bucket: S3ImagesBucketName,percentageHandler: {
                     percentage in
                     self.setPercentageOfItem(i, percentage: percentage)
                 }){

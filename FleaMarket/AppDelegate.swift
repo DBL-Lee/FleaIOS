@@ -62,12 +62,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             remove.objects = objectids
             
             let deleteRequest = AWSS3DeleteObjectsRequest()
-            deleteRequest.bucket = S3BucketName
+            deleteRequest.bucket = S3ImagesBucketName
             deleteRequest.remove = remove
             
             AWSS3.defaultS3().deleteObjects(deleteRequest)
         }
         
+        //Try refreshing jwt token
+        if UserLoginHandler.instance.loggedIn(){
+            UserLoginHandler.instance.refreshToken()
+        }
        
         
         

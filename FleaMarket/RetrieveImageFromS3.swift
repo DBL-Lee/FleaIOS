@@ -12,7 +12,7 @@ import AWSCore
 import KDCircularProgress
 
 class RetrieveImageFromS3{
-    static func retrieveImage(imageUUID:String,percentageHandler:Int->Void = {_ in},completion:()->Void){
+    static func retrieveImage(imageUUID:String,bucket:String,percentageHandler:Int->Void = {_ in},completion:()->Void){
         let url = LocalDownloadDirectory.URLByAppendingPathComponent(imageUUID)
         if NSFileManager.defaultManager().fileExistsAtPath(url.path!){
             dispatch_async(dispatch_get_main_queue(), {
@@ -21,7 +21,7 @@ class RetrieveImageFromS3{
             return
         }
         let downloadRequest = AWSS3TransferManagerDownloadRequest()
-        downloadRequest.bucket = S3BucketName
+        downloadRequest.bucket = bucket
         downloadRequest.key = imageUUID
         downloadRequest.downloadingFileURL = url
         downloadRequest.downloadProgress = {

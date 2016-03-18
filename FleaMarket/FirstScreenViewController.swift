@@ -25,6 +25,8 @@ class FirstScreenViewController: UIViewController,UITableViewDelegate,UITableVie
         }
     }
     
+    var fetchRequest = FetchProductRequest()
+    
     //static cell to hold categories
     var categoryCell:CategoryTableViewCell!
     
@@ -35,6 +37,9 @@ class FirstScreenViewController: UIViewController,UITableViewDelegate,UITableVie
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        fetchRequest.maxdistance = 100
+        
         self.tableView.backgroundColor = UIColor.groupTableViewBackgroundColor()
         
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .Plain, target: nil, action: nil)
@@ -78,6 +83,7 @@ class FirstScreenViewController: UIViewController,UITableViewDelegate,UITableVie
         }
         self.productCategory = CoreDataHandler.instance.getPrimaryCategoryList()
         categoryCell = self.tableView.dequeueReusableCellWithIdentifier("CategoryTableViewCell", forIndexPath: NSIndexPath(forRow: 0, inSection: 1)) as! CategoryTableViewCell
+        categoryCell.selectionStyle = .None
         categoryCell.setUpCollectionView(productCategory, callback: categoryChosen)
         
         
@@ -103,22 +109,13 @@ class FirstScreenViewController: UIViewController,UITableViewDelegate,UITableVie
     }
     
     func refresh(){
-        Alamofire.request(.GET, getProductURL).responseJSON{
-            response in
-            switch response.result{
-            case .Success:
-                self.products = []
-                let json = JSON(response.result.value!)
-                self.nextPageURL = json["next"].stringValue
-                for (_,productjson) in json["results"] {
-                    self.products.append(Product.deserialize(productjson))
-                }
-                self.tableView.reloadData()
-            case .Failure(let e):
-                print(e)
-            }
+        fetchRequest.request{
+            previous,next,products in
+            self.nextPageURL = next
+            self.products = products
+            self.tableView.reloadData()
+            self.refreshControl.endRefreshing()
         }
-        self.refreshControl.endRefreshing()
     }
     
     func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
@@ -140,10 +137,12 @@ class FirstScreenViewController: UIViewController,UITableViewDelegate,UITableVie
                 case .Success:
                     let json = JSON(response.result.value!)
                     self.nextPageURL = json["next"].stringValue
+                    var indexPaths:[NSIndexPath] = []
                     for (_,productjson) in json["results"] {
+                        indexPaths.append(NSIndexPath(forRow: self.products.count, inSection: 2))
                         self.products.append(Product.deserialize(productjson))
                     }
-                    self.tableView.reloadData()
+                    self.tableView.insertRowsAtIndexPaths(indexPaths, withRowAnimation: .None)
                     self.loadingMore = false
                 case .Failure(let e):
                     print(e)
@@ -157,15 +156,14 @@ class FirstScreenViewController: UIViewController,UITableViewDelegate,UITableVie
         case 0:
             let cell = tableView.dequeueReusableCellWithIdentifier("FirstScreenSearchTableViewCell", forIndexPath: indexPath) as! FirstScreenSearchTableViewCell
             cell.setSearchCallBack(searchButtonPressed)
+            cell.selectionStyle = .None
             return cell
         case 1:
             return categoryCell
         case 2:
             let cell = tableView.dequeueReusableCellWithIdentifier("LookAroundTableViewCell", forIndexPath: indexPath) as! LookAroundTableViewCell
             cell.selectionStyle = .None
-            let avatar = UIImage(named: "avatar.png")!
-            
-            cell.setUpLookAroundCell(avatar, sellerName: "DBL_Lee", product: products[indexPath.row],productid: indexPath.row,callback: presentPreviewVC)
+            cell.setUpLookAroundCell(products[indexPath.row],productid: indexPath.row,callback: presentPreviewVC)
             return cell
         default:
             let cell = UITableViewCell()
@@ -242,12 +240,15 @@ class FirstScreenViewController: UIViewController,UITableViewDelegate,UITableVie
         self.navigationController?.pushViewController(vc, animated: true)
     }
     
+    //need to instantiate early to allow location service
+    var categoryFetchRequest = FetchProductRequest()
+    
     func categoryChosen(categoryID:Int,categoryName:String){
         let vc = SearchResultViewController()
-        let fetchRequest = FetchProductRequest()
-        fetchRequest.primarycategory = categoryID
-        vc.fetchRequest = fetchRequest
+        categoryFetchRequest.primarycategory = categoryID
+        vc.fetchRequest = categoryFetchRequest
         vc.categoryText = categoryName
+        vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
     }
 

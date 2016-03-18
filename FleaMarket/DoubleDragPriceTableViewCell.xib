@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9532" systemVersion="14F1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="86" id="KGk-i7-Jjw" customClass="DoubleDragPriceTableViewCell" customModule="FleaMarket" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="86"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="85"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vZa-xo-rIE" customClass="RangeSlider" customModule="FleaMarket" customModuleProvider="target">
+                        <rect key="frame" x="8" y="8" width="304" height="31"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="31" id="mD6-5j-oU2"/>
+                        </constraints>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="curvaceousness">
+                                <real key="value" value="1"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="number" keyPath="minimumValue">
+                                <real key="value" value="0.0"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="number" keyPath="maximumValue">
+                                <real key="value" value="100"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="number" keyPath="lowerValue">
+                                <real key="value" value="0.0"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="number" keyPath="upperValue">
+                                <real key="value" value="100"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                        <connections>
+                            <action selector="slided:" destination="KGk-i7-Jjw" eventType="valueChanged" id="CdM-NQ-Spy"/>
+                        </connections>
+                    </view>
+                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ted-fZ-yGS">
+                        <rect key="frame" x="81" y="44" width="97" height="22"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                        <textInputTraits key="textInputTraits"/>
+                    </textField>
+                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="CpZ-qU-5ke">
+                        <rect key="frame" x="215" y="44" width="97" height="22"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                        <textInputTraits key="textInputTraits"/>
+                    </textField>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="~" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FKu-2H-1hQ">
+                        <rect key="frame" x="186" y="48" width="21" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="价格区间" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kW0-xP-tG9">
+                        <rect key="frame" x="8" y="48" width="68" height="21"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="100" id="X8S-3f-Igz"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="CpZ-qU-5ke" firstAttribute="top" secondItem="vZa-xo-rIE" secondAttribute="bottom" constant="8" id="73z-L4-rhj"/>
+                    <constraint firstItem="kW0-xP-tG9" firstAttribute="centerY" secondItem="ted-fZ-yGS" secondAttribute="centerY" id="Fd0-FI-2Dg"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="CpZ-qU-5ke" secondAttribute="bottom" constant="8" id="HO1-e1-4g2"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="kW0-xP-tG9" secondAttribute="bottom" constant="8" id="JDy-dg-3mC"/>
+                    <constraint firstItem="kW0-xP-tG9" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" id="S44-sl-ye4"/>
+                    <constraint firstItem="ted-fZ-yGS" firstAttribute="centerY" secondItem="FKu-2H-1hQ" secondAttribute="centerY" id="Ucf-Ue-e9y"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="ted-fZ-yGS" secondAttribute="bottom" constant="8" id="VYF-x8-OtQ"/>
+                    <constraint firstItem="ted-fZ-yGS" firstAttribute="leading" secondItem="kW0-xP-tG9" secondAttribute="trailing" constant="5" id="ZFQ-Po-dne"/>
+                    <constraint firstItem="vZa-xo-rIE" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" id="bxk-7s-97d"/>
+                    <constraint firstItem="FKu-2H-1hQ" firstAttribute="leading" secondItem="ted-fZ-yGS" secondAttribute="trailing" constant="8" id="fts-Bk-4ZE"/>
+                    <constraint firstItem="CpZ-qU-5ke" firstAttribute="trailing" secondItem="H2p-sc-9uM" secondAttribute="trailingMargin" id="jDO-eB-0FG"/>
+                    <constraint firstItem="vZa-xo-rIE" firstAttribute="trailing" secondItem="H2p-sc-9uM" secondAttribute="trailingMargin" id="n3N-1k-Lqh"/>
+                    <constraint firstItem="CpZ-qU-5ke" firstAttribute="width" secondItem="ted-fZ-yGS" secondAttribute="width" id="rEW-fd-jDX"/>
+                    <constraint firstItem="FKu-2H-1hQ" firstAttribute="centerY" secondItem="CpZ-qU-5ke" secondAttribute="centerY" id="sXy-WW-T4N"/>
+                    <constraint firstItem="CpZ-qU-5ke" firstAttribute="leading" secondItem="FKu-2H-1hQ" secondAttribute="trailing" constant="8" id="t0q-ch-ul4"/>
+                    <constraint firstItem="vZa-xo-rIE" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" id="xJe-cM-CDX"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="lowerText" destination="ted-fZ-yGS" id="9S5-4h-U4D"/>
+                <outlet property="rangeSlider" destination="vZa-xo-rIE" id="1xY-Fd-Ida"/>
+                <outlet property="upperText" destination="CpZ-qU-5ke" id="LBk-wd-wJd"/>
+            </connections>
+            <point key="canvasLocation" x="228" y="284"/>
+        </tableViewCell>
+    </objects>
+</document>

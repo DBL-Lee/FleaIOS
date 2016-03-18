@@ -26,8 +26,10 @@ class SearchResultTableViewCell: UITableViewCell {
     func setupCell(product:Product){
         self.product = product
         
+        self.imageview.image = nil
+        
         let uuid = product.imageUUID[product.mainimage]
-        RetrieveImageFromS3.retrieveImage(uuid, completion: {
+        RetrieveImageFromS3.retrieveImage(uuid, bucket: S3ImagesBucketName, completion: {
             _ in
             self.imageview.image = UIImage(contentsOfFile: RetrieveImageFromS3.localDirectoryOf(uuid).path!)
         })

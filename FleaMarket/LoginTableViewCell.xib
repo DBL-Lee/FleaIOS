@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9532" systemVersion="14F1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="44" id="KGk-i7-Jjw" customClass="LoginTableViewCell" customModule="FleaMarket" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Cl0-Jt-fkz">
+                        <rect key="frame" x="0.0" y="11" width="100" height="21"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="80" id="0UH-eA-N96"/>
+                            <constraint firstAttribute="height" constant="21" id="tZv-W1-sH3"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="haQ-Ac-DxG">
+                        <rect key="frame" x="272" y="2" width="40" height="40"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="40" id="74L-qY-LYx"/>
+                            <constraint firstAttribute="width" constant="30" id="X3k-hy-ovM"/>
+                            <constraint firstAttribute="height" constant="30" id="aKi-w2-ASf"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="74L-qY-LYx"/>
+                            </mask>
+                        </variation>
+                        <connections>
+                            <action selector="auxiBtnTapped:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="Tj0-Pb-Oos"/>
+                        </connections>
+                    </button>
+                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="R2z-mx-Pu3">
+                        <rect key="frame" x="108" y="6" width="156" height="30"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                        <textInputTraits key="textInputTraits"/>
+                    </textField>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="bottomMargin" secondItem="haQ-Ac-DxG" secondAttribute="bottom" constant="-7" id="6Gq-Gd-bW6"/>
+                    <constraint firstItem="haQ-Ac-DxG" firstAttribute="leading" secondItem="R2z-mx-Pu3" secondAttribute="trailing" constant="8" id="PHp-Sv-ioF"/>
+                    <constraint firstItem="R2z-mx-Pu3" firstAttribute="height" secondItem="Cl0-Jt-fkz" secondAttribute="height" id="WHh-2h-10z"/>
+                    <constraint firstItem="R2z-mx-Pu3" firstAttribute="leading" secondItem="Cl0-Jt-fkz" secondAttribute="trailing" constant="8" id="WoS-kL-wgg"/>
+                    <constraint firstItem="haQ-Ac-DxG" firstAttribute="trailing" secondItem="H2p-sc-9uM" secondAttribute="trailingMargin" id="bET-Hq-b4a"/>
+                    <constraint firstItem="R2z-mx-Pu3" firstAttribute="centerY" secondItem="Cl0-Jt-fkz" secondAttribute="centerY" id="grr-Ni-tOG"/>
+                    <constraint firstItem="Cl0-Jt-fkz" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="-8" id="maV-nl-Pab"/>
+                    <constraint firstItem="haQ-Ac-DxG" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="-6" id="ukL-eG-Nq7"/>
+                    <constraint firstItem="haQ-Ac-DxG" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="wQL-Lo-xLY"/>
+                    <constraint firstItem="R2z-mx-Pu3" firstAttribute="centerY" secondItem="haQ-Ac-DxG" secondAttribute="centerY" id="zoZ-KF-sJ0"/>
+                </constraints>
+                <variation key="default">
+                    <mask key="constraints">
+                        <exclude reference="6Gq-Gd-bW6"/>
+                        <exclude reference="ukL-eG-Nq7"/>
+                    </mask>
+                </variation>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="auxiBtn" destination="haQ-Ac-DxG" id="eVV-4p-zS3"/>
+                <outlet property="textField" destination="R2z-mx-Pu3" id="tyO-3z-MkG"/>
+                <outlet property="titleLabel" destination="Cl0-Jt-fkz" id="cWR-sU-hGx"/>
+            </connections>
+        </tableViewCell>
+    </objects>
+</document>

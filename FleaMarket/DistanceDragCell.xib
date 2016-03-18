@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9532" systemVersion="14F1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="43" id="gN8-5B-iLd" customClass="DistanceDragCell" customModule="FleaMarket" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="86"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" ambiguous="YES" tableViewCell="gN8-5B-iLd" id="nfv-Zb-ubE">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="85"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="最远距离" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="z2F-Ij-472">
+                        <rect key="frame" x="8" y="46" width="100" height="21"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="43" id="IkZ-N8-xvn"/>
+                            <constraint firstAttribute="width" constant="100" id="oAI-gs-HyX"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Lse-7k-TvD">
+                        <rect key="frame" x="177" y="42" width="97" height="31"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="100" id="N0g-Xj-9hQ"/>
+                            <constraint firstAttribute="height" constant="31" id="bZE-Id-HmU"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                        <textInputTraits key="textInputTraits"/>
+                    </textField>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="km" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fTi-vz-GdI">
+                        <rect key="frame" x="282" y="46" width="30" height="21"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="21" id="SSD-fr-HWv"/>
+                            <constraint firstAttribute="width" constant="30" id="eUs-A6-3cP"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="bottomMargin" secondItem="Lse-7k-TvD" secondAttribute="bottom" id="3Zh-aE-6KY"/>
+                    <constraint firstItem="Lse-7k-TvD" firstAttribute="centerY" secondItem="z2F-Ij-472" secondAttribute="centerY" id="6Mq-en-qao"/>
+                    <constraint firstItem="fTi-vz-GdI" firstAttribute="leading" secondItem="Lse-7k-TvD" secondAttribute="trailing" constant="8" id="C5T-gf-iaJ"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="z2F-Ij-472" secondAttribute="bottom" id="F7R-nm-Ibl"/>
+                    <constraint firstItem="fTi-vz-GdI" firstAttribute="trailing" secondItem="nfv-Zb-ubE" secondAttribute="trailingMargin" id="IIm-R8-AJW"/>
+                    <constraint firstItem="z2F-Ij-472" firstAttribute="top" secondItem="nfv-Zb-ubE" secondAttribute="topMargin" id="VLR-lz-JDf"/>
+                    <constraint firstItem="Lse-7k-TvD" firstAttribute="trailing" secondItem="nfv-Zb-ubE" secondAttribute="trailingMargin" id="YJ2-A9-WyO"/>
+                    <constraint firstItem="z2F-Ij-472" firstAttribute="leading" secondItem="nfv-Zb-ubE" secondAttribute="leadingMargin" id="bEg-QF-pvA"/>
+                    <constraint firstItem="fTi-vz-GdI" firstAttribute="centerY" secondItem="Lse-7k-TvD" secondAttribute="centerY" id="jcA-9u-sHi"/>
+                    <constraint firstItem="Lse-7k-TvD" firstAttribute="top" secondItem="nfv-Zb-ubE" secondAttribute="topMargin" id="wCE-OU-YRS"/>
+                </constraints>
+                <variation key="default">
+                    <mask key="constraints">
+                        <exclude reference="3Zh-aE-6KY"/>
+                        <exclude reference="YJ2-A9-WyO"/>
+                        <exclude reference="wCE-OU-YRS"/>
+                    </mask>
+                </variation>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="textField" destination="Lse-7k-TvD" id="EAY-ub-0sI"/>
+            </connections>
+            <point key="canvasLocation" x="242" y="320"/>
+        </tableViewCell>
+    </objects>
+</document>

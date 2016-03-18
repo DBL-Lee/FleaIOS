@@ -59,7 +59,7 @@ class ProductDetailTableViewController: UITableViewController {
     let separator = [3,5]
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if product.description == nil{
+        if product.description == nil || product.description == ""{
             return 5
         }
         return 7
@@ -82,7 +82,7 @@ class ProductDetailTableViewController: UITableViewController {
         case 卖家:
             let cell = tableView.dequeueReusableCellWithIdentifier("ProductDetailSellerTableViewCell", forIndexPath: indexPath) as!
             ProductDetailSellerTableViewCell
-            cell.setupCell(UIImage(named: "avatar.png")!, sellername: "DBL_Lee", soldItemCount: 107, goodFeedBack: 100)
+            cell.setupCell(product.useravatar, sellername: product.usernickname, soldItemCount: 107, goodFeedBack: 100)
             cell.selectionStyle = .None
             return cell
         case 信息:

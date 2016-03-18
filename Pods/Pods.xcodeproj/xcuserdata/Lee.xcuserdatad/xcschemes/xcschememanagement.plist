@@ -39,6 +39,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>SimpleKeychain.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>SwiftyJSON.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -67,6 +72,16 @@
 			<key>primary</key>
 			<true/>
 		</dict>
+		<key>6E1780C7BDCB8A4EC8FDB1E99D943043</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>76E04D1189D0277E3BE8616DFEE43416</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>79C040AFDDCE1BCBF6D8B5EB0B85887F</key>
 		<dict>
 			<key>primary</key>
@@ -77,12 +92,7 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>BA0849E349974EBABF44DCFFE5C253CA</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>BC2AFF05398B8F2924C1DC28F8F419E8</key>
+		<key>A9EDE7457DA1E99CD88504BA54789F64</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -92,7 +102,7 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>CB221CCE75B703694793519DFD8D6928</key>
+		<key>E8FF0886C259BCEB6D77DCE75236F721</key>
 		<dict>
 			<key>primary</key>
 			<true/>

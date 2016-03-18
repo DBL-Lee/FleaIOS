@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9532" systemVersion="14F1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="121" id="KGk-i7-Jjw" customClass="MineTopTableViewCell" customModule="FleaMarket" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="402" height="121"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="402" height="120"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="defaultavatar.png" translatesAutoresizingMaskIntoConstraints="NO" id="Uex-0j-Psl">
+                        <rect key="frame" x="19" y="20" width="80" height="80"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="80" id="3dQ-Ho-9kF"/>
+                            <constraint firstAttribute="height" constant="80" id="80p-nI-3sE"/>
+                            <constraint firstAttribute="width" secondItem="Uex-0j-Psl" secondAttribute="height" multiplier="1:1" id="Ql2-gG-CP9"/>
+                            <constraint firstAttribute="width" constant="80" id="rnl-eU-MB3"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="80p-nI-3sE"/>
+                                <exclude reference="Ql2-gG-CP9"/>
+                            </mask>
+                        </variation>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="您还没有登录。" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rgq-WD-rU0">
+                        <rect key="frame" x="107" y="49" width="148" height="21"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="148" id="Lrc-ax-l89"/>
+                            <constraint firstAttribute="height" constant="21" id="kcx-fN-Me4"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <nil key="highlightedColor"/>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="Lrc-ax-l89"/>
+                            </mask>
+                        </variation>
+                    </label>
+                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ghw-0L-fdM">
+                        <rect key="frame" x="317" y="45" width="77" height="30"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="80" id="9oU-le-di9"/>
+                            <constraint firstAttribute="height" constant="30" id="PiG-FM-jGO"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                        <state key="normal" title="登录">
+                            <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                        </state>
+                    </button>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="ghw-0L-fdM" firstAttribute="trailing" secondItem="H2p-sc-9uM" secondAttribute="trailingMargin" constant="20" id="1Zm-iy-RNA"/>
+                    <constraint firstItem="Uex-0j-Psl" firstAttribute="bottom" secondItem="H2p-sc-9uM" secondAttribute="bottomMargin" constant="20" id="8b1-Wn-6qi"/>
+                    <constraint firstItem="ghw-0L-fdM" firstAttribute="centerY" secondItem="rgq-WD-rU0" secondAttribute="centerY" id="9Vm-Up-8fb"/>
+                    <constraint firstItem="ghw-0L-fdM" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="Al6-7u-IGM"/>
+                    <constraint firstItem="rgq-WD-rU0" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="HtV-bP-REO"/>
+                    <constraint firstItem="ghw-0L-fdM" firstAttribute="trailing" secondItem="H2p-sc-9uM" secondAttribute="trailingMargin" constant="20" id="IDo-K4-w33"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="Uex-0j-Psl" secondAttribute="bottom" constant="10" id="Iol-fD-6dg"/>
+                    <constraint firstItem="rgq-WD-rU0" firstAttribute="leading" secondItem="Uex-0j-Psl" secondAttribute="trailing" constant="10" id="NAV-5r-D8V"/>
+                    <constraint firstItem="ghw-0L-fdM" firstAttribute="leading" secondItem="rgq-WD-rU0" secondAttribute="trailing" constant="8" id="Qn0-qk-P0N"/>
+                    <constraint firstItem="Uex-0j-Psl" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="10" id="TB4-ZP-cAH"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="Uex-0j-Psl" secondAttribute="bottom" constant="20" id="Vw4-oY-HDz"/>
+                    <constraint firstItem="Uex-0j-Psl" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="20" id="aeR-oP-Vkp"/>
+                    <constraint firstItem="rgq-WD-rU0" firstAttribute="centerY" secondItem="Uex-0j-Psl" secondAttribute="centerY" id="cVQ-TD-1mV"/>
+                    <constraint firstItem="Uex-0j-Psl" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="10" id="rnx-dw-3xV"/>
+                    <constraint firstItem="ghw-0L-fdM" firstAttribute="trailing" secondItem="H2p-sc-9uM" secondAttribute="trailingMargin" constant="-10" id="rtN-q8-azj"/>
+                    <constraint firstItem="Uex-0j-Psl" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="xGw-Uw-inM"/>
+                </constraints>
+                <variation key="default">
+                    <mask key="constraints">
+                        <exclude reference="8b1-Wn-6qi"/>
+                        <exclude reference="Vw4-oY-HDz"/>
+                        <exclude reference="aeR-oP-Vkp"/>
+                        <exclude reference="HtV-bP-REO"/>
+                        <exclude reference="1Zm-iy-RNA"/>
+                        <exclude reference="Al6-7u-IGM"/>
+                        <exclude reference="IDo-K4-w33"/>
+                    </mask>
+                </variation>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="loginBtn" destination="ghw-0L-fdM" id="bAi-NZ-rKl"/>
+                <outlet property="unloginBtn" destination="ghw-0L-fdM" id="4lp-Z5-1Y0"/>
+                <outlet property="unloginLabel" destination="rgq-WD-rU0" id="8xo-DS-4w3"/>
+            </connections>
+            <point key="canvasLocation" x="224" y="228.5"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="defaultavatar.png" width="225" height="225"/>
+    </resources>
+</document>

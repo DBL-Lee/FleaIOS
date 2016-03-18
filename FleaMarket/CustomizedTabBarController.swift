@@ -20,6 +20,8 @@ class CustomizedTabBarController: UITabBarController,UITabBarControllerDelegate 
         button.addTarget(self, action: "postNewItem", forControlEvents: .TouchUpInside)
         self.tabBar.addSubview(button)
         
+        
+        
     }
     
     func tabBarController(tabBarController: UITabBarController, shouldSelectViewController viewController: UIViewController) -> Bool {
@@ -30,23 +32,30 @@ class CustomizedTabBarController: UITabBarController,UITabBarControllerDelegate 
     }
     
     func postNewItem(){
-        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
-        let camera = UIAlertAction(title: "使用相机", style: UIAlertActionStyle.Default, handler: {
-            _ in
-            self.showCamera()
-        })
-        let album = UIAlertAction(title: "使用相册", style: .Default, handler: {
-            _ in
-            self.showAlbum()
-        })
-        let cancel = UIAlertAction(title: "取消", style: .Cancel, handler: {
-            _ in
-            alert.dismissViewControllerAnimated(true, completion: {})
-        })
-        alert.addAction(camera)
-        alert.addAction(album)
-        alert.addAction(cancel)
-        self.presentViewController(alert, animated: true, completion: {})
+        if UserLoginHandler.instance.loggedIn(){ // logged in
+            let alert = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
+            let camera = UIAlertAction(title: "使用相机", style: UIAlertActionStyle.Default, handler: {
+                _ in
+                self.showCamera()
+            })
+            let album = UIAlertAction(title: "使用相册", style: .Default, handler: {
+                _ in
+                self.showAlbum()
+            })
+            let cancel = UIAlertAction(title: "取消", style: .Cancel, handler: {
+                _ in
+                alert.dismissViewControllerAnimated(true, completion: {})
+            })
+            alert.addAction(camera)
+            alert.addAction(album)
+            alert.addAction(cancel)
+            self.presentViewController(alert, animated: true, completion: {})
+        }else{//not logged in
+            let controller = UserLoginViewController()
+            let navi = UINavigationController(rootViewController: controller)
+            navi.hidesBottomBarWhenPushed = true
+            self.presentViewController(navi, animated: true, completion: nil)
+        }
     }
     
     func finishPostingItem(){

@@ -43,7 +43,7 @@ class ProductDetailImageTableViewCell: UITableViewCell,UICollectionViewDataSourc
         self.pageControl.currentPage = currentImage
         
         for i in 0..<imagesUUID.count{
-            RetrieveImageFromS3.retrieveImage(imagesUUID[i]){
+            RetrieveImageFromS3.retrieveImage(imagesUUID[i],bucket: S3ImagesBucketName){
                 _ in
                 self.downloadFinished[i] = true
                 self.imagesCollectionView.reloadItemsAtIndexPaths([NSIndexPath(forItem: i, inSection: 0)])

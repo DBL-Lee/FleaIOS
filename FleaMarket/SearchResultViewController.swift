@@ -25,10 +25,15 @@ class SearchResultViewController: UIViewController,UITableViewDataSource,UITable
     var sortText = "排序 "
     var sortAttr:NSMutableAttributedString!
     var sortAttrChosen:NSMutableAttributedString!
+    
+    var sortView:OrderingTableView!
+    
     @IBOutlet weak var filterBtn: UIButton!
     var filterText = "筛选 "
     var filterAttr:NSMutableAttributedString!
     var filterAttrChosen:NSMutableAttributedString!
+    
+    var filterView:FilterDropDownTableView!
     
     var upAttach:NSAttributedString!
     var downAttach:NSAttributedString!
@@ -67,7 +72,7 @@ class SearchResultViewController: UIViewController,UITableViewDataSource,UITable
         
         let downattachment = NSTextAttachment()
         let im = UIImage(named: "dropdown.png")!
-        let height:CGFloat = 30*0.5
+        var height:CGFloat = 30*0.5
         let scale = height/im.size.height
         downattachment.image = UIImage(CGImage: im.CGImage!, scale: 1/scale, orientation: .Up)
         downAttach = NSAttributedString(attachment: downattachment)
@@ -112,16 +117,37 @@ class SearchResultViewController: UIViewController,UITableViewDataSource,UITable
         
         categoryBtn.addTarget(self, action: "tapCategory", forControlEvents: .TouchUpInside)
         
+        filterBtn.addTarget(self, action: "tapFilter", forControlEvents: .TouchUpInside)
+        
+        sortBtn.addTarget(self, action: "tapSort", forControlEvents: .TouchUpInside)
         
         self.dropDownOverlay.backgroundColor = UIColor(white: 0, alpha: 0.5)
         self.dropDownOverlay.clipsToBounds = true
         let tap = UITapGestureRecognizer(target: self, action: "tapOnOverlay:")
         tap.delegate = self
         self.dropDownOverlay.addGestureRecognizer(tap)
+        
+        height = dropDownOverlay.frame.height*0.8
+        
+        self.categoryView = CategoryDropDownTableView(frame: CGRect(x: 0, y: 0, width: dropDownOverlay.frame.width, height: height), callback: categoryChosen)
+        categoryView.autoresizingMask = [.FlexibleWidth,.FlexibleHeight]
+        self.dropDownOverlay.addSubview(categoryView)
+        
+        self.filterView = FilterDropDownTableView(frame: CGRect(x: 0, y: 0, width: dropDownOverlay.frame.width, height: self.dropDownOverlay.frame.height))
+        filterView.callback = filterCallBack
+        self.filterView.autoresizingMask = [.FlexibleWidth,.FlexibleHeight]
+        self.dropDownOverlay.addSubview(filterView)
+        
+        self.sortView = OrderingTableView(frame: CGRect(x: 0, y: 0, width: dropDownOverlay.frame.width, height: self.dropDownOverlay.frame.height), style: .Plain)
+        self.sortView.callback = finishChoosingOrder
+        self.sortView.autoresizingMask = [.FlexibleWidth,.FlexibleHeight]
+        self.dropDownOverlay.addSubview(sortView)
+        
+        fetchRequest.request(parseRequest)
     }
     
     func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool {
-        if touch.view!.isDescendantOfView(categoryView){
+        if touch.view!.isDescendantOfView(categoryView) || touch.view!.isDescendantOfView(filterView){
             return false
         }
         return true
@@ -131,9 +157,33 @@ class SearchResultViewController: UIViewController,UITableViewDataSource,UITable
         if categorySubviewShowing{
             categorySubviewShowing = false
             removeCategorySubview()
+            categoryBtn.selected = false
+        }
+        if filterSubviewShowing{
+            filterSubviewShowing = false
+            removeFilterSubview()
+            filterBtn.selected = false
         }
     }
     
+    
+    func clearOtherView(){
+        if categorySubviewShowing{
+            categoryBtn.selected = false
+            categorySubviewShowing = false
+            removeCategorySubview(false)
+        }
+        if filterSubviewShowing{
+            filterBtn.selected = false
+            filterSubviewShowing = false
+            removeFilterSubview(false)
+        }
+        if sortSubviewShowing{
+            sortBtn.selected = false
+            sortSubviewShowing = false
+            removeSortSubview(false)
+        }
+    }
     var categorySubviewShowing = false
     
     func tapCategory(){
@@ -142,9 +192,80 @@ class SearchResultViewController: UIViewController,UITableViewDataSource,UITable
             categorySubviewShowing = false
             removeCategorySubview()
         }else{
+            dropDownOverlay.bringSubviewToFront(categoryView)
+            clearOtherView()
             categorySubviewShowing = true
             presentCategorySubview()
         }
+    }
+    
+    var filterSubviewShowing = false
+    
+    func tapFilter(){
+        filterBtn.selected = !filterBtn.selected
+        if filterSubviewShowing{
+            filterSubviewShowing = false
+            removeFilterSubview()
+        }else{
+            dropDownOverlay.bringSubviewToFront(filterView)
+            clearOtherView()
+            filterSubviewShowing = true
+            presentFilterSubview()
+        }
+    }
+    
+    var sortSubviewShowing = false
+    
+    func tapSort(){
+        sortBtn.selected = !sortBtn.selected
+        if sortSubviewShowing{
+            sortSubviewShowing = false
+            removeSortSubview()
+        }else{
+            dropDownOverlay.bringSubviewToFront(sortView)
+            clearOtherView()
+            sortSubviewShowing = true
+            presentSortSubview()
+        }
+    }
+    
+    func filterCallBack(brandnew:Bool,bargain:Bool,exchange:Bool,distance:Int?,minPrice:Int?,maxPrice:Int?){
+        if brandnew {
+            fetchRequest.brandNew = true
+        }else{
+            fetchRequest.brandNew = nil
+        }
+        if bargain {
+            fetchRequest.bargain = true
+        }else{
+            fetchRequest.bargain = nil
+        }
+        if exchange {
+            fetchRequest.exchange = true
+        }else{
+            fetchRequest.exchange = nil
+        }
+        fetchRequest.minprice = minPrice
+        fetchRequest.maxprice = maxPrice
+
+        fetchRequest.maxdistance = distance
+        
+        fetchRequest.request(parseRequest)
+        tapFilter()
+    }
+    
+    func finishChoosingOrder(type:FetchRequestSortType,text:String){
+        fetchRequest.sortType = type
+        fetchRequest.request(parseRequest)
+        let d = NSMutableAttributedString(string: text+" ")
+        d.appendAttributedString(downAttach)
+        sortAttr = d
+        let u = NSMutableAttributedString(string: text+" ")
+        u.appendAttributedString(upAttach)
+        sortAttrChosen = d
+        sortBtn.setAttributedTitle(sortAttr, forState: .Normal)
+        sortBtn.setAttributedTitle(sortAttrChosen, forState: .Selected)
+        tapSort()
     }
 
     
@@ -173,12 +294,7 @@ class SearchResultViewController: UIViewController,UITableViewDataSource,UITable
         
         self.dropDownOverlay.hidden = true
         
-        let height = dropDownOverlay.frame.height*0.8
         
-        self.categoryView = CategoryDropDownTableView(frame: CGRect(x: 0, y: 0, width: dropDownOverlay.frame.width, height: height), callback: categoryChosen)
-        categoryView.autoresizingMask = [.FlexibleWidth,.FlexibleHeight]
-        self.categoryView.transform = CGAffineTransformMakeTranslation(0, -self.categoryView.frame.height)
-        self.dropDownOverlay.addSubview(categoryView)
     }
     
     func dismiss(){
@@ -200,7 +316,9 @@ class SearchResultViewController: UIViewController,UITableViewDataSource,UITable
         
         tableView.tableFooterView = footerLabel
         
-        fetchRequest.request(parseRequest)
+        self.categoryView.transform = CGAffineTransformMakeTranslation(0, -self.categoryView.frame.height)
+        self.filterView.transform = CGAffineTransformMakeTranslation(0, -self.filterView.frame.height)
+        self.sortView.transform = CGAffineTransformMakeTranslation(0, -self.sortView.frame.height)
     }
     
     func parseRequest(_:String,next:String,p:[Product]){
@@ -229,10 +347,12 @@ class SearchResultViewController: UIViewController,UITableViewDataSource,UITable
                 case .Success:
                     let json = JSON(response.result.value!)
                     self.nextURL = json["next"].stringValue
+                    var indexPaths:[NSIndexPath] = []
                     for (_,productjson) in json["results"] {
+                        indexPaths.append(NSIndexPath(forRow: self.products.count, inSection: 0))
                         self.products.append(Product.deserialize(productjson))
                     }
-                    self.tableView.reloadData()
+                    self.tableView.insertRowsAtIndexPaths(indexPaths, withRowAnimation: .None)
                     self.loadingMore = false
                 case .Failure(let e):
                     print(e)
@@ -276,26 +396,65 @@ class SearchResultViewController: UIViewController,UITableViewDataSource,UITable
     
     func presentCategorySubview(){
         presentDropDownOverlay()
+        self.categoryView.transform = CGAffineTransformMakeTranslation(0, -self.categoryView.frame.height)
         UIView.animateWithDuration(0.5, animations: {
             self.categoryView.transform = CGAffineTransformMakeTranslation(0, 0)
         })
     }
     
-    func removeCategorySubview(){
+    func removeCategorySubview(removeOverlay:Bool = true){
         UIView.animateWithDuration(0.5, animations: {
             self.categoryView.transform = CGAffineTransformMakeTranslation(0, -self.categoryView.frame.height)
             }){
                 _ in
-                self.removeDropDownOverlay()
+                if removeOverlay{
+                    self.removeDropDownOverlay()
+                }
         }
     }
     
     func presentSortSubview(){
-        
+        presentDropDownOverlay()
+        self.sortView.needsShowing()
+        self.sortView.transform = CGAffineTransformMakeTranslation(0, 0)
+        self.sortView.frame.origin = CGPoint.zero
+        self.sortView.transform = CGAffineTransformMakeTranslation(0, -self.sortView.frame.height)
+        UIView.animateWithDuration(0.5, animations: {
+            self.sortView.transform = CGAffineTransformMakeTranslation(0, 0)
+        })
+    }
+    
+    func removeSortSubview(removeOverlay:Bool = true){
+        UIView.animateWithDuration(0.5, animations: {
+            self.sortView.transform = CGAffineTransformMakeTranslation(0, -self.sortView.frame.height)
+            }){
+                _ in
+                if removeOverlay{
+                    self.removeDropDownOverlay()
+                }
+        }
     }
     
     func presentFilterSubview(){
-        
+        presentDropDownOverlay()
+        self.filterView.needsShowing()
+        self.filterView.transform = CGAffineTransformMakeTranslation(0, 0)
+        self.filterView.frame.origin = CGPoint.zero
+        self.filterView.transform = CGAffineTransformMakeTranslation(0, -self.filterView.frame.height)
+        UIView.animateWithDuration(0.5, animations: {
+            self.filterView.transform = CGAffineTransformMakeTranslation(0, 0)
+        })
+    }
+    
+    func removeFilterSubview(removeOverlay:Bool = true){
+        UIView.animateWithDuration(0.5, animations: {
+            self.filterView.transform = CGAffineTransformMakeTranslation(0, -self.filterView.frame.height)
+            }){
+                _ in
+                if removeOverlay{
+                    self.removeDropDownOverlay()
+                }
+        }
     }
     
     var products:[Product] = []

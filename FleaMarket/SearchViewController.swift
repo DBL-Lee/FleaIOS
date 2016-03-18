@@ -108,6 +108,7 @@ class SearchViewController: UITableViewController,UISearchBarDelegate,UISearchRe
         CoreDataHandler.instance.addSearchHistoryToCoreData(searchText)
         let vc = SearchResultViewController()
         fetchRequest.title = searchText
+        fetchRequest.maxdistance = 10
         vc.fetchRequest = fetchRequest
         vc.searchText = searchText
         self.navigationController?.pushViewController(vc, animated: true)

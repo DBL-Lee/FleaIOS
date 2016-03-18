@@ -90,6 +90,7 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "Pods-FleaMarket/Alamofire.framework"
   install_framework "Pods-FleaMarket/FastttCamera.framework"
   install_framework "Pods-FleaMarket/KDCircularProgress.framework"
+  install_framework "Pods-FleaMarket/SimpleKeychain.framework"
   install_framework "Pods-FleaMarket/SwiftyJSON.framework"
   install_framework "Pods-FleaMarket/UITextView_Placeholder.framework"
 fi
@@ -100,6 +101,7 @@ if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "Pods-FleaMarket/Alamofire.framework"
   install_framework "Pods-FleaMarket/FastttCamera.framework"
   install_framework "Pods-FleaMarket/KDCircularProgress.framework"
+  install_framework "Pods-FleaMarket/SimpleKeychain.framework"
   install_framework "Pods-FleaMarket/SwiftyJSON.framework"
   install_framework "Pods-FleaMarket/UITextView_Placeholder.framework"
 fi

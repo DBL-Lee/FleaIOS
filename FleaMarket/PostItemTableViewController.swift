@@ -11,6 +11,7 @@ import CoreLocation
 import AWSCore
 import AWSS3
 import Alamofire
+import SwiftyJSON
 
 class PostItemTableViewController: UITableViewController {
 
@@ -96,7 +97,7 @@ class PostItemTableViewController: UITableViewController {
         let imageData = UIImagePNGRepresentation(image)
         imageData!.writeToFile(filePath, atomically: true)
         
-        uploadRequest.bucket = S3BucketName
+        uploadRequest.bucket = S3ImagesBucketName
         uploadRequest.key = fileName
         uploadRequest.body = fileURL
         
@@ -105,7 +106,7 @@ class PostItemTableViewController: UITableViewController {
     
     func deleteImageFromCloud(uuid:String){
         let deleteRequest = AWSS3DeleteObjectRequest()
-        deleteRequest.bucket = S3BucketName
+        deleteRequest.bucket = S3ImagesBucketName
         deleteRequest.key = uuid
         
         AWSS3.defaultS3().deleteObject(deleteRequest)
@@ -327,7 +328,7 @@ class PostItemTableViewController: UITableViewController {
         
         
         let deleteRequest = AWSS3DeleteObjectsRequest()
-        deleteRequest.bucket = S3BucketName
+        deleteRequest.bucket = S3ImagesBucketName
         deleteRequest.remove = remove
         
         AWSS3.defaultS3().deleteObjects(deleteRequest)
@@ -675,7 +676,10 @@ class PostItemTableViewController: UITableViewController {
             imagepara.append(["uuid":uuid])
         }
         let coor = location!.location!.coordinate
-        var parameter:[String:AnyObject] = ["title":productTitle!,"images":imagepara,"price":currentPrice!,"category":categoryID!,"location":location!.ISOcountryCode!,"gps":"\(coor.latitude) \(coor.longitude)","city":currentCity!,"country":currentCountry!,"amount":amount,"originalPrice":(originalPrice == nil ? "":originalPrice!)]
+        var parameter:[String:AnyObject] = ["title":productTitle!,"images":imagepara,"price":currentPrice!,"mainimage":mainIm,"category":categoryID!,"location":location!.ISOcountryCode!,"latitude":"\(coor.latitude)","longitude":"\(coor.longitude)","city":currentCity!,"country":currentCountry!,"amount":amount]
+        if let originalPrice = originalPrice{
+            parameter["originalPrice"] = originalPrice
+        }
         if let new = brandNew {
             parameter["brandNew"] = new
         }
@@ -689,7 +693,7 @@ class PostItemTableViewController: UITableViewController {
             parameter["description"] = productDescription
         }
         
-        Alamofire.request(.POST, getProductURL, parameters: parameter, encoding: .JSON, headers: nil).responseJSON{
+        Alamofire.request(.POST, getProductURL, parameters: parameter, encoding: .JSON, headers: UserLoginHandler.instance.authorizationHeader()).validate().responseJSON{
             response in
             switch response.result{
             case .Success:

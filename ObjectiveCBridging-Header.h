@@ -10,3 +10,4 @@
 #import <UITextView+Placeholder/UITextView+Placeholder.h>
 #import <AWSCore/AWSCore.h>
 #import <AWSS3/AWSS3.h>
+#import <SimpleKeychain/SimpleKeychain.h>

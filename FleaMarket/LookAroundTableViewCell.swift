@@ -53,7 +53,21 @@ class LookAroundTableViewCell: UITableViewCell,UICollectionViewDataSource,UIColl
         return "1个月以上"
     }
 
-    func setUpLookAroundCell(avatar:UIImage,sellerName:String,product:Product,productid:Int,callback:(Int,Int)->Void){
+    func setUpLookAroundCell(product:Product,productid:Int,callback:(Int,Int)->Void){
+        let sellerName = product.usernickname
+        
+        self.avatarView.image = UIImage(named:"defaultavatar.png")
+        
+        let fileURL = RetrieveImageFromS3.localDirectoryOf(product.useravatar)
+        if product.useravatar == "default"{
+            self.avatarView.image = UIImage(named:"defaultavatar.png")
+        }else if NSFileManager.defaultManager().fileExistsAtPath(fileURL.path!){
+            self.avatarView.image = UIImage(contentsOfFile: fileURL.path!)!
+        }else{
+            RetrieveImageFromS3.retrieveImage(product.useravatar, bucket: S3ImagesBucketName){
+                self.avatarView.image = UIImage(contentsOfFile: fileURL.path!)!
+            }
+        }
         
         self.productid = productid
         self.callback = callback
@@ -68,7 +82,7 @@ class LookAroundTableViewCell: UITableViewCell,UICollectionViewDataSource,UIColl
         imagesCollectionView.setCollectionViewLayout(layout, animated: false)
         self.product = product
         
-        self.avatarView.image = avatar
+        
         self.accountID.text = sellerName
         let timeElapse = NSDate().timeIntervalSinceDate(product.postedTime)
         self.timeStamp.text = " "+stringFromTimeInterval(timeElapse)
@@ -113,7 +127,7 @@ class LookAroundTableViewCell: UITableViewCell,UICollectionViewDataSource,UIColl
             cell.setImage(UIImage(contentsOfFile: fileURL.path!)!)
         }else{
             cell.setImage(UIImage(named: "loading.png")!)
-            RetrieveImageFromS3.retrieveImage(uuid){
+            RetrieveImageFromS3.retrieveImage(uuid,bucket: S3ImagesBucketName){
                 _ in
                 self.imagesCollectionView.reloadItemsAtIndexPaths([indexPath])
             }

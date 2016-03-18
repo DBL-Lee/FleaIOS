@@ -21,8 +21,20 @@ class ProductDetailSellerTableViewCell: UITableViewCell {
         self.avatarImageView.contentMode = .ScaleAspectFill
     }
 
-    func setupCell(avatar:UIImage,sellername:String,soldItemCount:Int,goodFeedBack:Int){
-        self.avatarImageView.image = avatar
+    func setupCell(avatar:String,sellername:String,soldItemCount:Int,goodFeedBack:Int){
+        self.avatarImageView.image = UIImage(named:"defaultavatar.png")
+        
+        let fileURL = RetrieveImageFromS3.localDirectoryOf(avatar)
+        if avatar == "default"{
+            self.avatarImageView.image = UIImage(named:"defaultavatar.png")
+        }else if NSFileManager.defaultManager().fileExistsAtPath(fileURL.path!){
+            self.avatarImageView.image = UIImage(contentsOfFile: fileURL.path!)!
+        }else{
+            RetrieveImageFromS3.retrieveImage(avatar, bucket: S3ImagesBucketName){
+                self.avatarImageView.image = UIImage(contentsOfFile: fileURL.path!)!
+            }
+        }
+        
         self.userNameLabel.text = sellername
         self.soldItemLabel.text = "成功卖出\(soldItemCount)件二手商品"
         let res = goodFeedBack*10000/soldItemCount

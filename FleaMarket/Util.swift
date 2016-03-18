@@ -113,6 +113,51 @@ extension String{
     }
 }
 
+extension NSDate {
+    func isAfter(dateToCompare: NSDate) -> Bool {
+        //Declare Variables
+        var isGreater = false
+        
+        //Compare Values
+        if self.compare(dateToCompare) == NSComparisonResult.OrderedDescending {
+            isGreater = true
+        }
+        
+        //Return Result
+        return isGreater
+    }
+    
+    func isBefore(dateToCompare: NSDate) -> Bool {
+        //Declare Variables
+        var isLess = false
+        
+        //Compare Values
+        if self.compare(dateToCompare) == NSComparisonResult.OrderedAscending {
+            isLess = true
+        }
+        
+        //Return Result
+        return isLess
+    }
+
+    
+    func addDays(daysToAdd: Int) -> NSDate {
+        let secondsInDays: NSTimeInterval = Double(daysToAdd) * 60 * 60 * 24
+        let dateWithDaysAdded: NSDate = self.dateByAddingTimeInterval(secondsInDays)
+        
+        //Return Result
+        return dateWithDaysAdded
+    }
+    
+    func addHours(hoursToAdd: Int) -> NSDate {
+        let secondsInHours: NSTimeInterval = Double(hoursToAdd) * 60 * 60
+        let dateWithHoursAdded: NSDate = self.dateByAddingTimeInterval(secondsInHours)
+        
+        //Return Result
+        return dateWithHoursAdded
+    }
+}
+
 extension UIImage{
     func thumbnailOfSize(size:CGSize)->UIImage{
         let scale = max(size.width/self.size.width, size.height/self.size.height)
@@ -130,30 +175,6 @@ extension UIImage{
     }
 }
 
-//class CustomSearchBar: UISearchBar {
-//    
-//    override func layoutSubviews() {
-//        super.layoutSubviews()
-//        setShowsCancelButton(false, animated: false)
-//    }
-//}
-//
-//class CustomSearchController: UISearchController, UISearchBarDelegate {
-//    
-//    lazy var _searchBar: CustomSearchBar = {
-//        [unowned self] in
-//        let result = CustomSearchBar(frame: CGRectZero)
-//        result.delegate = self
-//        
-//        return result
-//        }()
-//    
-//    override var searchBar: UISearchBar {
-//        get {
-//            return _searchBar
-//        }
-//    }
-//}
 class CustomSearchBar: UISearchBar {
     
     init(){
@@ -212,4 +233,44 @@ class CustomSearchController: UISearchController, UISearchBarDelegate {
         super.init(coder: aDecoder)
     }
     
+}
+
+class LoadingOverlay{
+    
+    var overlayView : UIView!
+    var activityIndicator : UIActivityIndicatorView!
+    
+    class var shared: LoadingOverlay {
+        struct Static {
+            static let instance: LoadingOverlay = LoadingOverlay()
+        }
+        return Static.instance
+    }
+    
+    init(){
+        self.overlayView = UIView()
+        self.activityIndicator = UIActivityIndicatorView()
+        
+        overlayView.frame = CGRectMake(0, 0, 80, 80)
+        overlayView.backgroundColor = UIColor(white: 0, alpha: 0.7)
+        overlayView.clipsToBounds = true
+        overlayView.layer.cornerRadius = 10
+        overlayView.layer.zPosition = 1
+        
+        activityIndicator.frame = CGRectMake(0, 0, 40, 40)
+        activityIndicator.center = CGPointMake(overlayView.bounds.width / 2, overlayView.bounds.height / 2)
+        activityIndicator.activityIndicatorViewStyle = .WhiteLarge
+        overlayView.addSubview(activityIndicator)
+    }
+    
+    func showOverlay(view: UIView) {
+        overlayView.center = view.center
+        view.addSubview(overlayView)
+        activityIndicator.startAnimating()
+    }
+    
+    func hideOverlayView() {
+        activityIndicator.stopAnimating()
+        overlayView.removeFromSuperview()
+    }
 }

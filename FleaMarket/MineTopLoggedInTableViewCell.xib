@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9532" systemVersion="14F1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" rowHeight="88" id="uje-8E-bSF" customClass="MineTopLoggedInTableViewCell" customModule="FleaMarket" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="402" height="121"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" ambiguous="YES" tableViewCell="uje-8E-bSF" id="grg-KF-MLN">
+                <rect key="frame" x="0.0" y="0.0" width="369" height="120"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" image="defaultavatar.png" translatesAutoresizingMaskIntoConstraints="NO" id="6Ap-Nl-bcb">
+                        <rect key="frame" x="19" y="20" width="80" height="80"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="80" id="jKE-4C-NCw"/>
+                            <constraint firstAttribute="height" constant="80" id="zJQ-HG-KT8"/>
+                        </constraints>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vSf-BQ-jyO">
+                        <rect key="frame" x="107" y="20" width="262" height="34"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Er-0C-bLj">
+                        <rect key="frame" x="107" y="62" width="262" height="38"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="2Er-0C-bLj" firstAttribute="leading" secondItem="6Ap-Nl-bcb" secondAttribute="trailing" constant="10" id="8LP-LL-62k"/>
+                    <constraint firstItem="vSf-BQ-jyO" firstAttribute="top" secondItem="6Ap-Nl-bcb" secondAttribute="top" id="DGa-no-mzd"/>
+                    <constraint firstItem="vSf-BQ-jyO" firstAttribute="height" secondItem="2Er-0C-bLj" secondAttribute="height" id="IEG-sI-iKS"/>
+                    <constraint firstItem="vSf-BQ-jyO" firstAttribute="leading" secondItem="6Ap-Nl-bcb" secondAttribute="trailing" constant="10" id="YCz-3w-jqL"/>
+                    <constraint firstItem="2Er-0C-bLj" firstAttribute="bottom" secondItem="6Ap-Nl-bcb" secondAttribute="bottom" id="cza-bc-inI"/>
+                    <constraint firstItem="2Er-0C-bLj" firstAttribute="top" secondItem="vSf-BQ-jyO" secondAttribute="bottom" constant="8" id="hHC-aA-zjT"/>
+                    <constraint firstItem="6Ap-Nl-bcb" firstAttribute="top" secondItem="grg-KF-MLN" secondAttribute="topMargin" constant="10" id="nqa-OU-ysM"/>
+                    <constraint firstItem="6Ap-Nl-bcb" firstAttribute="bottom" secondItem="grg-KF-MLN" secondAttribute="bottomMargin" constant="20" id="qfm-N6-LQo"/>
+                    <constraint firstItem="6Ap-Nl-bcb" firstAttribute="leading" secondItem="grg-KF-MLN" secondAttribute="leadingMargin" constant="10" id="sZv-5k-pN9"/>
+                    <constraint firstItem="6Ap-Nl-bcb" firstAttribute="leading" secondItem="grg-KF-MLN" secondAttribute="leadingMargin" constant="20" id="uyC-u3-lV3"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="6Ap-Nl-bcb" secondAttribute="bottom" constant="10" id="vPI-dh-oqe"/>
+                </constraints>
+                <variation key="default">
+                    <mask key="constraints">
+                        <exclude reference="qfm-N6-LQo"/>
+                        <exclude reference="uyC-u3-lV3"/>
+                    </mask>
+                </variation>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="auxiLabel" destination="2Er-0C-bLj" id="vHQ-XB-Ve1"/>
+                <outlet property="avatarImageView" destination="6Ap-Nl-bcb" id="TNl-LE-LIg"/>
+                <outlet property="nicknameLabel" destination="vSf-BQ-jyO" id="dnl-z7-Gb5"/>
+            </connections>
+            <point key="canvasLocation" x="240" y="213.5"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="defaultavatar.png" width="225" height="225"/>
+    </resources>
+</document>

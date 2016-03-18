@@ -6,7 +6,8 @@ let GLOBAL_DESCRIPTIONMAXCHAR = 140
 let CognitoRegionType = AWSRegionType.EUWest1
 let DefaultServiceRegionType = AWSRegionType.EUWest1
 let CognitoIdentityPoolId = "eu-west-1:32e7790b-bcc2-47f4-9386-222ccf14ce0f"
-let S3BucketName = "flea.images"
+let S3ImagesBucketName = "flea.images"
+let S3AvatarsBucketName = "flea.avatars"
 
 let THUMBNAILSIZE:CGSize = CGSize(width: 128, height: 128)
 

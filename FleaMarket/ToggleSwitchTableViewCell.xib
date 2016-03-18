@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9532" systemVersion="14F1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="56" id="ipt-6s-bg3" customClass="ToggleSwitchTableViewCell" customModule="FleaMarket" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="56"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" ambiguous="YES" tableViewCell="ipt-6s-bg3" id="O9v-Pa-TL3">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="55"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="uSo-5e-wDe">
+                        <rect key="frame" x="263" y="6" width="51" height="43"/>
+                        <connections>
+                            <action selector="switchToggled:" destination="ipt-6s-bg3" eventType="valueChanged" id="gKP-He-cEB"/>
+                        </connections>
+                    </switch>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bwm-ua-plM">
+                        <rect key="frame" x="8" y="14" width="100" height="27"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="100" id="Eh4-WU-CgQ"/>
+                            <constraint firstAttribute="height" constant="43" id="ekN-ml-1oh"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="bwm-ua-plM" firstAttribute="top" secondItem="O9v-Pa-TL3" secondAttribute="topMargin" id="1ow-tJ-h1W"/>
+                    <constraint firstItem="uSo-5e-wDe" firstAttribute="trailing" secondItem="O9v-Pa-TL3" secondAttribute="trailingMargin" constant="20" id="2YG-F8-4Up"/>
+                    <constraint firstItem="bwm-ua-plM" firstAttribute="leading" secondItem="O9v-Pa-TL3" secondAttribute="leadingMargin" id="551-2R-6ki"/>
+                    <constraint firstItem="uSo-5e-wDe" firstAttribute="top" secondItem="O9v-Pa-TL3" secondAttribute="topMargin" id="GBJ-3v-tXW"/>
+                    <constraint firstItem="uSo-5e-wDe" firstAttribute="trailing" secondItem="O9v-Pa-TL3" secondAttribute="trailingMargin" id="ID0-ZM-fII"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="uSo-5e-wDe" secondAttribute="bottom" id="SV9-MV-1Xk"/>
+                    <constraint firstItem="bwm-ua-plM" firstAttribute="bottom" secondItem="O9v-Pa-TL3" secondAttribute="bottomMargin" id="VSr-NA-MdE"/>
+                    <constraint firstItem="uSo-5e-wDe" firstAttribute="trailing" secondItem="O9v-Pa-TL3" secondAttribute="trailingMargin" id="WKC-Tj-YNJ"/>
+                    <constraint firstItem="bwm-ua-plM" firstAttribute="bottom" secondItem="O9v-Pa-TL3" secondAttribute="bottomMargin" id="Yid-Jm-qYr"/>
+                    <constraint firstItem="uSo-5e-wDe" firstAttribute="centerY" secondItem="bwm-ua-plM" secondAttribute="centerY" id="pbf-1R-2fc"/>
+                    <constraint firstItem="uSo-5e-wDe" firstAttribute="centerY" secondItem="bwm-ua-plM" secondAttribute="centerY" id="zDG-bq-gNg"/>
+                    <constraint firstItem="bwm-ua-plM" firstAttribute="top" secondItem="O9v-Pa-TL3" secondAttribute="topMargin" id="zlT-eN-zMh"/>
+                </constraints>
+                <variation key="default">
+                    <mask key="constraints">
+                        <exclude reference="Yid-Jm-qYr"/>
+                        <exclude reference="zlT-eN-zMh"/>
+                        <exclude reference="2YG-F8-4Up"/>
+                        <exclude reference="GBJ-3v-tXW"/>
+                        <exclude reference="ID0-ZM-fII"/>
+                        <exclude reference="SV9-MV-1Xk"/>
+                        <exclude reference="pbf-1R-2fc"/>
+                    </mask>
+                </variation>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="titleLabel" destination="bwm-ua-plM" id="39M-Kd-4LN"/>
+            </connections>
+            <point key="canvasLocation" x="427" y="185"/>
+        </tableViewCell>
+    </objects>
+</document>
