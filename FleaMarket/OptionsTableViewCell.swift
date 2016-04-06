@@ -21,7 +21,7 @@ class OptionsTableViewCell: UITableViewCell {
         self.button1.layer.borderColor = UIColor.lightGrayColor().CGColor
         self.button2.layer.borderWidth = 1
         self.button2.layer.borderColor = UIColor.lightGrayColor().CGColor
-        let image = UIColor.purpleColor().toImage()
+        let image = UIColor.orangeColor().toImage()
         self.button1.setBackgroundImage(image, forState: .Selected)
         self.button1.setTitleColor(UIColor.blackColor(), forState: .Normal)
         self.button1.setTitleColor(UIColor.whiteColor(), forState: .Selected)

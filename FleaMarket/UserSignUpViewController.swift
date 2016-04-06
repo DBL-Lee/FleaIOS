@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MBProgressHUD
 
 class UserSignUpViewController: UIViewController,UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate {
     
@@ -30,7 +31,7 @@ class UserSignUpViewController: UIViewController,UITableViewDataSource,UITableVi
         signupTable.registerNib(UINib(nibName: "VerifyCodeTableViewCell", bundle: nil), forCellReuseIdentifier: "VerifyCodeTableViewCell")
         signupBtn.setBackgroundImage(UIColor.orangeColor().toImage(), forState: .Normal)
         
-        let tap = UITapGestureRecognizer(target: self, action: "tapped:")
+        let tap = UITapGestureRecognizer(target: self, action: #selector(UserSignUpViewController.tapped(_:)))
         self.view.addGestureRecognizer(tap)
     }
     
@@ -47,7 +48,7 @@ class UserSignUpViewController: UIViewController,UITableViewDataSource,UITableVi
         let button = UIButton(type: .Custom)
         button.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
         button.setImage(image, forState: .Normal)
-        button.addTarget(self, action: "dismiss", forControlEvents: .TouchUpInside)
+        button.addTarget(self, action: #selector(UserSignUpViewController.dismiss), forControlEvents: .TouchUpInside)
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: button)
     }
     
@@ -79,7 +80,7 @@ class UserSignUpViewController: UIViewController,UITableViewDataSource,UITableVi
                 cell.setupCell("确认密码", placeholder: "请再次确认密码", showBtn: true)
                 confirmPasswordTextField = cell.textField
             case 3:
-                cell.setupCell("昵称", placeholder: "昵称一旦注册以后不能修改", showBtn: false)
+                cell.setupCell("昵称", placeholder: "中文英文和数字组合", showBtn: false)
                 nicknameTextField = cell.textField
             default: break
             }
@@ -90,7 +91,7 @@ class UserSignUpViewController: UIViewController,UITableViewDataSource,UITableVi
             verifycodeTextField = cell.textField
             sendBtn = cell.auxiBtn
             cell.setupCell("验证码", placeholder: "输入邮箱中的验证码")
-            cell.auxiBtn.addTarget(self, action: "sendVerificationEmail", forControlEvents: .TouchUpInside)
+            cell.auxiBtn.addTarget(self, action: #selector(UserSignUpViewController.sendVerificationEmail), forControlEvents: .TouchUpInside)
             return cell
         default:break
         }
@@ -100,24 +101,27 @@ class UserSignUpViewController: UIViewController,UITableViewDataSource,UITableVi
     var timer:NSTimer!
     var time = 60
     func sendVerificationEmail(){
+        let hud = MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
+        hud.labelText = "正在发送邮件"
         UserLoginHandler.instance.sendVerificationEmail(emailTextField.text!){
             id in
+            MBProgressHUD.hideHUDForView(self.navigationController!.view, animated: true)
             self.verifycodeID = Int(id)
         }
         sendBtn.setTitle("请等待\(time)秒", forState: .Normal)
         sendBtn.enabled = false
-        timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "update", userInfo: nil, repeats: false)
+        timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: #selector(UserSignUpViewController.update), userInfo: nil, repeats: false)
     }
 
     func update(){
-        time--
+        time -= 1
         sendBtn.setTitle("请等待\(time)秒", forState: .Normal)
         if time==0{
             sendBtn.setTitle("获取验证码", forState: .Normal)
             sendBtn.enabled = true
             time = 60
         }else{
-            NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "update", userInfo: nil, repeats: false)
+            NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: #selector(UserSignUpViewController.update), userInfo: nil, repeats: false)
         }
     }
     
@@ -127,8 +131,8 @@ class UserSignUpViewController: UIViewController,UITableViewDataSource,UITableVi
     
     func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
         let newString = (textField.text! as NSString).stringByReplacingCharactersInRange(range, withString: string)
-        let length = newString.characters.count
-        var otherlength = 0
+        _ = newString.characters.count
+        _ = 0
 //        if textField == usernameTextField{
 //            otherlength = passwordTextField.text!.characters.count
 //        }else{
@@ -210,22 +214,19 @@ class UserSignUpViewController: UIViewController,UITableViewDataSource,UITableVi
             return
         }
         
+        
+        let hud = MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
+        hud.labelText = "正在注册"
+        
         UserLoginHandler.instance.registerNewAccount(emailTextField.text!, password: passwordTextField.text!, nickname: nicknameTextField.text!,verifycode: verifycodeTextField.text!,verifyID: verifycodeID!){
-            result in
+            result, errorStr in
+            MBProgressHUD.hideHUDForView(self.navigationController!.view, animated: true)
             let alert = UIAlertController(title: nil, message: nil, preferredStyle: .Alert)
             alert.addAction(UIAlertAction(title: "好的", style: .Cancel, handler: nil))
-            switch result{
-            case .Success:
+            if result{
                 self.dismiss()
-                return
-            case .verifyCodeExpired:
-                alert.message = "验证码已过期请再次获取!"
-            case .wrongVerifyCode:
-                alert.message = "验证码不正确!"
-            case .duplicateEmail:
-                alert.message = "邮箱已被注册!"
-            case .duplicateNickname:
-                alert.message = "昵称已被注册!"
+            }else{
+                alert.message = errorStr!
             }
             self.presentViewController(alert, animated: true, completion: nil)
         }

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9532" systemVersion="14F1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
@@ -26,7 +26,7 @@
                             <constraint firstAttribute="height" constant="43" id="ty8-Z3-3ag"/>
                             <constraint firstAttribute="width" constant="80" id="zTq-ad-nF9"/>
                         </constraints>
-                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
@@ -37,12 +37,13 @@
                     <constraint firstAttribute="bottom" secondItem="FrK-6A-dGx" secondAttribute="bottom" id="ZoF-C9-Ozp"/>
                     <constraint firstItem="AJ6-DC-stR" firstAttribute="leading" secondItem="FrK-6A-dGx" secondAttribute="trailing" constant="8" symbolic="YES" id="j0p-dS-QLO"/>
                     <constraint firstItem="FrK-6A-dGx" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="pDl-Zr-ByZ"/>
-                    <constraint firstAttribute="trailing" secondItem="AJ6-DC-stR" secondAttribute="trailing" id="quX-Wi-Hjc"/>
+                    <constraint firstAttribute="trailing" secondItem="AJ6-DC-stR" secondAttribute="trailing" constant="8" id="quX-Wi-Hjc"/>
                 </constraints>
             </tableViewCellContentView>
             <connections>
                 <outlet property="detailLabel" destination="AJ6-DC-stR" id="ECc-fX-T9f"/>
                 <outlet property="label" destination="FrK-6A-dGx" id="tZI-TU-tKy"/>
+                <outlet property="rightConstraint" destination="quX-Wi-Hjc" id="OAD-Y2-xGC"/>
             </connections>
             <point key="canvasLocation" x="139" y="346"/>
         </tableViewCell>

@@ -89,9 +89,14 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "Pods-FleaMarket/AWSS3.framework"
   install_framework "Pods-FleaMarket/Alamofire.framework"
   install_framework "Pods-FleaMarket/FastttCamera.framework"
+  install_framework "Pods-FleaMarket/JSQMessagesViewController.framework"
+  install_framework "Pods-FleaMarket/JSQSystemSoundPlayer.framework"
   install_framework "Pods-FleaMarket/KDCircularProgress.framework"
+  install_framework "Pods-FleaMarket/MBProgressHUD.framework"
+  install_framework "Pods-FleaMarket/MJRefresh.framework"
   install_framework "Pods-FleaMarket/SimpleKeychain.framework"
   install_framework "Pods-FleaMarket/SwiftyJSON.framework"
+  install_framework "Pods-FleaMarket/TOCropViewController.framework"
   install_framework "Pods-FleaMarket/UITextView_Placeholder.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
@@ -100,8 +105,13 @@ if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "Pods-FleaMarket/AWSS3.framework"
   install_framework "Pods-FleaMarket/Alamofire.framework"
   install_framework "Pods-FleaMarket/FastttCamera.framework"
+  install_framework "Pods-FleaMarket/JSQMessagesViewController.framework"
+  install_framework "Pods-FleaMarket/JSQSystemSoundPlayer.framework"
   install_framework "Pods-FleaMarket/KDCircularProgress.framework"
+  install_framework "Pods-FleaMarket/MBProgressHUD.framework"
+  install_framework "Pods-FleaMarket/MJRefresh.framework"
   install_framework "Pods-FleaMarket/SimpleKeychain.framework"
   install_framework "Pods-FleaMarket/SwiftyJSON.framework"
+  install_framework "Pods-FleaMarket/TOCropViewController.framework"
   install_framework "Pods-FleaMarket/UITextView_Placeholder.framework"
 fi

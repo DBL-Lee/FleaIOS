@@ -14,6 +14,7 @@ class DetailDisclosureTableViewCell: UITableViewCell {
     
     @IBOutlet weak var detailLabel: UILabel!
     
+    @IBOutlet weak var rightConstraint: NSLayoutConstraint!
     
     override func awakeFromNib() {
         super.awakeFromNib()

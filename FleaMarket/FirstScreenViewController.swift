@@ -10,20 +10,13 @@ import UIKit
 import CoreData
 import Alamofire
 import SwiftyJSON
+import MJRefresh
 
 class FirstScreenViewController: UIViewController,UITableViewDelegate,UITableViewDataSource,UIScrollViewDelegate {
 
     var products:[Product] = []
     var productCategory:[NSManagedObject] = []
-    var nextPageURL:String = "" {
-        didSet{
-            if nextPageURL == ""{
-                self.footerView.text = "没有更多商品了"
-            }else{
-                self.footerView.text = "加载中..."
-            }
-        }
-    }
+    var nextPageURL:String = ""
     
     var fetchRequest = FetchProductRequest()
     
@@ -31,9 +24,9 @@ class FirstScreenViewController: UIViewController,UITableViewDelegate,UITableVie
     var categoryCell:CategoryTableViewCell!
     
     @IBOutlet weak var tableView: UITableView!
-    var refreshControl = UIRefreshControl()
-    
-    var footerView:UILabel!
+    var refControl = UIRefreshControl()
+    var refreshHeader:MJRefreshNormalHeader!
+    var refreshFooter:MJRefreshBackFooter!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,8 +43,7 @@ class FirstScreenViewController: UIViewController,UITableViewDelegate,UITableVie
         self.tableView.rowHeight = UITableViewAutomaticDimension
         self.tableView.estimatedRowHeight = self.view.frame.height/3
         
-        refreshControl.addTarget(self, action: "refresh", forControlEvents: .ValueChanged)
-        self.tableView.addSubview(refreshControl)
+     
         
         //fetch primary and secondary category from server if needed
         Alamofire.request(.GET, getCategoryVersionURL).responseString{
@@ -66,6 +58,7 @@ class FirstScreenViewController: UIViewController,UITableViewDelegate,UITableVie
                     switch response.result{
                     case .Success:
                         if let value = response.result.value {
+                            print(value)
                             let json = JSON(value)
                             CoreDataHandler.instance.updateCategoryToCoreData(json)
                             NSUserDefaults.standardUserDefaults().setValue(currentVersion, forKey: "CategoryVersion")
@@ -86,15 +79,12 @@ class FirstScreenViewController: UIViewController,UITableViewDelegate,UITableVie
         categoryCell.selectionStyle = .None
         categoryCell.setUpCollectionView(productCategory, callback: categoryChosen)
         
+        refreshHeader = MJRefreshNormalHeader(refreshingTarget: self, refreshingAction: #selector(refresh))
+        self.tableView.mj_header = refreshHeader
+        refreshFooter = MJRefreshBackNormalFooter(refreshingTarget: self, refreshingAction: #selector(loadMore))
+        self.tableView.mj_footer = refreshFooter
         
-        footerView = UILabel(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 44))
-        footerView.textAlignment = .Center
-        footerView.font = UIFont.systemFontOfSize(12)
-        footerView.text = "加载中..."
-        tableView.tableFooterView = footerView
-        
-        self.refreshControl.beginRefreshing()
-        refresh()
+        refreshHeader.beginRefreshing()
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -110,27 +100,21 @@ class FirstScreenViewController: UIViewController,UITableViewDelegate,UITableVie
     
     func refresh(){
         fetchRequest.request{
-            previous,next,products in
-            self.nextPageURL = next
-            self.products = products
-            self.tableView.reloadData()
-            self.refreshControl.endRefreshing()
+            previous,next,products,success in
+            
+            self.refreshHeader.endRefreshing()
+            if success{
+                self.nextPageURL = next
+                self.products = products
+                self.tableView.reloadData()
+            }else{
+                OverlaySingleton.addToView(self.navigationController!.view, text: NetworkProblemString)
+            }
         }
     }
-    
-    func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
-        let currentOffset = scrollView.contentOffset.y
-        let maximumOffset = scrollView.contentSize.height-scrollView.frame.height
-        if currentOffset/maximumOffset > 0.9 {
-            loadMore()
-        }
-    }
-    
-    var loadingMore = false
     
     func loadMore(){
-        if nextPageURL != "" && !loadingMore{
-            loadingMore = true
+        if nextPageURL != "" {
             Alamofire.request(.GET, nextPageURL).responseJSON{
                 response in
                 switch response.result{
@@ -143,11 +127,19 @@ class FirstScreenViewController: UIViewController,UITableViewDelegate,UITableVie
                         self.products.append(Product.deserialize(productjson))
                     }
                     self.tableView.insertRowsAtIndexPaths(indexPaths, withRowAnimation: .None)
-                    self.loadingMore = false
+                    if self.nextPageURL == ""{
+                        self.refreshFooter.endRefreshingWithNoMoreData()
+                    }else{
+                        self.refreshFooter.endRefreshing()
+                    }
+                    
                 case .Failure(let e):
-                    print(e)
+                    self.refreshFooter.endRefreshingWithNoMoreData()
+                    OverlaySingleton.addToView(self.navigationController!.view, text: NetworkProblemString)
                 }
             }
+        }else{
+            self.refreshFooter.endRefreshingWithNoMoreData()
         }
     }
 
@@ -162,8 +154,8 @@ class FirstScreenViewController: UIViewController,UITableViewDelegate,UITableVie
             return categoryCell
         case 2:
             let cell = tableView.dequeueReusableCellWithIdentifier("LookAroundTableViewCell", forIndexPath: indexPath) as! LookAroundTableViewCell
-            cell.selectionStyle = .None
-            cell.setUpLookAroundCell(products[indexPath.row],productid: indexPath.row,callback: presentPreviewVC)
+            cell.tag = indexPath.row
+            cell.setUpLookAroundCell(products[indexPath.row], row: indexPath.row ,callback: presentPreviewVC)
             return cell
         default:
             let cell = UITableViewCell()
@@ -221,6 +213,7 @@ class FirstScreenViewController: UIViewController,UITableViewDelegate,UITableVie
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
         if indexPath.section==2{
             let vc = ProductDetailTableViewController()
             vc.product = products[indexPath.row]
@@ -230,7 +223,7 @@ class FirstScreenViewController: UIViewController,UITableViewDelegate,UITableVie
     }
 
     func presentPreviewVC(productid:Int,imageid:Int){
-        let vc = PreviewImagesViewController()
+        let vc = PreviewImagesViewController(nibName: "PreviewImagesViewController", bundle: nil)
         vc.imagesUUID = products[productid].imageUUID
         vc.currentImage = imageid
         vc.hidesBottomBarWhenPushed = true

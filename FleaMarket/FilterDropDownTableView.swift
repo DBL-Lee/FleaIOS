@@ -19,7 +19,7 @@ class FilterDropDownTableView:UITableView,UITableViewDataSource,UITableViewDeleg
         button.setTitle("确定", forState: .Normal)
         button.setBackgroundImage(UIColor.orangeColor().toImage(), forState: .Normal)
         button.tintColor = UIColor.whiteColor()
-        button.addTarget(self, action: "confirm", forControlEvents: .TouchUpInside)
+        button.addTarget(self, action: #selector(FilterDropDownTableView.confirm), forControlEvents: .TouchUpInside)
         view.addSubview(button)
         button.autoresizingMask = [.FlexibleHeight,.FlexibleWidth]
         button.center = view.center

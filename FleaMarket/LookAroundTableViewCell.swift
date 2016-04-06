@@ -18,7 +18,7 @@ class LookAroundTableViewCell: UITableViewCell,UICollectionViewDataSource,UIColl
     @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var locationLabel: UILabel!
     var product:Product!
-    var productid:Int = 0
+    var row:Int = 0
     var callback:(Int,Int)->Void = {_,_ in}
     
     override func awakeFromNib() {
@@ -53,23 +53,15 @@ class LookAroundTableViewCell: UITableViewCell,UICollectionViewDataSource,UIColl
         return "1个月以上"
     }
 
-    func setUpLookAroundCell(product:Product,productid:Int,callback:(Int,Int)->Void){
+    func setUpLookAroundCell(product:Product,row:Int,callback:(Int,Int)->Void){
         let sellerName = product.usernickname
         
         self.avatarView.image = UIImage(named:"defaultavatar.png")
         
-        let fileURL = RetrieveImageFromS3.localDirectoryOf(product.useravatar)
-        if product.useravatar == "default"{
-            self.avatarView.image = UIImage(named:"defaultavatar.png")
-        }else if NSFileManager.defaultManager().fileExistsAtPath(fileURL.path!){
-            self.avatarView.image = UIImage(contentsOfFile: fileURL.path!)!
-        }else{
-            RetrieveImageFromS3.retrieveImage(product.useravatar, bucket: S3ImagesBucketName){
-                self.avatarView.image = UIImage(contentsOfFile: fileURL.path!)!
-            }
-        }
+        avatarView.tag = self.tag
+        AvatarFactory.setupAvatarImageView(self.avatarView, avatar: product.useravatar)
         
-        self.productid = productid
+        self.row = row
         self.callback = callback
         
         let MARGIN:CGFloat = 10
@@ -117,19 +109,26 @@ class LookAroundTableViewCell: UITableViewCell,UICollectionViewDataSource,UIColl
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("LookAroundCollectionViewCell", forIndexPath: indexPath) as! LookAroundCollectionViewCell
-        let tap = UITapGestureRecognizer(target: self, action: "handleTap:")
+        let tap = UITapGestureRecognizer(target: self, action: #selector(LookAroundTableViewCell.handleTap(_:)))
         cell.addGestureRecognizer(tap)
         cell.index = indexPath.row
         
+        //small prefix for thumbnail
         let uuid = "small-"+self.product.imageUUID[indexPath.row]
         let fileURL = RetrieveImageFromS3.localDirectoryOf(uuid)
+        
+        
         if NSFileManager.defaultManager().fileExistsAtPath(fileURL.path!){
             cell.setImage(UIImage(contentsOfFile: fileURL.path!)!)
         }else{
             cell.setImage(UIImage(named: "loading.png")!)
-            RetrieveImageFromS3.retrieveImage(uuid,bucket: S3ImagesBucketName){
-                _ in
-                self.imagesCollectionView.reloadItemsAtIndexPaths([indexPath])
+            RetrieveImageFromS3.instance.retrieveImage(uuid,bucket: S3ImagesBucketName){
+                bool in
+                if bool{
+                    self.imagesCollectionView.reloadItemsAtIndexPaths([indexPath])
+                }else{//TODO: download image fail
+                    
+                }
             }
         }
         return cell
@@ -137,7 +136,16 @@ class LookAroundTableViewCell: UITableViewCell,UICollectionViewDataSource,UIColl
     
     func handleTap(tap:UITapGestureRecognizer){
         let view = tap.view! as! LookAroundCollectionViewCell
-        callback(productid,view.index)
+        callback(row,view.index)
+    }
+    
+    override func hitTest(point: CGPoint, withEvent event: UIEvent?) -> UIView? {
+        let view = super.hitTest(point, withEvent: event)
+        if view == nil { return nil}
+        if view!.isKindOfClass(UICollectionView){
+            return self
+        }
+        return view
     }
     
     

@@ -7,9 +7,11 @@
 //
 
 import UIKit
+import JSQMessagesViewController
 
 class MineTopTableViewCell: UITableViewCell {
 
+    @IBOutlet weak var avatarImageView: UIImageView!
     @IBOutlet weak var unloginLabel: UILabel!
     @IBOutlet weak var loginBtn: UIButton!
     
@@ -17,10 +19,8 @@ class MineTopTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         unloginBtn.setBackgroundImage(UIColor.orangeColor().toImage(), forState: .Normal)
-        
-    }
-
-    func setupCell(){
+        let square = UIImage(named: "defaultavatar.png")
+        avatarImageView.image = JSQMessagesAvatarImageFactory.avatarImageWithImage(square, diameter: UInt(avatarImageView.frame.width)).avatarImage
         
     }
     

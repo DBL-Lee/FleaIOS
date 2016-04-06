@@ -24,11 +24,11 @@ class PostImagePreviewViewController: UIViewController {
         
 
         
-        let button = UIBarButtonItem(title: "取消", style: UIBarButtonItemStyle.Plain, target: self, action: "dismiss")
+        let button = UIBarButtonItem(title: "取消", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(PostImagePreviewViewController.dismiss))
         button.tintColor = UIColor.whiteColor()
         self.navigationItem.leftBarButtonItem = button
         
-        let button2 = UIBarButtonItem(title: "删除", style: UIBarButtonItemStyle.Plain, target: self, action: "delete")
+        let button2 = UIBarButtonItem(title: "删除", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(PostImagePreviewViewController.delete as (PostImagePreviewViewController) -> () -> ()))
         button2.tintColor = UIColor.redColor()
         self.navigationItem.rightBarButtonItem = button2
        
@@ -36,7 +36,7 @@ class PostImagePreviewViewController: UIViewController {
         button3.setTitle(mainTitle, forState: .Normal)
         button3.setTitleColor(UIColor.yellowColor(), forState: .Normal)
         if mainTitleIsButton{
-            button3.addTarget(self, action: "setMainIm", forControlEvents: .TouchUpInside)
+            button3.addTarget(self, action: #selector(PostImagePreviewViewController.setMainIm), forControlEvents: .TouchUpInside)
         }
         self.navigationItem.titleView = button3
         self.view.backgroundColor = UIColor.blackColor()

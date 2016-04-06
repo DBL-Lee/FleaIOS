@@ -29,7 +29,27 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>JSQMessagesViewController.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>JSQSystemSoundPlayer.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>KDCircularProgress.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>MBProgressHUD.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>MJRefresh.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -49,6 +69,16 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>TOCropViewController-TOCropViewControllerBundle.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>TOCropViewController.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>UITextView+Placeholder.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -57,6 +87,16 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>04C6CF768FF6FEA321E66ED47139D26D</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>138AD76ADBF64D817C9AE4711265F67B</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>2424F3B8426EC2E6A0EEA813BFA12ACD</key>
 		<dict>
 			<key>primary</key>
@@ -72,12 +112,12 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>6E1780C7BDCB8A4EC8FDB1E99D943043</key>
+		<key>4C52C2CC7F7C278ACF8547FF532EF7BA</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>76E04D1189D0277E3BE8616DFEE43416</key>
+		<key>6847254D016329D4A531D34ED2B6DF81</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -92,7 +132,17 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>A9EDE7457DA1E99CD88504BA54789F64</key>
+		<key>95DB89A8BFC5FF0BF98458651D0163CD</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>9966144394522B6D260FD62EEADA9F6B</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>9C9C54EAAFF9378E65B831F2BC7D6A68</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -102,7 +152,17 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>E8FF0886C259BCEB6D77DCE75236F721</key>
+		<key>E61CE3B6DFA1FE6B3E296965C76C0E10</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>EDA125ADA52355B7CA6DF7BA96918357</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>FA26348C2690DC9D7F5E157E6C3AF686</key>
 		<dict>
 			<key>primary</key>
 			<true/>

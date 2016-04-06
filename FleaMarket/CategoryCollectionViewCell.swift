@@ -11,11 +11,25 @@ import UIKit
 class CategoryCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var label: UILabel!
-    func setUpButton(name:String){
-        self.label.adjustsFontSizeToFitWidth = true
+    func setUpButton(name:String,icon:String){
         self.label.text = name
         self.label.font = UIFont.systemFontOfSize(12)
-        let im = UIImage(named: "电脑配件.png")!
-        self.imageView.image = im
+        self.label.sizeToFit()
+        self.label.setNeedsLayout()
+        
+        self.imageView.image = nil
+        
+        let fileURL = LocalIconDirectory.URLByAppendingPathComponent(icon)
+        if NSFileManager.defaultManager().fileExistsAtPath(fileURL.path!){
+            self.imageView.image = UIImage(contentsOfFile: fileURL.path!)!
+        }else{
+            RetrieveImageFromS3.retrieveCategoryIcon(icon){
+                print(NSFileManager.defaultManager().fileExistsAtPath(fileURL.path!))
+                if (NSFileManager.defaultManager().fileExistsAtPath(fileURL.path!)){
+                    self.imageView.image = UIImage(contentsOfFile: fileURL.path!)!
+                }
+            }
+        }
+        
     }
 }

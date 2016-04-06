@@ -70,6 +70,8 @@ class PostItemTableViewController: UITableViewController {
         let temp = self.images
         self.images = []
         self.addImages(temp)
+        
+        //LoadingOverlay.shared.hideOverlayView()
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -80,13 +82,12 @@ class PostItemTableViewController: UITableViewController {
         let button = UIButton(type: .Custom)
         button.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
         button.setImage(image, forState: .Normal)
-        button.addTarget(self, action: "dismiss", forControlEvents: .TouchUpInside)
+        button.addTarget(self, action: #selector(PostItemTableViewController.dismiss), forControlEvents: .TouchUpInside)
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: button)
         self.navigationController?.navigationBar.barStyle = UIBarStyle.Default
         self.navigationController?.navigationBar.translucent = false
-        self.navigationController?.navigationBar.barTintColor = UIColor.purpleColor()
-        self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
-        self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.whiteColor()]
+        self.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
+        self.navigationController?.navigationBar.tintColor = UIColor.blackColor()
     }
 
     func setupUploadRequest(image:UIImage,thumbnailUUID:String? = nil)->AWSS3TransferManagerUploadRequest{
@@ -116,7 +117,7 @@ class PostItemTableViewController: UITableViewController {
         
         let transferManager = AWSS3TransferManager.defaultS3TransferManager()
         
-        uploading++
+        uploading += 1
         
         transferManager.upload(uploadRequest).continueWithBlock {
             task -> AnyObject! in
@@ -145,7 +146,7 @@ class PostItemTableViewController: UITableViewController {
             
             //upload complete
             if task.result != nil{
-                self.uploading--
+                self.uploading -= 1
                 GLOBAL_imagesUUID.append(uploadRequest.key!)
             }
             return nil
@@ -221,7 +222,7 @@ class PostItemTableViewController: UITableViewController {
             self.staticCell.changeMainIm(0)
         }
         if i<mainIm{
-            mainIm--
+            mainIm -= 1
         }
         self.images.removeAtIndex(i)
         let uuid = self.imagesUUID.removeAtIndex(i)
@@ -478,10 +479,10 @@ class PostItemTableViewController: UITableViewController {
         if section == numberOfSectionsInTableView(self.tableView)-1{
             let view = UIView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 44))
             let postBtn = UIButton(frame: view.frame)
-            postBtn.backgroundColor = UIColor.purpleColor()
+            postBtn.backgroundColor = UIColor.orangeColor()
             postBtn.tintColor = UIColor.whiteColor()
             postBtn.setTitle("发布", forState: .Normal)
-            postBtn.addTarget(self, action: "postNewItem", forControlEvents: .TouchUpInside)
+            postBtn.addTarget(self, action: #selector(PostItemTableViewController.postNewItem), forControlEvents: .TouchUpInside)
             view.addSubview(postBtn)
             return view
         }

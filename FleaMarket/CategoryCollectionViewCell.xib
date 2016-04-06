@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="14F1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9532" systemVersion="14F1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
@@ -42,12 +42,13 @@
             </view>
             <constraints>
                 <constraint firstItem="NxP-h9-s5j" firstAttribute="leading" secondItem="92T-5D-76S" secondAttribute="leading" constant="21" id="07C-BZ-Vk7"/>
+                <constraint firstItem="NxP-h9-s5j" firstAttribute="centerX" secondItem="92T-5D-76S" secondAttribute="centerX" id="0A6-9I-tR2"/>
                 <constraint firstAttribute="trailing" secondItem="NxP-h9-s5j" secondAttribute="trailing" constant="25" id="1ZU-CN-fdb"/>
                 <constraint firstItem="NxP-h9-s5j" firstAttribute="top" secondItem="92T-5D-76S" secondAttribute="top" constant="8" id="3EN-kw-vdL"/>
                 <constraint firstItem="c2j-pe-lCc" firstAttribute="trailing" secondItem="92T-5D-76S" secondAttribute="trailingMargin" id="Kkb-MR-nK0"/>
                 <constraint firstItem="c2j-pe-lCc" firstAttribute="leading" secondItem="92T-5D-76S" secondAttribute="leadingMargin" id="OKr-4W-f1F"/>
-                <constraint firstAttribute="bottom" secondItem="c2j-pe-lCc" secondAttribute="bottom" constant="2" id="dJv-C9-7Ph"/>
-                <constraint firstItem="c2j-pe-lCc" firstAttribute="top" secondItem="NxP-h9-s5j" secondAttribute="bottom" constant="10" id="fHA-SK-y9f"/>
+                <constraint firstAttribute="bottom" secondItem="c2j-pe-lCc" secondAttribute="bottom" id="dJv-C9-7Ph"/>
+                <constraint firstItem="c2j-pe-lCc" firstAttribute="top" secondItem="NxP-h9-s5j" secondAttribute="bottom" constant="8" id="fHA-SK-y9f"/>
                 <constraint firstItem="c2j-pe-lCc" firstAttribute="centerX" secondItem="NxP-h9-s5j" secondAttribute="centerX" id="l7V-DW-kew"/>
                 <constraint firstItem="NxP-h9-s5j" firstAttribute="top" secondItem="92T-5D-76S" secondAttribute="topMargin" id="uYI-7M-qX3"/>
                 <constraint firstItem="NxP-h9-s5j" firstAttribute="leading" secondItem="92T-5D-76S" secondAttribute="leading" constant="25" id="zQn-L3-pVi"/>
@@ -59,6 +60,8 @@
                     <exclude reference="1ZU-CN-fdb"/>
                     <exclude reference="3EN-kw-vdL"/>
                     <exclude reference="zQn-L3-pVi"/>
+                    <exclude reference="Kkb-MR-nK0"/>
+                    <exclude reference="OKr-4W-f1F"/>
                 </mask>
             </variation>
             <connections>

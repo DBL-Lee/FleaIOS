@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MBProgressHUD
 
 class UserLoginViewController: UIViewController,UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate {
 
@@ -35,7 +36,7 @@ class UserLoginViewController: UIViewController,UITableViewDataSource,UITableVie
         
         loginBtn.enabled = false
         
-        let tap = UITapGestureRecognizer(target: self, action: "tapped:")
+        let tap = UITapGestureRecognizer(target: self, action: #selector(UserLoginViewController.tapped(_:)))
         self.view.addGestureRecognizer(tap)
     }
     
@@ -52,7 +53,7 @@ class UserLoginViewController: UIViewController,UITableViewDataSource,UITableVie
         let button = UIButton(type: .Custom)
         button.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
         button.setImage(image, forState: .Normal)
-        button.addTarget(self, action: "dismiss", forControlEvents: .TouchUpInside)
+        button.addTarget(self, action: #selector(UserLoginViewController.dismiss), forControlEvents: .TouchUpInside)
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: button)
     }
     
@@ -115,7 +116,8 @@ class UserLoginViewController: UIViewController,UITableViewDataSource,UITableVie
     @IBAction func loginTapped(sender: AnyObject) {
         self.view.endEditing(true)
         UserLoginHandler.instance.login(usernameTextField.text!, password: passwordTextField.text!, completion: loginResponse)
-        LoadingOverlay.shared.showOverlay(self.navigationController!.view)
+        let hud = MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
+        hud.labelText = "登录中"
     }
     
     @IBAction func signUp(sender: AnyObject) {
@@ -127,7 +129,7 @@ class UserLoginViewController: UIViewController,UITableViewDataSource,UITableVie
     }
     
     func loginResponse(response:Bool){
-        LoadingOverlay.shared.hideOverlayView()
+        MBProgressHUD.hideHUDForView(self.navigationController!.view, animated: true)
         if response{
             self.dismiss()
         }else{

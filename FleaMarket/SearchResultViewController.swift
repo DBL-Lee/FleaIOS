@@ -9,6 +9,7 @@
 import UIKit
 import Alamofire
 import SwiftyJSON
+import MJRefresh
 
 class SearchResultViewController: UIViewController,UITableViewDataSource,UITableViewDelegate,UIScrollViewDelegate,UISearchBarDelegate,UIGestureRecognizerDelegate {
     @IBOutlet weak var tableView: UITableView!
@@ -42,18 +43,11 @@ class SearchResultViewController: UIViewController,UITableViewDataSource,UITable
     
     @IBOutlet weak var dropDownOverlay:UIView!
     
-    var footerLabel:UILabel = UILabel()
     var fetchRequest:FetchProductRequest!
-    var nextURL:String = ""{
-        didSet{
-            if nextURL == ""{
-                self.footerLabel.text = "没有更多商品了"
-            }else{
-                self.footerLabel.text = "加载中..."
-            }
-        }
-    }
+    var nextURL:String = ""
+    
     var searchText = "请输入宝贝关键字或@卖家名"
+    var refreshFooter:MJRefreshBackNormalFooter!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -115,15 +109,15 @@ class SearchResultViewController: UIViewController,UITableViewDataSource,UITable
         searchController.hidesNavigationBarDuringPresentation = false
         navigationItem.titleView = searchController.searchBar
         
-        categoryBtn.addTarget(self, action: "tapCategory", forControlEvents: .TouchUpInside)
+        categoryBtn.addTarget(self, action: #selector(SearchResultViewController.tapCategory), forControlEvents: .TouchUpInside)
         
-        filterBtn.addTarget(self, action: "tapFilter", forControlEvents: .TouchUpInside)
+        filterBtn.addTarget(self, action: #selector(SearchResultViewController.tapFilter), forControlEvents: .TouchUpInside)
         
-        sortBtn.addTarget(self, action: "tapSort", forControlEvents: .TouchUpInside)
+        sortBtn.addTarget(self, action: #selector(SearchResultViewController.tapSort), forControlEvents: .TouchUpInside)
         
         self.dropDownOverlay.backgroundColor = UIColor(white: 0, alpha: 0.5)
         self.dropDownOverlay.clipsToBounds = true
-        let tap = UITapGestureRecognizer(target: self, action: "tapOnOverlay:")
+        let tap = UITapGestureRecognizer(target: self, action: #selector(SearchResultViewController.tapOnOverlay(_:)))
         tap.delegate = self
         self.dropDownOverlay.addGestureRecognizer(tap)
         
@@ -144,6 +138,9 @@ class SearchResultViewController: UIViewController,UITableViewDataSource,UITable
         self.dropDownOverlay.addSubview(sortView)
         
         fetchRequest.request(parseRequest)
+        
+        refreshFooter = MJRefreshBackNormalFooter(refreshingTarget: self, refreshingAction: #selector(loadMore))
+        self.tableView.mj_footer = refreshFooter
     }
     
     func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool {
@@ -287,7 +284,7 @@ class SearchResultViewController: UIViewController,UITableViewDataSource,UITable
         let button = UIButton(type: .Custom)
         button.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
         button.setImage(image, forState: .Normal)
-        button.addTarget(self, action: "dismiss", forControlEvents: .TouchUpInside)
+        button.addTarget(self, action: #selector(SearchResultViewController.dismiss), forControlEvents: .TouchUpInside)
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: button)
         self.navigationController?.navigationBar.barTintColor = UIColor(white: 0.95, alpha: 1)
         self.navigationController?.navigationBar.tintColor = UIColor.blackColor()
@@ -304,43 +301,23 @@ class SearchResultViewController: UIViewController,UITableViewDataSource,UITable
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         
-        footerLabel = UILabel(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 44))
-        footerLabel.font = UIFont.systemFontOfSize(12)
-        footerLabel.textAlignment = .Center
-        footerLabel.textColor = UIColor.grayColor()
-        if nextURL==""{
-            footerLabel.text = "没有更多宝贝了"
-        }else{
-            footerLabel.text = "加载中..."
-        }
-        
-        tableView.tableFooterView = footerLabel
-        
         self.categoryView.transform = CGAffineTransformMakeTranslation(0, -self.categoryView.frame.height)
         self.filterView.transform = CGAffineTransformMakeTranslation(0, -self.filterView.frame.height)
         self.sortView.transform = CGAffineTransformMakeTranslation(0, -self.sortView.frame.height)
     }
     
-    func parseRequest(_:String,next:String,p:[Product]){
-        self.nextURL = next
-        self.loadingMore = false
-        self.products = p
-        self.tableView.reloadData()
-    }
-    
-    func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
-        let currentOffset = scrollView.contentOffset.y
-        let maximumOffset = scrollView.contentSize.height-scrollView.frame.height
-        if currentOffset/maximumOffset > 0.9 {
-            loadMore()
+    func parseRequest(_:String,next:String,p:[Product],success:Bool){
+        if success{
+            self.nextURL = next
+            self.products = p
+            self.tableView.reloadData()
+        }else{
+            OverlaySingleton.addToView(self.navigationController!.view, text: NetworkProblemString)
         }
     }
     
-    var loadingMore = false
-    
     func loadMore(){
-        if nextURL != "" && !loadingMore{
-            loadingMore = true
+        if nextURL != ""{
             Alamofire.request(.GET, nextURL).responseJSON{
                 response in
                 switch response.result{
@@ -353,11 +330,20 @@ class SearchResultViewController: UIViewController,UITableViewDataSource,UITable
                         self.products.append(Product.deserialize(productjson))
                     }
                     self.tableView.insertRowsAtIndexPaths(indexPaths, withRowAnimation: .None)
-                    self.loadingMore = false
+                    if self.nextURL == ""{
+                        self.refreshFooter.endRefreshingWithNoMoreData()
+                    }else{
+                        self.refreshFooter.endRefreshing()
+                    }
                 case .Failure(let e):
                     print(e)
+                    self.refreshFooter.endRefreshingWithNoMoreData()
+                    OverlaySingleton.addToView(self.navigationController!.view, text: NetworkProblemString)
                 }
             }
+        }else{
+            
+            self.refreshFooter.endRefreshingWithNoMoreData()
         }
     }
     
@@ -461,6 +447,7 @@ class SearchResultViewController: UIViewController,UITableViewDataSource,UITable
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("SearchResultTableViewCell", forIndexPath: indexPath) as! SearchResultTableViewCell
+        cell.tag = indexPath.row
         cell.setupCell(products[indexPath.row])
         cell.selectionStyle = .None
         return cell

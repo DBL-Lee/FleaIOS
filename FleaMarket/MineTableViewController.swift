@@ -9,6 +9,7 @@
 import UIKit
 import Alamofire
 import SwiftyJSON
+import MBProgressHUD
 
 class MineTableViewController: UITableViewController {
 
@@ -16,12 +17,13 @@ class MineTableViewController: UITableViewController {
     
     /*
     头像
+    修改资料
     ------------
     发布的
     卖出的
     买到的
     ------------
-    好友
+    //好友
     ------------
     设置
 
@@ -32,6 +34,9 @@ class MineTableViewController: UITableViewController {
         self.tableView.registerNib(UINib(nibName: "MineTopLoggedInTableViewCell", bundle: nil), forCellReuseIdentifier: "MineTopLoggedInTableViewCell")
         self.tableView.registerNib(UINib(nibName: "MineNormalTableViewCell", bundle: nil), forCellReuseIdentifier: "MineNormalTableViewCell")
         self.tableView.tableFooterView = UIView()
+        
+        let hud = MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
+        hud.labelText = "登录中"
         
         self.tableView.rowHeight = UITableViewAutomaticDimension
         self.tableView.estimatedRowHeight = 44
@@ -44,6 +49,9 @@ class MineTableViewController: UITableViewController {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.barStyle = .Default
         self.navigationController?.navigationBar.translucent = false
+        self.navigationController?.navigationBar.tintColor = UIColor.blackColor()
+        self.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
+        
         self.edgesForExtendedLayout = .None
         self.navigationItem.title = "我的"
         if UserLoginHandler.instance.loggedIn(){
@@ -53,6 +61,16 @@ class MineTableViewController: UITableViewController {
                 case .Success:
                     if response.response?.statusCode<400{
                         let json = JSON(response.result.value!)
+                        UserLoginHandler.instance.getUserDetailFromCloud(json["id"].intValue, emusername: nil){
+                            user in
+                            MBProgressHUD.hideHUDForView(self.navigationController!.view, animated: true)
+                            if let user = user{
+                                
+                            }else{
+                                
+                            }
+                        }
+                        self.id = json["id"].intValue
                         self.posted = json["posted"].intValue
                         self.sold = json["sold"].intValue
                         self.bought = json["bought"].intValue
@@ -61,19 +79,25 @@ class MineTableViewController: UITableViewController {
                         self.loggedIn = true
                         self.tableView.reloadData()
                     }else{
+                        MBProgressHUD.hideHUDForView(self.navigationController!.view, animated: true)
                         self.loggedIn = false
                         self.tableView.reloadData()
                     }
                 case .Failure(let e):
                     print(e)
+                    MBProgressHUD.hideHUDForView(self.navigationController!.view, animated: true)
+                    OverlaySingleton.addToView(self.navigationController!.view, text: NetworkProblemString)
                     self.loggedIn = false
                     self.tableView.reloadData()
                 }
                 
             }
+        }else{
+            MBProgressHUD.hideHUDForView(self.navigationController!.view, animated: true)
         }
 
     }
+    var id = 0
     var nickname = ""
     var avatar = "default"
     var posted = 0
@@ -86,9 +110,14 @@ class MineTableViewController: UITableViewController {
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section{
-        case 0:return 1
+        case 0:
+            if loggedIn{
+                return 2
+            }else{
+                return 1
+            }
         case 1:return 3
-        case 2:return 1
+        case 2:return 0
         case 3:return 2
         default:return 0
         }
@@ -103,40 +132,43 @@ class MineTableViewController: UITableViewController {
                 return cell
             }else{
                 let cell = tableView.dequeueReusableCellWithIdentifier("MineTopTableViewCell", forIndexPath: indexPath) as! MineTopTableViewCell
-                cell.loginBtn.addTarget(self, action: "presentLoginViewController", forControlEvents: .TouchUpInside)
+                cell.loginBtn.addTarget(self, action: #selector(MineTableViewController.presentLoginViewController), forControlEvents: .TouchUpInside)
                 return cell
             }
+        case (0,1):
+            if loggedIn{
+                let cell = tableView.dequeueReusableCellWithIdentifier("MineNormalTableViewCell", forIndexPath: indexPath) as! MineNormalTableViewCell
+                cell.setupCell("修改资料",image: UIImage(named: "editicon.png"))
+                return cell
+            }
+            break
         case (1,0):
             let cell = tableView.dequeueReusableCellWithIdentifier("MineNormalTableViewCell", forIndexPath: indexPath) as! MineNormalTableViewCell
             if loggedIn{
-                cell.setupCell("我发布的", count: posted)
+                cell.setupCell("我发布的",image: UIImage(named: "postedicon.png") , count: posted)
             }else{
-                cell.setupCell("我发布的")
+                cell.setupCell("我发布的",image: UIImage(named: "postedicon.png"))
             }
             return cell
         case (1,1):
             let cell = tableView.dequeueReusableCellWithIdentifier("MineNormalTableViewCell", forIndexPath: indexPath) as! MineNormalTableViewCell
             if loggedIn{
-                cell.setupCell("我卖出的", count: sold)
+                cell.setupCell("我卖出的",image: UIImage(named: "soldicon.png"), count: sold)
             }else{
-                cell.setupCell("我卖出的")
+                cell.setupCell("我卖出的",image: UIImage(named: "soldicon.png"))
             }
             return cell
         case (1,2):
             let cell = tableView.dequeueReusableCellWithIdentifier("MineNormalTableViewCell", forIndexPath: indexPath) as! MineNormalTableViewCell
             if loggedIn{
-                cell.setupCell("我买到的", count: bought)
+                cell.setupCell("我买到的",image: UIImage(named: "boughticon.png"), count: bought)
             }else{
-                cell.setupCell("我买到的")
+                cell.setupCell("我买到的", image: UIImage(named: "boughticon.png"))
             }
-            return cell
-        case (2,0):
-            let cell = tableView.dequeueReusableCellWithIdentifier("MineNormalTableViewCell", forIndexPath: indexPath) as! MineNormalTableViewCell
-            cell.setupCell("好友")
             return cell
         case (3,0):
             let cell = tableView.dequeueReusableCellWithIdentifier("MineNormalTableViewCell", forIndexPath: indexPath) as! MineNormalTableViewCell
-            cell.setupCell("设置")
+            cell.setupCell("设置",image: UIImage(named: "settingsicon.png"))
             return cell
         case (3,1):
             let cell = tableView.dequeueReusableCellWithIdentifier("MineNormalTableViewCell", forIndexPath: indexPath) as! MineNormalTableViewCell
@@ -145,6 +177,7 @@ class MineTableViewController: UITableViewController {
         default:
             return UITableViewCell()
         }
+        return UITableViewCell()
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
@@ -155,28 +188,45 @@ class MineTableViewController: UITableViewController {
             }
         }else{
             switch (indexPath.section,indexPath.row){
-            case (3,1):
-                UserLoginHandler.instance.logoutUser()
-                loggedIn = false
-                self.tableView.reloadData()
+            case (0,0):
+//                let vc = UserOverviewController(userid: self.id, nextURL: userPostedURL)
+//                NSBundle.mainBundle().loadNibNamed("UserOverviewController", owner: vc, options: nil)
+                let vc = UserOverviewController(nibName: "UserOverviewController", bundle: nil)
+                vc.userid = self.id
+                vc.nextURL = userPostedURL
+                vc.hidesBottomBarWhenPushed = true
+                self.navigationController?.pushViewController(vc, animated: true)
+            case (0,1): //改资料
+                let vc = MineEditDetailTableViewController(style: .Plain)
+                vc.hidesBottomBarWhenPushed = true
+                self.navigationController?.pushViewController(vc, animated: true)
+            case (3,1): //注销
+                let hud = MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
+                hud.labelText = "注销中"
+                UserLoginHandler.instance.logoutUser{
+                    MBProgressHUD.hideHUDForView(self.navigationController!.view, animated: true)
+                    self.loggedIn = false
+                    self.tableView.reloadData()
+                    
+                }
                 
             case (1,0):
                 let vc = MineProductsTableViewController()
-                vc.nextURL = userPostedURL
+                vc.nextURL = selfPostedURL
                 vc.header = "我发布的"
                 vc.hidesBottomBarWhenPushed = true
                 self.navigationController?.pushViewController(vc, animated: true)
             case (1,1):
                 
                 let vc = MineProductsTableViewController()
-                vc.nextURL = userSoldURL
+                vc.nextURL = selfSoldURL
                 vc.header = "我卖出的"
                 vc.hidesBottomBarWhenPushed = true
                 self.navigationController?.pushViewController(vc, animated: true)
             case (1,2):
                 
                 let vc = MineProductsTableViewController()
-                vc.nextURL = userBoughtURL
+                vc.nextURL = selfBoughtURL
                 vc.header = "我买到的"
                 vc.hidesBottomBarWhenPushed = true
                 self.navigationController?.pushViewController(vc, animated: true)
@@ -187,7 +237,7 @@ class MineTableViewController: UITableViewController {
     }
     
     func presentLoginViewController(){
-        let register = UserLoginViewController()
+        let register = UserLoginViewController(nibName: "UserLoginViewController", bundle: nil)
         register.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(register, animated: true)
     }

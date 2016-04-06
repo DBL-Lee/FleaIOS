@@ -20,6 +20,7 @@ class CategoryTableViewCell: UITableViewCell,UIScrollViewDelegate,UICollectionVi
     let nROW:Int = 2
     let nCOL:Int = 4
     var names:[String] = []
+    var icons:[String] = []
     var numberOfPages:Int = 1
     let LAYOUTSPACING:CGFloat = 10
     var callback:(Int,String)->Void = {_,_ in }
@@ -48,6 +49,11 @@ class CategoryTableViewCell: UITableViewCell,UIScrollViewDelegate,UICollectionVi
             return managedObject.valueForKey("title") as! String
         }
         
+        self.icons = btnNames.map{
+            managedObject -> String in
+            return managedObject.valueForKey("iconPath") as! String
+        }
+        
         self.pageControl.numberOfPages = self.numberOfPages
         self.pageControl.currentPage = 0
         
@@ -66,7 +72,7 @@ class CategoryTableViewCell: UITableViewCell,UIScrollViewDelegate,UICollectionVi
 
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("CategoryCollectionViewCell", forIndexPath: indexPath) as! CategoryCollectionViewCell
-        cell.setUpButton(names[indexPath.row])
+        cell.setUpButton(names[indexPath.row],icon: icons[indexPath.row])
         return cell
     }
     

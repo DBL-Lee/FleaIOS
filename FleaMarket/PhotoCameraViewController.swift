@@ -9,6 +9,7 @@
 import UIKit
 import AVFoundation
 import FastttCamera
+import MBProgressHUD
 
 class PhotoCameraViewController: UIViewController,FastttCameraDelegate,UICollectionViewDataSource,UICollectionViewDelegate {
 
@@ -44,6 +45,14 @@ class PhotoCameraViewController: UIViewController,FastttCameraDelegate,UICollect
         self.flashLabel.adjustsFontSizeToFitWidth = true
         
         fastVC.cameraFlashMode = .Auto
+        self.flashToggleBtn.setImage(UIImage(named: "flashauto.png"), forState: .Normal)
+        
+        self.changeCameraBtn.setImage(UIImage(named: "cameratoggle.png"), forState: .Normal)
+        
+        self.finishBtn.backgroundColor = UIColor.yellowColor()
+        
+        self.takePhotoBtn.setImage(UIImage(named: "takephoto.png"), forState: .Normal)
+        self.takePhotoBtn.setImage(UIImage(named: "takephoto-h.png"), forState: .Highlighted)
         
         self.capturedImagesCollectionView.delegate = self
         self.capturedImagesCollectionView.dataSource = self
@@ -116,12 +125,15 @@ class PhotoCameraViewController: UIViewController,FastttCameraDelegate,UICollect
         case .Auto:
             fastVC.cameraFlashMode = .On
             self.flashLabel.text = "开"
+            self.flashToggleBtn.setImage(UIImage(named: "flashon.png"), forState: .Normal)
         case .On:
             fastVC.cameraFlashMode = .Off
             self.flashLabel.text = "关"
+            self.flashToggleBtn.setImage(UIImage(named: "flashoff.png"), forState: .Normal)
         case .Off:
             fastVC.cameraFlashMode = .Auto
             self.flashLabel.text = "自动"
+            self.flashToggleBtn.setImage(UIImage(named: "flashauto.png"), forState: .Normal)
         }
     }
     
@@ -141,6 +153,9 @@ class PhotoCameraViewController: UIViewController,FastttCameraDelegate,UICollect
     
     @IBAction func takePhoto(sender: AnyObject) {
         if self.images.count<self.MAXPHOTO{
+            let hud = MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
+            hud.labelText = "处理照片中"
+            
             fastVC.takePicture()
             self.previewView.backgroundColor = UIColor.blackColor()
             UIView.animateWithDuration(0.5, animations: {
@@ -150,16 +165,22 @@ class PhotoCameraViewController: UIViewController,FastttCameraDelegate,UICollect
     }
     
     func cameraController(cameraController: FastttCameraInterface!, didFinishNormalizingCapturedImage capturedImage: FastttCapturedImage!) {
+        
         images.append(capturedImage.scaledImage)
         self.finishBtn.setTitle("完成\n\(self.images.count)/\(MAXPHOTO)", forState: .Normal)
         self.capturedImagesCollectionView.reloadData()
         self.capturedImagesCollectionView.scrollToItemAtIndexPath(NSIndexPath(forItem: self.images.count-1, inSection: 0), atScrollPosition: .Right, animated: true)
+        MBProgressHUD.hideHUDForView(self.navigationController!.view, animated: true)
         
     }
     
     @IBAction func finishBtnPressed(sender: AnyObject) {
-        self.dismissViewControllerAnimated(true, completion: nil)
-        callback(self.images)
+        if self.images.count > 0 {
+            self.dismissViewControllerAnimated(true, completion: nil)
+            callback(self.images)
+        }else{
+            
+        }
     }
     
     @IBAction func cancelBtnPressed(sender: AnyObject) {

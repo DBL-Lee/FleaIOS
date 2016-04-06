@@ -7,10 +7,15 @@
 //
 
 import UIKit
+import Alamofire
+import SwiftyJSON
+import MBProgressHUD
 
 class ProductDetailTableViewController: UITableViewController {
     
     var product:Product!
+    var targetEMUsername:String = ""
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "商品详情"
@@ -30,14 +35,16 @@ class ProductDetailTableViewController: UITableViewController {
         self.edgesForExtendedLayout = .None
         self.navigationController?.navigationBar.tintColor = UIColor.blackColor()
         self.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
+        
         self.navigationItem.hidesBackButton = true
         let image = UIImage(named: "backButton.png")
         let button = UIButton(type: .Custom)
         button.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
         button.setImage(image, forState: .Normal)
-        button.addTarget(self, action: "dismiss", forControlEvents: .TouchUpInside)
+        button.addTarget(self, action: #selector(ProductDetailTableViewController.dismiss), forControlEvents: .TouchUpInside)
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: button)
         
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .Plain, target: nil, action: nil)
     }
     
     func dismiss(){
@@ -82,7 +89,29 @@ class ProductDetailTableViewController: UITableViewController {
         case 卖家:
             let cell = tableView.dequeueReusableCellWithIdentifier("ProductDetailSellerTableViewCell", forIndexPath: indexPath) as!
             ProductDetailSellerTableViewCell
-            cell.setupCell(product.useravatar, sellername: product.usernickname, soldItemCount: 107, goodFeedBack: 100)
+            UserLoginHandler.instance.getUserDetailFromCloud(product.userid, emusername: nil){
+                user in
+                if let user = user{
+                    let avatar = user.avatar
+                    let nickname = user.nickname
+                    let emusername = user.emusername
+                    let transaction = user.transaction
+                    let goodfeedback = user.goodfeedback
+                    cell.tag = indexPath.row
+                    cell.setupCell(avatar, sellername: nickname, soldItemCount: transaction, goodFeedBack: goodfeedback)
+                    self.targetEMUsername = emusername
+                }else{//load user failed
+                    
+                }
+            }
+            
+            cell.setupCell(product.useravatar, sellername: product.usernickname, soldItemCount: 0, goodFeedBack: 0)
+            cell.chatBtn.addTarget(self, action: #selector(ProductDetailTableViewController.chat), forControlEvents: .TouchUpInside)
+//            if UserLoginHandler.instance.loggedIn(){
+//                if UserLoginHandler.instance.userid==self.product.userid{
+//                    cell.chatBtn.hidden = true
+//                }
+//            }
             cell.selectionStyle = .None
             return cell
         case 信息:
@@ -119,6 +148,18 @@ class ProductDetailTableViewController: UITableViewController {
         return UITableViewCell()
     }
     
+    
+    func chat(){
+        if UserLoginHandler.instance.loggedIn(){
+            let vc = ChatViewController(userid: product.userid ,username: targetEMUsername, nickname: product.usernickname, avatar: product.useravatar)
+            self.navigationController?.pushViewController(vc, animated: true)
+        }else{
+            
+            let vc = UserLoginViewController(nibName: "UserLoginViewController", bundle: nil)
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
+    }
+    
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         if separator.contains(indexPath.row){
             return 30
@@ -139,7 +180,7 @@ class ProductDetailTableViewController: UITableViewController {
             postBtn.backgroundColor = UIColor.orangeColor()
             postBtn.tintColor = UIColor.whiteColor()
             postBtn.setTitle("购买", forState: .Normal)
-            postBtn.addTarget(self, action: "buyNow", forControlEvents: .TouchUpInside)
+            postBtn.addTarget(self, action: #selector(ProductDetailTableViewController.buyNow), forControlEvents: .TouchUpInside)
             view.addSubview(postBtn)
             return view
         }
@@ -156,6 +197,30 @@ class ProductDetailTableViewController: UITableViewController {
     }
     
     func buyNow(){
-        
+        if !UserLoginHandler.instance.loggedIn(){
+            let vc = UserLoginViewController()
+            self.navigationController?.presentViewController(vc, animated: true, completion: nil)
+            return
+        }
+        MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
+        Alamofire.request(.POST, buyProductURL, parameters: ["id":product.id], encoding: .JSON, headers: UserLoginHandler.instance.authorizationHeader()).responseJSON{
+            response in
+            MBProgressHUD.hideHUDForView(self.navigationController!.view, animated: true)
+            switch response.result{
+            case .Success:
+                if response.response?.statusCode<400{
+                    let alert = UIAlertController(title: nil, message: "购买成功", preferredStyle: .Alert)
+                    alert.addAction(UIAlertAction(title: "好的", style: .Cancel, handler: nil))
+                    self.presentViewController(alert, animated: true, completion: nil)
+                }else{
+                    let json = JSON(response.result.value!)
+                    let alert = UIAlertController(title: nil, message: json["error"].stringValue, preferredStyle: .Alert)
+                    alert.addAction(UIAlertAction(title: "好的", style: .Cancel, handler: nil))
+                    self.presentViewController(alert, animated: true, completion: nil)
+                }
+            case .Failure(let e):
+                OverlaySingleton.addToView(self.navigationController!.view, text: NetworkProblemString)
+            }
+        }
     }
 }

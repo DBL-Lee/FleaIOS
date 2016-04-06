@@ -43,10 +43,14 @@ class ProductDetailImageTableViewCell: UITableViewCell,UICollectionViewDataSourc
         self.pageControl.currentPage = currentImage
         
         for i in 0..<imagesUUID.count{
-            RetrieveImageFromS3.retrieveImage(imagesUUID[i],bucket: S3ImagesBucketName){
-                _ in
-                self.downloadFinished[i] = true
-                self.imagesCollectionView.reloadItemsAtIndexPaths([NSIndexPath(forItem: i, inSection: 0)])
+            RetrieveImageFromS3.instance.retrieveImage(imagesUUID[i],bucket: S3ImagesBucketName){
+                bool in
+                if bool {
+                    self.downloadFinished[i] = true
+                    self.imagesCollectionView.reloadItemsAtIndexPaths([NSIndexPath(forItem: i, inSection: 0)])
+                }else{//TODO: download image fail
+                    
+                }
             }
         }
     }
@@ -62,7 +66,7 @@ class ProductDetailImageTableViewCell: UITableViewCell,UICollectionViewDataSourc
             let image = UIImage(contentsOfFile: (LocalDownloadDirectory.URLByAppendingPathComponent(imagesUUID[indexPath.row])).path!)!
             cell.setImage(image)
             cell.index = indexPath.row
-            let tap = UITapGestureRecognizer(target: self, action: "handleTap:")
+            let tap = UITapGestureRecognizer(target: self, action: #selector(ProductDetailImageTableViewCell.handleTap(_:)))
             cell.addGestureRecognizer(tap)
         }else{
             cell.setImage(UIImage(named: "loading.png")!)

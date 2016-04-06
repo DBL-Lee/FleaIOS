@@ -1,6 +1,135 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Workspace
    version = "1.0">
+   <Group
+      location = "group:HyphenateSDK"
+      name = "HyphenateSDK">
+      <Group
+         location = "group:include"
+         name = "include">
+         <FileRef
+            location = "group:EMCallLocalView.h">
+         </FileRef>
+         <FileRef
+            location = "group:EMCallManagerDelegate.h">
+         </FileRef>
+         <FileRef
+            location = "group:EMCallRemoteView.h">
+         </FileRef>
+         <FileRef
+            location = "group:EMCallSession.h">
+         </FileRef>
+         <FileRef
+            location = "group:EMChatManagerDelegate.h">
+         </FileRef>
+         <FileRef
+            location = "group:EMChatroom.h">
+         </FileRef>
+         <FileRef
+            location = "group:EMChatroomManagerDelegate.h">
+         </FileRef>
+         <FileRef
+            location = "group:EMClient+Call.h">
+         </FileRef>
+         <FileRef
+            location = "group:EMClient.h">
+         </FileRef>
+         <FileRef
+            location = "group:EMClientDelegate.h">
+         </FileRef>
+         <FileRef
+            location = "group:EMCmdMessageBody.h">
+         </FileRef>
+         <FileRef
+            location = "group:EMContactManagerDelegate.h">
+         </FileRef>
+         <FileRef
+            location = "group:EMConversation.h">
+         </FileRef>
+         <FileRef
+            location = "group:EMCursorResult.h">
+         </FileRef>
+         <FileRef
+            location = "group:EMError.h">
+         </FileRef>
+         <FileRef
+            location = "group:EMErrorCode.h">
+         </FileRef>
+         <FileRef
+            location = "group:EMFileMessageBody.h">
+         </FileRef>
+         <FileRef
+            location = "group:EMGroup.h">
+         </FileRef>
+         <FileRef
+            location = "group:EMGroupManagerDelegate.h">
+         </FileRef>
+         <FileRef
+            location = "group:EMGroupOptions.h">
+         </FileRef>
+         <FileRef
+            location = "group:EMImageMessageBody.h">
+         </FileRef>
+         <FileRef
+            location = "group:EMLocationMessageBody.h">
+         </FileRef>
+         <FileRef
+            location = "group:EMMessage.h">
+         </FileRef>
+         <FileRef
+            location = "group:EMMessageBody.h">
+         </FileRef>
+         <FileRef
+            location = "group:EMOptions+PrivateDeploy.h">
+         </FileRef>
+         <FileRef
+            location = "group:EMOptions.h">
+         </FileRef>
+         <FileRef
+            location = "group:EMPushOptions.h">
+         </FileRef>
+         <FileRef
+            location = "group:EMSDK.h">
+         </FileRef>
+         <FileRef
+            location = "group:EMSDKFull.h">
+         </FileRef>
+         <FileRef
+            location = "group:EMTextMessageBody.h">
+         </FileRef>
+         <FileRef
+            location = "group:EMVideoMessageBody.h">
+         </FileRef>
+         <FileRef
+            location = "group:EMVoiceMessageBody.h">
+         </FileRef>
+         <FileRef
+            location = "group:IEMCallManager.h">
+         </FileRef>
+         <FileRef
+            location = "group:IEMChatManager.h">
+         </FileRef>
+         <FileRef
+            location = "group:IEMChatroomManager.h">
+         </FileRef>
+         <FileRef
+            location = "group:IEMContactManager.h">
+         </FileRef>
+         <FileRef
+            location = "group:IEMGroupManager.h">
+         </FileRef>
+         <FileRef
+            location = "group:OpenGLView20.h">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:lib"
+         name = "lib">
+         <FileRef
+            location = "group:libHyphenateSDK.a">
+         </FileRef>
+      </Group>
+   </Group>
    <FileRef
       location = "group:FleaMarket.xcodeproj">
    </FileRef>

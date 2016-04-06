@@ -28,10 +28,14 @@ class SearchResultTableViewCell: UITableViewCell {
         
         self.imageview.image = nil
         
-        let uuid = product.imageUUID[product.mainimage]
-        RetrieveImageFromS3.retrieveImage(uuid, bucket: S3ImagesBucketName, completion: {
+        let uuid = "small-"+product.imageUUID[product.mainimage]
+        imageview.tag = self.tag
+        let tag = imageview.tag
+        RetrieveImageFromS3.instance.retrieveImage(uuid, bucket: S3ImagesBucketName, completion: {
             _ in
-            self.imageview.image = UIImage(contentsOfFile: RetrieveImageFromS3.localDirectoryOf(uuid).path!)
+            if self.imageview.tag == tag{
+                self.imageview.image = UIImage(contentsOfFile: RetrieveImageFromS3.localDirectoryOf(uuid).path!)
+            }
         })
         
         //price attributed string

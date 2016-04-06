@@ -14,7 +14,9 @@ class ProductDetailSellerTableViewCell: UITableViewCell {
     @IBOutlet weak var userNameLabel: UILabel!
     @IBOutlet weak var soldItemLabel: UILabel!
     @IBOutlet weak var feedBackRateLabel: UILabel!
+
     
+    @IBOutlet weak var chatBtn: UIButton!
     override func awakeFromNib() {
         super.awakeFromNib()
         self.avatarImageView.clipsToBounds = true
@@ -24,21 +26,15 @@ class ProductDetailSellerTableViewCell: UITableViewCell {
     func setupCell(avatar:String,sellername:String,soldItemCount:Int,goodFeedBack:Int){
         self.avatarImageView.image = UIImage(named:"defaultavatar.png")
         
-        let fileURL = RetrieveImageFromS3.localDirectoryOf(avatar)
-        if avatar == "default"{
-            self.avatarImageView.image = UIImage(named:"defaultavatar.png")
-        }else if NSFileManager.defaultManager().fileExistsAtPath(fileURL.path!){
-            self.avatarImageView.image = UIImage(contentsOfFile: fileURL.path!)!
-        }else{
-            RetrieveImageFromS3.retrieveImage(avatar, bucket: S3ImagesBucketName){
-                self.avatarImageView.image = UIImage(contentsOfFile: fileURL.path!)!
-            }
-        }
+        
+        avatarImageView.tag = self.tag
+        AvatarFactory.setupAvatarImageView(self.avatarImageView, avatar: avatar)
         
         self.userNameLabel.text = sellername
-        self.soldItemLabel.text = "成功卖出\(soldItemCount)件二手商品"
-        let res = goodFeedBack*10000/soldItemCount
-        self.feedBackRateLabel.text = "好评率\(res/100).\(res%100)%"
+        self.soldItemLabel.text = "成功交易\(soldItemCount)笔"
+        
+        let res = soldItemCount==0 ? 0 : goodFeedBack*10000/soldItemCount
+        self.feedBackRateLabel.text = "好评率\(res/100)" + (res%100==0 ? "%" : ".\(res%100)%")
     }
     
     

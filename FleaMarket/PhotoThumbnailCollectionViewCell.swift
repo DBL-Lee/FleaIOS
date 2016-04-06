@@ -23,7 +23,7 @@ class PhotoThumbnailCollectionViewCell: UICollectionViewCell {
         self.contentView.backgroundColor = UIColor.redColor()
         self.chosenBtn.setBackgroundImage(UIImage(named: "uncheckmark.png"), forState: .Normal)
         self.chosenBtn.setBackgroundImage(UIImage(named: "checkmark.png"), forState: .Selected)
-        let tapGesture = UITapGestureRecognizer(target: self, action: "chosenBtnClicked")
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(PhotoThumbnailCollectionViewCell.chosenBtnClicked))
         self.addGestureRecognizer(tapGesture)
     }
     

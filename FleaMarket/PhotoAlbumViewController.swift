@@ -62,7 +62,7 @@ class PhotoAlbumViewController: UIViewController,UICollectionViewDataSource,UICo
         self.navigationController?.navigationBar.translucent = false
         
         self.navigationItem.title = "相机胶卷"
-        let button = UIBarButtonItem(title: "取消", style: UIBarButtonItemStyle.Plain, target: self, action: "dismiss")
+        let button = UIBarButtonItem(title: "取消", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(PhotoAlbumViewController.dismiss))
         button.tintColor = UIColor.whiteColor()
         self.navigationItem.leftBarButtonItem = button
         
@@ -217,20 +217,23 @@ class PhotoAlbumViewController: UIViewController,UICollectionViewDataSource,UICo
     
     
     @IBAction func confirmBtnPressed(sender: AnyObject) {
-        var images = [UIImage]()
-        let option = PHImageRequestOptions()
-        option.synchronous = true
-        for asset in self.assets{
-            self.cachingImageManager.requestImageForAsset(asset, targetSize: PHImageManagerMaximumSize, contentMode: .AspectFit, options: option){
-                (image,dict) in
-                if image != nil{
-                    images.append(image!)
+        if self.assets.count > 0 {
+            var images = [UIImage]()
+            let option = PHImageRequestOptions()
+            option.synchronous = true
+            for asset in self.assets{
+                self.cachingImageManager.requestImageForAsset(asset, targetSize: PHImageManagerMaximumSize, contentMode: .AspectFit, options: option){
+                    (image,dict) in
+                    if image != nil{
+                        images.append(image!)
+                    }
                 }
             }
-        }
-        self.dismissViewControllerAnimated(true){}
-        self.callback(images)
+            self.dismissViewControllerAnimated(true){}
+            self.callback(images)
+        }else{
             
+        }
     }
     
 

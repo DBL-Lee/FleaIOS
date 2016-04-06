@@ -4,25 +4,17 @@
 //
 //  Created by Zichuan Huang on 18/03/2016.
 //  Copyright © 2016 Zichuan Huang. All rights reserved.
-//
+///Users/Lee/Documents/Apps/FleaMarket/FleaMarket/MineProductsTableViewController.swift:10:8: No such module 'Alamofire'
 
 import UIKit
 import Alamofire
 import SwiftyJSON
+import MJRefresh
 
 class MineProductsTableViewController: UITableViewController {
-    var footerLabel:UILabel = UILabel()
-    
-    var nextURL:String = ""{
-        didSet{
-            if nextURL == ""{
-                self.footerLabel.text = "没有更多商品了"
-            }else{
-                self.footerLabel.text = "加载中..."
-            }
-        }
-    }
-    
+
+    var nextURL:String = ""
+    var refreshFooter:MJRefreshBackFooter!
     var products:[Product] = []
     var header = ""
     
@@ -35,22 +27,14 @@ class MineProductsTableViewController: UITableViewController {
         self.tableView.rowHeight = UITableViewAutomaticDimension
         self.tableView.estimatedRowHeight = 100
         self.view.backgroundColor = UIColor.groupTableViewBackgroundColor()
+        
+        refreshFooter = MJRefreshBackFooter(refreshingTarget: self, refreshingAction: #selector(loadMore))
+        self.tableView.mj_footer = refreshFooter
         loadMore()
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        footerLabel = UILabel(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 44))
-        footerLabel.font = UIFont.systemFontOfSize(12)
-        footerLabel.textAlignment = .Center
-        footerLabel.textColor = UIColor.grayColor()
-        if nextURL==""{
-            footerLabel.text = "没有更多宝贝了"
-        }else{
-            footerLabel.text = "加载中..."
-        }
-        
-        tableView.tableFooterView = footerLabel
         
         self.navigationController?.navigationBar.barStyle = .Default
         self.navigationController?.navigationBar.translucent = false
@@ -58,19 +42,10 @@ class MineProductsTableViewController: UITableViewController {
         self.navigationItem.title = header
         self.navigationController?.navigationBar.tintColor = UIColor.blackColor()
     }
-    override func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
-        let currentOffset = scrollView.contentOffset.y
-        let maximumOffset = scrollView.contentSize.height-scrollView.frame.height
-        if currentOffset/maximumOffset > 0.9 {
-            loadMore()
-        }
-    }
     
-    var loadingMore = false
     
     func loadMore(){
-        if nextURL != "" && !loadingMore{
-            loadingMore = true
+        if nextURL != ""{
             Alamofire.request(.GET, nextURL, parameters: nil, encoding: .JSON, headers: UserLoginHandler.instance.authorizationHeader()).responseJSON{
                 response in
                 switch response.result{
@@ -85,15 +60,22 @@ class MineProductsTableViewController: UITableViewController {
                     for (_,productjson) in json["results"] {
                         products.append(Product.deserialize(productjson))
                         indexPaths.append(NSIndexPath(forRow: current, inSection: 0))
-                        current++
+                        current += 1
                     }
                     self.products.appendContentsOf(products)
-                    self.tableView.insertRowsAtIndexPaths(indexPaths, withRowAnimation: .None)
-                    self.loadingMore = false
+                    self.tableView.insertRowsAtIndexPaths(indexPaths, withRowAnimation: UITableViewRowAnimation.None)
+                    if next == ""{
+                        self.refreshFooter.endRefreshingWithNoMoreData()
+                    }else{
+                        self.refreshFooter.endRefreshing()
+                    }
                 case .Failure(let e):
-                    print(e)
+                    self.refreshFooter.endRefreshingWithNoMoreData()
+                    OverlaySingleton.addToView(self.navigationController!.view, text: NetworkProblemString)
                 }
             }
+        }else{
+            self.refreshFooter.endRefreshingWithNoMoreData()
         }
     }
 

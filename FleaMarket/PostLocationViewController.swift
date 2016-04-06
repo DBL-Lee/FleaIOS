@@ -127,7 +127,7 @@ class PostLocationViewController: UIViewController,UITableViewDelegate,UITableVi
     
     func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if section == 0{
-            return "当前位置"
+            return "当前位置(推荐)"
         }
         return "搜索结果"
     }

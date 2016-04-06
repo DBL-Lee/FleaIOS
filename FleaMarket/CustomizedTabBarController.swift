@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+import MBProgressHUD
 class CustomizedTabBarController: UITabBarController,UITabBarControllerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -17,7 +17,7 @@ class CustomizedTabBarController: UITabBarController,UITabBarControllerDelegate 
         button.setBackgroundImage(UIImage(named: "post.png"), forState: .Normal)
         button.center = CGPoint(x: self.tabBar.center.x, y: height/4)
         self.delegate = self
-        button.addTarget(self, action: "postNewItem", forControlEvents: .TouchUpInside)
+        button.addTarget(self, action: #selector(CustomizedTabBarController.postNewItem), forControlEvents: .TouchUpInside)
         self.tabBar.addSubview(button)
         
         
@@ -51,8 +51,8 @@ class CustomizedTabBarController: UITabBarController,UITabBarControllerDelegate 
             alert.addAction(cancel)
             self.presentViewController(alert, animated: true, completion: {})
         }else{//not logged in
-            let controller = UserLoginViewController()
-            let navi = UINavigationController(rootViewController: controller)
+            let vc = UserLoginViewController(nibName: "UserLoginViewController", bundle: nil)
+            let navi = UINavigationController(rootViewController: vc)
             navi.hidesBottomBarWhenPushed = true
             self.presentViewController(navi, animated: true, completion: nil)
         }
@@ -78,12 +78,16 @@ class CustomizedTabBarController: UITabBarController,UITabBarControllerDelegate 
     }
     
     func presentPostView(images:[UIImage]){
-        
+        let hud = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+        hud.labelText = "处理图片中"
         let vc = PostItemTableViewController()
         let vc2 = UINavigationController(rootViewController: vc)
         vc.images = images
         vc.callback = finishPostingItem
-        self.presentViewController(vc2, animated: true, completion: nil)
+        self.presentViewController(vc2, animated: true){
+            _ in
+            MBProgressHUD.hideHUDForView(self.view, animated: true)
+        }
     }
 
 }

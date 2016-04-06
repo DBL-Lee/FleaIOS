@@ -44,14 +44,14 @@ class SearchViewController: UITableViewController,UISearchBarDelegate,UISearchRe
 //        
 //        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: rightBtn)
         
-        let rightBtn = UIBarButtonItem(title: "取消", style: UIBarButtonItemStyle.Done, target: self, action: "dismiss")
+        let rightBtn = UIBarButtonItem(title: "取消", style: UIBarButtonItemStyle.Done, target: self, action: #selector(SearchViewController.dismiss))
         rightBtn.setTitleTextAttributes([NSFontAttributeName:UIFont.systemFontOfSize(15)], forState: .Normal)
 
         self.navigationItem.rightBarButtonItem = rightBtn
         
         clearButton = UIButton(type: .Custom)
         clearButton.setTitle("清楚搜索历史记录", forState: .Normal)
-        clearButton.addTarget(self, action: "clearHistory", forControlEvents: .TouchUpInside)
+        clearButton.addTarget(self, action: #selector(SearchViewController.clearHistory), forControlEvents: .TouchUpInside)
     }
     
     func clearHistory(){

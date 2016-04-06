@@ -56,65 +56,79 @@ class FetchProductRequest:NSObject,CLLocationManagerDelegate{
         longitude = locValue.coordinate.longitude
     }
     
-    func request(completion:(String,String,[Product])->Void){
-        var url = getProductURL
-        
-        url+="?"
-        
-//        if title != nil || primarycategory != nil || secondarycategory != nil || minprice != nil || maxprice != nil || brandNew != nil || exchange != nil || bargain != nil{
-            if let title = title{
-                url+="title="+title+"&"
-            }
-            if let p = primarycategory {
-                url+="primarycategory=\(p)&"
-            }
-            if let s = secondarycategory {
-                url+="secondarycategory=\(s)&"
-            }
-            if let min = minprice{
-                url+="min_price="+"\(min)&"
-            }
-            if let max = maxprice{
-                url+="max_price="+"\(max)&"
-            }
-            if let brandNew = brandNew{
-                url+="brandNew="+(brandNew ? "True" : "False" )+"&"
-            }
-            if let exchange = exchange{
-                url+="exchange="+(exchange ? "True" : "False" )+"&"
-            }
-            if let bargain = bargain{
-                url+="bargain="+(bargain ? "True" : "False" )+"&"
-            }
-            if let distance = maxdistance{
-                url+="distance=\(distance)&"
-            }
+    func request(completion:(String,String,[Product],Bool)->Void){
+        dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)){ //run in background thread to prevent blocking UI
+            var url = getProductURL
             
-            url = url.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!
-//        }
-        
-        let rl = NSRunLoop.currentRunLoop()
-        while(longitude==nil && rl.runMode(NSDefaultRunLoopMode, beforeDate: NSDate.distantFuture())){
-            print("waiting")
-        }
-        url+="latitude=\(latitude)&longitude=\(longitude)&"
-        
-        url+="sorttype="+sortType.rawValue
-        
-        Alamofire.request(.GET, url).validate().responseJSON{
-            response in
-            switch response.result{
-            case .Success:
-                let json = JSON(response.result.value!)
-                let previous = json["previous"].stringValue
-                let next = json["next"].stringValue
-                var products:[Product] = []
-                for (_,productjson) in json["results"] {
-                    products.append(Product.deserialize(productjson))
+            url+="?"
+            
+    //        if title != nil || primarycategory != nil || secondarycategory != nil || minprice != nil || maxprice != nil || brandNew != nil || exchange != nil || bargain != nil{
+                if let title = self.title{
+                    url+="title="+title+"&"
                 }
-                completion(previous,next,products)
-            case .Failure(let e):
-                print(e)
+                if let p = self.primarycategory {
+                    url+="primarycategory=\(p)&"
+                }
+                if let s = self.secondarycategory {
+                    url+="secondarycategory=\(s)&"
+                }
+                if let min = self.minprice{
+                    url+="min_price="+"\(min)&"
+                }
+                if let max = self.maxprice{
+                    url+="max_price="+"\(max)&"
+                }
+                if let brandNew = self.brandNew{
+                    url+="brandNew="+(brandNew ? "True" : "False" )+"&"
+                }
+                if let exchange = self.exchange{
+                    url+="exchange="+(exchange ? "True" : "False" )+"&"
+                }
+                if let bargain = self.bargain{
+                    url+="bargain="+(bargain ? "True" : "False" )+"&"
+                }
+                if let distance = self.maxdistance{
+                    url+="distance=\(distance)&"
+                }
+                
+                url = url.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!
+    //        }
+            
+            let rl = NSRunLoop.currentRunLoop()
+            while(self.longitude==nil||self.latitude==nil){
+                print("waiting")
+            }
+            url+="latitude=\(self.latitude)&longitude=\(self.longitude)&"
+            
+            url+="sorttype="+self.sortType.rawValue
+            
+            Alamofire.request(.GET, url).responseJSON{
+                response in
+                switch response.result{
+                case .Success:
+                    if response.response?.statusCode < 400{
+                        let json = JSON(response.result.value!)
+                        let previous = json["previous"].stringValue
+                        let next = json["next"].stringValue
+                        var products:[Product] = []
+                        for (_,productjson) in json["results"] {
+                            products.append(Product.deserialize(productjson))
+                        }
+                        dispatch_async(dispatch_get_main_queue()){
+                            completion(previous,next,products,true)
+                        }
+                    }else{
+                        
+                        dispatch_async(dispatch_get_main_queue()){
+                            completion("","",[],false)
+                        }
+                    }
+                case .Failure(let e):
+                    
+                    dispatch_async(dispatch_get_main_queue()){
+                        completion("","",[],false)
+                    }
+                }
             }
         }
     }

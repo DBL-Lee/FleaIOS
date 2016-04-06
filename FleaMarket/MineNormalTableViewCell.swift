@@ -15,16 +15,18 @@ class MineNormalTableViewCell: UITableViewCell {
     @IBOutlet weak var titleLabel: UILabel!
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
+        iconImageView.contentMode = .ScaleAspectFit
+        iconImageView.clipsToBounds = true
     }
     
-    func setupCell(title:String,count:Int? = nil){
+    func setupCell(title:String,image:UIImage? = nil,count:Int? = nil){
         self.titleLabel.text = title
         if let count = count{
             self.countLabel.text = "\(count)"
         }else{
             self.countLabel.text = ""
         }
+        self.iconImageView.image = image
     }
     
 }

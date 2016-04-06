@@ -26,7 +26,7 @@
                     </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="na1-hL-q3j">
                         <rect key="frame" x="56" y="17" width="120" height="21"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
@@ -35,7 +35,7 @@
                         <constraints>
                             <constraint firstAttribute="height" constant="21" id="yhd-Uu-S7L"/>
                         </constraints>
-                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
@@ -44,7 +44,7 @@
                         <constraints>
                             <constraint firstAttribute="height" constant="21" id="E7I-L6-hGZ"/>
                         </constraints>
-                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
@@ -89,6 +89,7 @@
             </tableViewCellContentView>
             <connections>
                 <outlet property="avatarImageView" destination="J0T-U0-dJ8" id="Sc7-gu-ckj"/>
+                <outlet property="chatBtn" destination="mYj-xX-2KN" id="s3H-ku-szM"/>
                 <outlet property="feedBackRateLabel" destination="tvb-cM-oeu" id="t5d-9f-iLZ"/>
                 <outlet property="soldItemLabel" destination="6Ma-ux-4np" id="61g-5D-cgp"/>
                 <outlet property="userNameLabel" destination="na1-hL-q3j" id="1cz-jy-U0r"/>

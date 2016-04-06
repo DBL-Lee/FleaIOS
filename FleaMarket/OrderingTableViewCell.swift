@@ -16,7 +16,7 @@ class OrderingTableViewCell: UITableViewCell {
     
     func setupCell(title:String,callback:()->Void){
         self.orderButton.setTitle(title, forState: .Normal)
-        self.orderButton.addTarget(self, action: "tap", forControlEvents: .TouchUpInside)
+        self.orderButton.addTarget(self, action: #selector(OrderingTableViewCell.tap), forControlEvents: .TouchUpInside)
         self.callback = callback
     }
     

@@ -14,13 +14,24 @@ import Alamofire
 import SwiftyJSON
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate,EMChatManagerDelegate {
 
     var window: UIWindow?
 
-
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         //AWSLogger.defaultLogger().logLevel = .Verbose
+        
+        //UIBarButtonItem.appearance().setBackButtonBackgroundImage(UIImage(named: "backButton.png")!.thumbnailOfSize(CGSize(width: 30, height: 30)), forState: .Normal, barMetrics: .Default)
+        
+        let appkey = "fleamarket#fleamarket"
+        let certname = "FleaMarket"
+        let options = EMOptions(appkey: appkey)
+        options.apnsCertName = certname
+        
+        EMClient.sharedClient().initializeSDKWithOptions(options)
+        
+        EMClient.sharedClient().chatManager.addDelegate(EaseDataHandler.shared, delegateQueue: nil)
+        
         
         let credentialsProvider = AWSCognitoCredentialsProvider(regionType: CognitoRegionType, identityPoolId: CognitoIdentityPoolId)
         let configuration = AWSServiceConfiguration(region:DefaultServiceRegionType, credentialsProvider:credentialsProvider)
@@ -28,14 +39,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         AWSServiceManager.defaultServiceManager().defaultServiceConfiguration = configuration
         
         //create upload and download directories
-        let error = NSErrorPointer()
         do {
             try NSFileManager.defaultManager().createDirectoryAtURL(
                 LocalUploadDirectory,
                 withIntermediateDirectories: true,
                 attributes: nil)
-        } catch let error1 as NSError {
-            error.memory = error1
+        } catch let error as NSError {
             print("Creating 'upload' directory failed. Error: \(error)")
         }
         
@@ -44,8 +53,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 LocalDownloadDirectory,
                 withIntermediateDirectories: true,
                 attributes: nil)
-        } catch let error1 as NSError {
-            error.memory = error1
+        } catch let error as NSError {
+            print("Creating 'upload' directory failed. Error: \(error)")
+        }
+        
+        do {
+            try NSFileManager.defaultManager().createDirectoryAtURL(
+                LocalIconDirectory,
+                withIntermediateDirectories: true,
+                attributes: nil)
+        } catch let error as NSError {
             print("Creating 'upload' directory failed. Error: \(error)")
         }
         
@@ -73,9 +90,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             UserLoginHandler.instance.refreshToken()
         }
        
-        
+        let notificationTypes: UIUserNotificationType = [UIUserNotificationType.Alert, UIUserNotificationType.Badge, UIUserNotificationType.Sound]
+        let pushNotificationSettings = UIUserNotificationSettings(forTypes: notificationTypes, categories: nil)
+        application.registerUserNotificationSettings(pushNotificationSettings)
+        application.registerForRemoteNotifications()
         
         return true
+    }
+    
+    func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
+        EMClient.sharedClient().bindDeviceToken(deviceToken)
+    }
+    
+    func application(application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: NSError) {
+        print(error)
     }
 
     func applicationWillResignActive(application: UIApplication) {
@@ -86,10 +114,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidEnterBackground(application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+        EMClient.sharedClient().applicationDidEnterBackground(application)
     }
 
     func applicationWillEnterForeground(application: UIApplication) {
         // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+        EMClient.sharedClient().applicationWillEnterForeground(application)
     }
 
     func applicationDidBecomeActive(application: UIApplication) {

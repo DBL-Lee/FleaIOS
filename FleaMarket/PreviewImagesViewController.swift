@@ -33,7 +33,7 @@ class PreviewImagesViewController: UIViewController,UICollectionViewDataSource,U
         detailButton.titleLabel!.font = UIFont.systemFontOfSize(15)
         detailButton.setTitle("查看详情", forState: .Normal)
         detailButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
-        detailButton.addTarget(self, action: "detailBtnPressed", forControlEvents: .TouchUpInside)
+        detailButton.addTarget(self, action: #selector(PreviewImagesViewController.detailBtnPressed), forControlEvents: .TouchUpInside)
         if showDetailButton{
             self.btmViewPanel.addSubview(detailButton)
         }
@@ -49,13 +49,17 @@ class PreviewImagesViewController: UIViewController,UICollectionViewDataSource,U
         
         downloadPercentage = [Int](count: imagesUUID.count, repeatedValue: 0)
         for i in 0..<imagesUUID.count{
-            RetrieveImageFromS3.retrieveImage(imagesUUID[i],bucket: S3ImagesBucketName,percentageHandler: {
+            RetrieveImageFromS3.instance.retrieveImage(imagesUUID[i],bucket: S3ImagesBucketName,percentageHandler: {
                     percentage in
                     self.setPercentageOfItem(i, percentage: percentage)
                 }){
-                _ in
-                self.downloadPercentage[i] = 100
-                self.imagesCollectionView.reloadItemsAtIndexPaths([NSIndexPath(forItem: i, inSection: 0)])
+                bool in
+                    if bool{
+                        self.downloadPercentage[i] = 100
+                        self.imagesCollectionView.reloadItemsAtIndexPaths([NSIndexPath(forItem: i, inSection: 0)])
+                    }else{//TODO: download image fail
+                        
+                    }
             }
         }
     }
@@ -78,6 +82,9 @@ class PreviewImagesViewController: UIViewController,UICollectionViewDataSource,U
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
+        style = self.navigationController?.navigationBar.barStyle
+        tintColor = self.navigationController?.navigationBar.tintColor
+        barTintColor = self.navigationController?.navigationBar.barTintColor
         
         self.navigationController?.setNavigationBarHidden(false, animated: false)
         self.navigationController?.navigationBar.barStyle = UIBarStyle.Black
@@ -85,6 +92,16 @@ class PreviewImagesViewController: UIViewController,UICollectionViewDataSource,U
         self.navigationController?.edgesForExtendedLayout = .None
         self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
         self.navigationController?.navigationBar.barTintColor = UIColor.blackColor()
+    }
+    var style:UIBarStyle!
+    var tintColor:UIColor!
+    var barTintColor:UIColor!
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.navigationController?.navigationBar.barStyle = style
+        self.navigationController?.navigationBar.tintColor = tintColor
+        self.navigationController?.navigationBar.barTintColor = barTintColor
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

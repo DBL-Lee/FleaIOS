@@ -50,14 +50,14 @@ class PostImageTableViewCell: UITableViewCell {
             let size = CGSize(width: side, height: side)
             let frame = CGRect(origin: origin, size: size)
             let view = ImageWithDeletionView(frame: frame, image: image,callback: removeImageAtIndex,index:i*column+j,mainIm: mainIm==i*column+j,overlay: true)
-            let tap = UITapGestureRecognizer(target: self, action: "handleTap:")
+            let tap = UITapGestureRecognizer(target: self, action: #selector(PostImageTableViewCell.handleTap(_:)))
             view.addGestureRecognizer(tap)
             self.containerView.addSubview(view)
             imageViews.append(view)
-            j++
+            j += 1
             if j==column{
                 j=0
-                i++
+                i += 1
             }
         }
         
@@ -97,7 +97,7 @@ class PostImageTableViewCell: UITableViewCell {
         
         self.addPhotoView.frame = CGRect(x: offset, y: offset, width: side, height: side)
         self.addPhotoView.setBackgroundImage(UIImage(named: "addPhoto.png"), forState: .Normal)
-        self.addPhotoView.addTarget(self, action: "addBtnPressed", forControlEvents: .TouchUpInside)
+        self.addPhotoView.addTarget(self, action: #selector(PostImageTableViewCell.addBtnPressed), forControlEvents: .TouchUpInside)
         self.containerView.addSubview(self.addPhotoView)
         
         addPhotos(images)
@@ -128,7 +128,7 @@ class PostImageTableViewCell: UITableViewCell {
         if deleteCallBack(i){
         
             if i<mainIm{
-                mainIm--
+                mainIm -= 1
             }
             
             let removedView = imageViews.removeAtIndex(i)

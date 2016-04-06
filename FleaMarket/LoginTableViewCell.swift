@@ -18,10 +18,27 @@ class LoginTableViewCell: UITableViewCell {
         auxiBtn.setBackgroundImage(UIImage(named: "password.png"), forState: .Normal)
         auxiBtn.setBackgroundImage(UIImage(named: "password-v.png"), forState: .Selected)
         auxiBtn.hidden = true
+        textField.keyboardType = .ASCIICapable
     }
+    
+    func setSecureEntry(secure:Bool){
+        UIView.performWithoutAnimation({
+            var resumeFirstResponder = false
+            if self.textField.isFirstResponder(){
+                resumeFirstResponder = true
+                self.textField.resignFirstResponder()
+            }
+            self.textField.secureTextEntry = secure
+            if resumeFirstResponder{
+                self.textField.becomeFirstResponder()
+            }
+            
+        })
+    }
+    
     @IBAction func auxiBtnTapped(sender: AnyObject) {
         auxiBtn.selected = !auxiBtn.selected
-        textField.secureTextEntry = !auxiBtn.selected
+        self.setSecureEntry(!auxiBtn.selected)
     }
 
     func setupCell(title:String,placeholder:String,showBtn:Bool){

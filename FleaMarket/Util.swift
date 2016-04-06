@@ -21,6 +21,7 @@ extension UIColor{
     }
 }
 
+
 extension UIView{
     func addBorder(edges edges: UIRectEdge, colour: UIColor = UIColor.whiteColor(), thickness: CGFloat = 1) -> [UIView] {
         
@@ -156,6 +157,8 @@ extension NSDate {
         //Return Result
         return dateWithHoursAdded
     }
+    
+
 }
 
 extension UIImage{
@@ -235,42 +238,15 @@ class CustomSearchController: UISearchController, UISearchBarDelegate {
     
 }
 
-class LoadingOverlay{
-    
-    var overlayView : UIView!
-    var activityIndicator : UIActivityIndicatorView!
-    
-    class var shared: LoadingOverlay {
-        struct Static {
-            static let instance: LoadingOverlay = LoadingOverlay()
+import MBProgressHUD
+
+class OverlaySingleton{
+    static func addToView(view:UIView,text:String,duration:Double = 1){
+        let hud = MBProgressHUD.showHUDAddedTo(view, animated: true)
+        hud.mode = .Text
+        hud.labelText = text
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(duration * Double(NSEC_PER_SEC))), dispatch_get_main_queue()){
+            hud.hide(true)
         }
-        return Static.instance
-    }
-    
-    init(){
-        self.overlayView = UIView()
-        self.activityIndicator = UIActivityIndicatorView()
-        
-        overlayView.frame = CGRectMake(0, 0, 80, 80)
-        overlayView.backgroundColor = UIColor(white: 0, alpha: 0.7)
-        overlayView.clipsToBounds = true
-        overlayView.layer.cornerRadius = 10
-        overlayView.layer.zPosition = 1
-        
-        activityIndicator.frame = CGRectMake(0, 0, 40, 40)
-        activityIndicator.center = CGPointMake(overlayView.bounds.width / 2, overlayView.bounds.height / 2)
-        activityIndicator.activityIndicatorViewStyle = .WhiteLarge
-        overlayView.addSubview(activityIndicator)
-    }
-    
-    func showOverlay(view: UIView) {
-        overlayView.center = view.center
-        view.addSubview(overlayView)
-        activityIndicator.startAnimating()
-    }
-    
-    func hideOverlayView() {
-        activityIndicator.stopAnimating()
-        overlayView.removeFromSuperview()
     }
 }
