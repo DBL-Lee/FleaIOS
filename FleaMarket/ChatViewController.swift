@@ -81,6 +81,7 @@ class ChatViewController: JSQMessagesViewController, CustomInputToolBarDelegate,
 //        self.collectionView.registerNib(JSQMessagesCollectionViewCellOutgoingCustom.nib(), forCellWithReuseIdentifier: JSQMessagesCollectionViewCellOutgoing.cellReuseIdentifier())
 //        self.collectionView.registerNib(JSQMessagesCollectionViewCellOutgoingCustom.nib(), forCellWithReuseIdentifier: JSQMessagesCollectionViewCellOutgoing.mediaCellReuseIdentifier())
         
+        self.collectionView.collectionViewLayout.minimumLineSpacing = 20
         
         self._inputToolbar = inputToolbar as! CustomInputToolBar
         inputToolbar.contentView.leftBarButtonItem = nil
