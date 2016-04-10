@@ -23,6 +23,8 @@ extension UIColor{
 
 
 extension UIView{
+    
+    
     func addBorder(edges edges: UIRectEdge, colour: UIColor = UIColor.whiteColor(), thickness: CGFloat = 1) -> [UIView] {
         
         var borders = [UIView]()

@@ -94,16 +94,14 @@ class UserLoginHandler:NSObject,EMClientDelegate{
     }
     
     func EMlogin(username:String,password:String){
-        if !EMClient.sharedClient().isLoggedIn{
-            let error = EMClient.sharedClient().loginWithUsername(username, password: password)
-            if (error == nil){
-                EMClient.sharedClient().options.isAutoLogin = true
-            }else{
-                print(error)
-            }
+        let error = EMClient.sharedClient().loginWithUsername(username, password: password)
+        if (error == nil){
+            
+        }else{
+            print(error)
         }
     }
-    
+
     func didAutoLoginWithError(aError: EMError!) {
         if aError == nil{
         }
@@ -246,6 +244,6 @@ class UserLoginHandler:NSObject,EMClientDelegate{
     }
     
     func loggedIn()->Bool{
-        return EMClient.sharedClient().isLoggedIn && A0SimpleKeychain().stringForKey(JWTTokenKey) != nil
+        return A0SimpleKeychain().stringForKey(JWTTokenKey) != nil
     }
 }

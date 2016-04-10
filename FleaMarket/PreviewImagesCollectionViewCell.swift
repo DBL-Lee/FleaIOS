@@ -7,30 +7,32 @@
 //
 
 import UIKit
-import KDCircularProgress
+//import KDCircularProgress
 
 class PreviewImagesCollectionViewCell: UICollectionViewCell {
 
     @IBOutlet weak var imageView: UIImageView!
-    var roundIndicator:KDCircularProgress = KDCircularProgress()
+    var roundIndicator:KDCircularProgress!
     
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
         self.imageView.contentMode = .ScaleAspectFit
-        roundIndicator.startAngle = -90
-        roundIndicator.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
-        roundIndicator.autoresizingMask = [.FlexibleTopMargin,.FlexibleBottomMargin,.FlexibleLeftMargin,.FlexibleRightMargin]
-        roundIndicator.setColors(UIColor.whiteColor())
-        imageView.addSubview(roundIndicator)
-        roundIndicator.center = imageView.center
+        let progressView = KDCircularProgress(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+        progressView.startAngle = -90.0
+        progressView.autoresizingMask = [.FlexibleTopMargin,.FlexibleBottomMargin,.FlexibleLeftMargin,.FlexibleRightMargin]
+        progressView.setColors(UIColor.whiteColor())
+        imageView.addSubview(progressView)
+        progressView.center = imageView.center
+        
+        roundIndicator = progressView
     }
     func setupCell(image:UIImage){
         self.roundIndicator.removeFromSuperview()
         self.imageView.image = image
     }
     func setupProgressIndicator(percentage:Int){
-        roundIndicator.angle = percentage*360/100
+        roundIndicator.angle = Double(percentage)*360/100
         if percentage == 100 {
             roundIndicator.removeFromSuperview()
         }

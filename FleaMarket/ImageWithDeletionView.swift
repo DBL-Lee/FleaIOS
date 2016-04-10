@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import KDCircularProgress
+//import KDCircularProgress
 
 class ImageWithDeletionView: UIView,UIGestureRecognizerDelegate {
     var index:Int
@@ -50,9 +50,8 @@ class ImageWithDeletionView: UIView,UIGestureRecognizerDelegate {
         if overlay{
             uploadOverlay = UIView(frame: CGRect(x: 0, y: 0, width: width-buttonSide/2, height: height-buttonSide/2))
             uploadOverlay.backgroundColor = UIColor.blackColor().colorWithAlphaComponent(0.5)
-            roundIndicator = KDCircularProgress()
-            roundIndicator.startAngle = -90
-            roundIndicator.frame = CGRect(x: 0, y: 0, width: (width-buttonSide/2)/2, height: (height-buttonSide/2)/2)
+            roundIndicator = KDCircularProgress(frame: CGRect(x: 0, y: 0, width: (width-buttonSide/2)/2, height: (height-buttonSide/2)/2))
+            roundIndicator.startAngle = -90.0
             uploadOverlay.autoresizingMask = [.FlexibleHeight,.FlexibleWidth]
             roundIndicator.autoresizingMask = [.FlexibleTopMargin,.FlexibleBottomMargin,.FlexibleLeftMargin,.FlexibleRightMargin]
             roundIndicator.setColors(UIColor.whiteColor())
@@ -82,7 +81,7 @@ class ImageWithDeletionView: UIView,UIGestureRecognizerDelegate {
     }
     
     func setPercentage(percentage:Int){
-        roundIndicator.angle = percentage*360/100
+        roundIndicator.angle = Double(percentage)*360/100
         if percentage == 100 {
             uploadOverlay.removeFromSuperview()
         }

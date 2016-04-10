@@ -182,6 +182,25 @@
 		9BE6F0141CAA98BA00854A29 /* ConversationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BE6F0121CAA98BA00854A29 /* ConversationTableViewCell.swift */; };
 		9BE6F0151CAA98BA00854A29 /* ConversationTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9BE6F0131CAA98BA00854A29 /* ConversationTableViewCell.xib */; };
 		9BE6F0171CAADC6F00854A29 /* EaseDataHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BE6F0161CAADC6F00854A29 /* EaseDataHandler.swift */; };
+		9BE769011CB5578400CF1E79 /* CustomInputToolBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BE769001CB5578400CF1E79 /* CustomInputToolBar.swift */; };
+		9BE769031CB563C400CF1E79 /* JSQMessagesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9BE769021CB563C400CF1E79 /* JSQMessagesViewController.xib */; };
+		9BE769091CB64D7400CF1E79 /* JSQMessagesViewController+Category.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BE769081CB64D7400CF1E79 /* JSQMessagesViewController+Category.m */; };
+		9BE7690B1CB7851900CF1E79 /* ChatMoreButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BE7690A1CB7851900CF1E79 /* ChatMoreButtonView.swift */; };
+		9BE7691A1CB7A65D00CF1E79 /* ChatMoreButtonView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9BE769191CB7A65D00CF1E79 /* ChatMoreButtonView.xib */; };
+		9BE7694D1CB7FD1700CF1E79 /* chatphoto.png in Resources */ = {isa = PBXBuildFile; fileRef = 9BE769431CB7FD1700CF1E79 /* chatphoto.png */; };
+		9BE7694E1CB7FD1700CF1E79 /* chatadd.png in Resources */ = {isa = PBXBuildFile; fileRef = 9BE769441CB7FD1700CF1E79 /* chatadd.png */; };
+		9BE7694F1CB7FD1700CF1E79 /* chatphoto-h.png in Resources */ = {isa = PBXBuildFile; fileRef = 9BE769451CB7FD1700CF1E79 /* chatphoto-h.png */; };
+		9BE769501CB7FD1700CF1E79 /* chatemoji.png in Resources */ = {isa = PBXBuildFile; fileRef = 9BE769461CB7FD1700CF1E79 /* chatemoji.png */; };
+		9BE769511CB7FD1700CF1E79 /* chatadd-h.png in Resources */ = {isa = PBXBuildFile; fileRef = 9BE769471CB7FD1700CF1E79 /* chatadd-h.png */; };
+		9BE769521CB7FD1700CF1E79 /* chatvoice.png in Resources */ = {isa = PBXBuildFile; fileRef = 9BE769481CB7FD1700CF1E79 /* chatvoice.png */; };
+		9BE769531CB7FD1700CF1E79 /* chatemoji-h.png in Resources */ = {isa = PBXBuildFile; fileRef = 9BE769491CB7FD1700CF1E79 /* chatemoji-h.png */; };
+		9BE769541CB7FD1700CF1E79 /* chatvoice-h.png in Resources */ = {isa = PBXBuildFile; fileRef = 9BE7694A1CB7FD1700CF1E79 /* chatvoice-h.png */; };
+		9BE769551CB7FD1700CF1E79 /* chatcamera.png in Resources */ = {isa = PBXBuildFile; fileRef = 9BE7694B1CB7FD1700CF1E79 /* chatcamera.png */; };
+		9BE769561CB7FD1700CF1E79 /* chatcamera-h.png in Resources */ = {isa = PBXBuildFile; fileRef = 9BE7694C1CB7FD1700CF1E79 /* chatcamera-h.png */; };
+		9BE769591CB7FF8400CF1E79 /* chatkeyboard.png in Resources */ = {isa = PBXBuildFile; fileRef = 9BE769571CB7FF8400CF1E79 /* chatkeyboard.png */; };
+		9BE7695A1CB7FF8400CF1E79 /* chatkeyboard-h.png in Resources */ = {isa = PBXBuildFile; fileRef = 9BE769581CB7FF8400CF1E79 /* chatkeyboard-h.png */; };
+		9BE7695C1CB935C800CF1E79 /* ChatImagePreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BE7695B1CB935C800CF1E79 /* ChatImagePreviewView.swift */; };
+		9BE769601CB94D4000CF1E79 /* KDCircularProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BE7695F1CB94D4000CF1E79 /* KDCircularProgress.swift */; };
 		9BE866A21CB3E067009FFE40 /* GenderEditTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BE866A11CB3E067009FFE40 /* GenderEditTableViewController.swift */; };
 		9BE866A71CB40E31009FFE40 /* UserOverviewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BE866A51CB40E31009FFE40 /* UserOverviewController.swift */; };
 		9BE866A81CB40E31009FFE40 /* UserOverviewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9BE866A61CB40E31009FFE40 /* UserOverviewController.xib */; };
@@ -400,6 +419,27 @@
 		9BE6F0121CAA98BA00854A29 /* ConversationTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversationTableViewCell.swift; sourceTree = "<group>"; };
 		9BE6F0131CAA98BA00854A29 /* ConversationTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ConversationTableViewCell.xib; sourceTree = "<group>"; };
 		9BE6F0161CAADC6F00854A29 /* EaseDataHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EaseDataHandler.swift; sourceTree = "<group>"; };
+		9BE769001CB5578400CF1E79 /* CustomInputToolBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomInputToolBar.swift; sourceTree = "<group>"; };
+		9BE769021CB563C400CF1E79 /* JSQMessagesViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JSQMessagesViewController.xib; sourceTree = "<group>"; };
+		9BE769071CB64D7400CF1E79 /* JSQMessagesViewController+Category.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "JSQMessagesViewController+Category.h"; sourceTree = "<group>"; };
+		9BE769081CB64D7400CF1E79 /* JSQMessagesViewController+Category.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "JSQMessagesViewController+Category.m"; sourceTree = "<group>"; };
+		9BE7690A1CB7851900CF1E79 /* ChatMoreButtonView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatMoreButtonView.swift; sourceTree = "<group>"; };
+		9BE769191CB7A65D00CF1E79 /* ChatMoreButtonView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChatMoreButtonView.xib; sourceTree = "<group>"; };
+		9BE769431CB7FD1700CF1E79 /* chatphoto.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chatphoto.png; sourceTree = "<group>"; };
+		9BE769441CB7FD1700CF1E79 /* chatadd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chatadd.png; sourceTree = "<group>"; };
+		9BE769451CB7FD1700CF1E79 /* chatphoto-h.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatphoto-h.png"; sourceTree = "<group>"; };
+		9BE769461CB7FD1700CF1E79 /* chatemoji.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chatemoji.png; sourceTree = "<group>"; };
+		9BE769471CB7FD1700CF1E79 /* chatadd-h.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatadd-h.png"; sourceTree = "<group>"; };
+		9BE769481CB7FD1700CF1E79 /* chatvoice.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chatvoice.png; sourceTree = "<group>"; };
+		9BE769491CB7FD1700CF1E79 /* chatemoji-h.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatemoji-h.png"; sourceTree = "<group>"; };
+		9BE7694A1CB7FD1700CF1E79 /* chatvoice-h.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatvoice-h.png"; sourceTree = "<group>"; };
+		9BE7694B1CB7FD1700CF1E79 /* chatcamera.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chatcamera.png; sourceTree = "<group>"; };
+		9BE7694C1CB7FD1700CF1E79 /* chatcamera-h.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatcamera-h.png"; sourceTree = "<group>"; };
+		9BE769571CB7FF8400CF1E79 /* chatkeyboard.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chatkeyboard.png; sourceTree = "<group>"; };
+		9BE769581CB7FF8400CF1E79 /* chatkeyboard-h.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chatkeyboard-h.png"; sourceTree = "<group>"; };
+		9BE7695B1CB935C800CF1E79 /* ChatImagePreviewView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatImagePreviewView.swift; sourceTree = "<group>"; };
+		9BE7695F1CB94D4000CF1E79 /* KDCircularProgress.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KDCircularProgress.swift; sourceTree = "<group>"; };
+		9BE7696F1CBAB26F00CF1E79 /* JSQOverride.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JSQOverride.h; sourceTree = "<group>"; };
 		9BE866A11CB3E067009FFE40 /* GenderEditTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GenderEditTableViewController.swift; sourceTree = "<group>"; };
 		9BE866A51CB40E31009FFE40 /* UserOverviewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserOverviewController.swift; sourceTree = "<group>"; };
 		9BE866A61CB40E31009FFE40 /* UserOverviewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserOverviewController.xib; sourceTree = "<group>"; };
@@ -766,9 +806,26 @@
 		9BB63F871C9F8E300053163D /* 聊天 */ = {
 			isa = PBXGroup;
 			children = (
-				9BB63F881C9F8EBD0053163D /* ChatViewController.swift */,
+				9BE769021CB563C400CF1E79 /* JSQMessagesViewController.xib */,
+				9BE769431CB7FD1700CF1E79 /* chatphoto.png */,
+				9BE769441CB7FD1700CF1E79 /* chatadd.png */,
+				9BE769451CB7FD1700CF1E79 /* chatphoto-h.png */,
+				9BE769461CB7FD1700CF1E79 /* chatemoji.png */,
+				9BE769471CB7FD1700CF1E79 /* chatadd-h.png */,
+				9BE769481CB7FD1700CF1E79 /* chatvoice.png */,
+				9BE769491CB7FD1700CF1E79 /* chatemoji-h.png */,
+				9BE7694A1CB7FD1700CF1E79 /* chatvoice-h.png */,
+				9BE7694B1CB7FD1700CF1E79 /* chatcamera.png */,
+				9BE7694C1CB7FD1700CF1E79 /* chatcamera-h.png */,
+				9BE769571CB7FF8400CF1E79 /* chatkeyboard.png */,
+				9BE769581CB7FF8400CF1E79 /* chatkeyboard-h.png */,
 				9BE6F0101CAA96CB00854A29 /* ChatListTableViewController.swift */,
+				9BB63F881C9F8EBD0053163D /* ChatViewController.swift */,
+				9BE7695B1CB935C800CF1E79 /* ChatImagePreviewView.swift */,
+				9BE769001CB5578400CF1E79 /* CustomInputToolBar.swift */,
 				9BE6F0121CAA98BA00854A29 /* ConversationTableViewCell.swift */,
+				9BE7690A1CB7851900CF1E79 /* ChatMoreButtonView.swift */,
+				9BE769191CB7A65D00CF1E79 /* ChatMoreButtonView.xib */,
 				9BE6F0131CAA98BA00854A29 /* ConversationTableViewCell.xib */,
 			);
 			name = "聊天";
@@ -807,6 +864,7 @@
 		9BB94B0C1CAE6BE300E727DF /* Obj-C helper classes */ = {
 			isa = PBXGroup;
 			children = (
+				9BE7695F1CB94D4000CF1E79 /* KDCircularProgress.swift */,
 				9BB94B561CAE7FE700E727DF /* FleaMarket-Bridging-Header.h */,
 				9BB94B5A1CAE801400E727DF /* NSDate+Category.h */,
 				9BB94B571CAE7FE800E727DF /* NSDate+Category.m */,
@@ -814,6 +872,7 @@
 				9BB94B591CAE801400E727DF /* NSDateFormatter+Category.m */,
 				9BB94B5D1CAE801400E727DF /* UIFont+SystemFontOverride.h */,
 				9BB94B5B1CAE801400E727DF /* UIFont+SystemFontOverride.m */,
+				9BE7696E1CBAB25E00CF1E79 /* JSQOverride */,
 			);
 			name = "Obj-C helper classes";
 			sourceTree = "<group>";
@@ -853,6 +912,16 @@
 				9B3CF5191C97E86400C80FA8 /* OrderingTableViewCell.xib */,
 			);
 			name = Search;
+			sourceTree = "<group>";
+		};
+		9BE7696E1CBAB25E00CF1E79 /* JSQOverride */ = {
+			isa = PBXGroup;
+			children = (
+				9BE7696F1CBAB26F00CF1E79 /* JSQOverride.h */,
+				9BE769071CB64D7400CF1E79 /* JSQMessagesViewController+Category.h */,
+				9BE769081CB64D7400CF1E79 /* JSQMessagesViewController+Category.m */,
+			);
+			name = JSQOverride;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -966,6 +1035,7 @@
 			files = (
 				9B82677E1C60F393008E1096 /* ProductDetailTableViewController.xib in Resources */,
 				9B6F904F1C53AFA3006B2514 /* 6.png in Resources */,
+				9BE769551CB7FD1700CF1E79 /* chatcamera.png in Resources */,
 				9B6F900F1C512F2F006B2514 /* FirstScreenSearchTableViewCell.xib in Resources */,
 				9B91CBAE1C7A22E8004F44C3 /* SearchResultViewController.xib in Resources */,
 				9BB94B6E1CB0BDB100E727DF /* flashoff.png in Resources */,
@@ -985,7 +1055,9 @@
 				9BE248211C5E55B200A119A4 /* OptionsTableViewCell.xib in Resources */,
 				9B72086B1C5A38B800F22983 /* uncheckmark.png in Resources */,
 				9BE2482B1C5F80F300A119A4 /* PostDescriptionTableViewCell.xib in Resources */,
+				9BE769031CB563C400CF1E79 /* JSQMessagesViewController.xib in Resources */,
 				9B72086A1C5A38B800F22983 /* checkmark.png in Resources */,
+				9BE769591CB7FF8400CF1E79 /* chatkeyboard.png in Resources */,
 				9BB94B6F1CB0BDB100E727DF /* flashon.png in Resources */,
 				9B8267791C60E40F008E1096 /* PreviewImagesCollectionViewCell.xib in Resources */,
 				9BCFB4041CB14FA9005ACFE5 /* settingsicon.png in Resources */,
@@ -1001,12 +1073,17 @@
 				9B3CF51B1C97E86400C80FA8 /* OrderingTableViewCell.xib in Resources */,
 				9BB1047F1C60DA7D003E5274 /* PreviewImagesViewController.xib in Resources */,
 				9BCFB4051CB14FA9005ACFE5 /* boughticon.png in Resources */,
+				9BE769561CB7FD1700CF1E79 /* chatcamera-h.png in Resources */,
+				9BE769511CB7FD1700CF1E79 /* chatadd-h.png in Resources */,
 				9BCFB4061CB14FA9005ACFE5 /* editicon.png in Resources */,
 				9BB831F71C9BD3EB00A9F319 /* MineTopLoggedInTableViewCell.xib in Resources */,
 				9BB9C6F51C7B878E008105AB /* backButton.png in Resources */,
 				9B72086D1C5A3A5700F22983 /* delete.png in Resources */,
+				9BE7694D1CB7FD1700CF1E79 /* chatphoto.png in Resources */,
+				9BE7691A1CB7A65D00CF1E79 /* ChatMoreButtonView.xib in Resources */,
 				9BCFB4031CB14FA9005ACFE5 /* postedicon.png in Resources */,
 				9B7208531C5834CC00F22983 /* PhotoThumbnailCollectionViewCell.xib in Resources */,
+				9BE769531CB7FD1700CF1E79 /* chatemoji-h.png in Resources */,
 				9BCFB4071CB14FA9005ACFE5 /* soldicon.png in Resources */,
 				9B7208201C564C5A00F22983 /* PostCategoryTableViewCell.xib in Resources */,
 				9B6F901C1C5244C1006B2514 /* CategoryTableViewCell.xib in Resources */,
@@ -1026,19 +1103,25 @@
 				9B2F6EDA1C9A57F5002A9829 /* password.png in Resources */,
 				9BE6F0151CAA98BA00854A29 /* ConversationTableViewCell.xib in Resources */,
 				9B8267821C60F6ED008E1096 /* ProductDetailImageTableViewCell.xib in Resources */,
+				9BE7694F1CB7FD1700CF1E79 /* chatphoto-h.png in Resources */,
 				9B6F90511C53AFA3006B2514 /* 4.png in Resources */,
+				9BE769521CB7FD1700CF1E79 /* chatvoice.png in Resources */,
 				9B6F8FE01C50FE37006B2514 /* Main.storyboard in Resources */,
 				9BD0B2A01C979A7900ED8C15 /* DistanceDragCell.xib in Resources */,
 				9B91CBB61C7A55BA004F44C3 /* SearchResultTableViewCell.xib in Resources */,
 				9B6F90601C55925C006B2514 /* post.png in Resources */,
 				9B72084A1C580FDE00F22983 /* addPhoto.png in Resources */,
+				9BE769541CB7FD1700CF1E79 /* chatvoice-h.png in Resources */,
 				9B7208251C56622B00F22983 /* DetailDisclosureTableViewCell.xib in Resources */,
 				9BB831E41C9A8F8400A9F319 /* VerifyCodeTableViewCell.xib in Resources */,
 				9BB94B841CB0D21100E727DF /* AvatarEditTableViewCell.xib in Resources */,
 				9BC879561C73652700905F2D /* section0back.jpg in Resources */,
 				9BB4CDAD1C722DBD0044EFA8 /* loading.png in Resources */,
+				9BE7695A1CB7FF8400CF1E79 /* chatkeyboard-h.png in Resources */,
+				9BE7694E1CB7FD1700CF1E79 /* chatadd.png in Resources */,
 				9B6F90541C53B04A006B2514 /* 1.png in Resources */,
 				9B91CBB21C7A2A92004F44C3 /* dropup.png in Resources */,
+				9BE769501CB7FD1700CF1E79 /* chatemoji.png in Resources */,
 				9B88C2101C668540007607A3 /* ProductDetailDescriptionTableViewCell.xib in Resources */,
 				9B72081C1C5647EE00F22983 /* PostCategoryViewController.xib in Resources */,
 				9BB94B881CB1111700E727DF /* IntroductionEditViewController.xib in Resources */,
@@ -1122,6 +1205,7 @@
 				9B6F90351C53A881006B2514 /* Currency.swift in Sources */,
 				9B9586361C9C0DBE006C44BC /* MineProductsTableViewController.swift in Sources */,
 				9B6305A01C9A478A00FB83B3 /* UserLoginHandler.swift in Sources */,
+				9BE769091CB64D7400CF1E79 /* JSQMessagesViewController+Category.m in Sources */,
 				9BE866A71CB40E31009FFE40 /* UserOverviewController.swift in Sources */,
 				9BB831F21C9BCD4800A9F319 /* MineTopTableViewCell.swift in Sources */,
 				9B6F90131C513187006B2514 /* FakeSearchBarButton.swift in Sources */,
@@ -1134,6 +1218,7 @@
 				9B998D801C7C908900F51609 /* CategoryDropDownTableView.swift in Sources */,
 				9BB1047E1C60DA7D003E5274 /* PreviewImagesViewController.swift in Sources */,
 				9B88C20F1C668540007607A3 /* ProductDetailDescriptionTableViewCell.swift in Sources */,
+				9BE769601CB94D4000CF1E79 /* KDCircularProgress.swift in Sources */,
 				9B8267851C63A51A008E1096 /* ProductDetailTitleTableViewCell.swift in Sources */,
 				9B7208441C57D03700F22983 /* ImageWithDeletionView.swift in Sources */,
 				9B6F8FE31C50FE37006B2514 /* FleaMarket.xcdatamodeld in Sources */,
@@ -1156,6 +1241,8 @@
 				9BB5ABAE1C7F9250008BF2AB /* DoubleDragPriceTableViewCell.swift in Sources */,
 				9B72083A1C57956200F22983 /* PostCounterTableViewCell.swift in Sources */,
 				9BD0B29E1C979A6700ED8C15 /* DistanceDragCell.swift in Sources */,
+				9BE769011CB5578400CF1E79 /* CustomInputToolBar.swift in Sources */,
+				9BE7695C1CB935C800CF1E79 /* ChatImagePreviewView.swift in Sources */,
 				9B91CBAD1C7A22E8004F44C3 /* SearchResultViewController.swift in Sources */,
 				9B6F8FDB1C50FE37006B2514 /* AppDelegate.swift in Sources */,
 				9BE6F0111CAA96CB00854A29 /* ChatListTableViewController.swift in Sources */,
@@ -1176,6 +1263,7 @@
 				9BB831EF1C9BC9D500A9F319 /* MineTableViewController.swift in Sources */,
 				9BC879591C7369DA00905F2D /* SearchViewController.swift in Sources */,
 				9B8267891C63AD1E008E1096 /* ProductDetailSellerTableViewCell.swift in Sources */,
+				9BE7690B1CB7851900CF1E79 /* ChatMoreButtonView.swift in Sources */,
 				9B82678D1C662533008E1096 /* ProductDetailDetailTableViewCell.swift in Sources */,
 				9B6F901E1C5249D8006B2514 /* CategoryCollectionViewCell.swift in Sources */,
 				9B7208631C592CCF00F22983 /* GlobalConstants.swift in Sources */,

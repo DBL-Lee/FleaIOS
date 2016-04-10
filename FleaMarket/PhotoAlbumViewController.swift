@@ -120,7 +120,6 @@ class PhotoAlbumViewController: UIViewController,UICollectionViewDataSource,UICo
     }
 
     func dismiss(){
-        print(self.view.frame.width)
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     

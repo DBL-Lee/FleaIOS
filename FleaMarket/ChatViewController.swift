@@ -8,8 +8,9 @@
 
 import JSQMessagesViewController
 import UIKit
+import MBProgressHUD
 
-class ChatViewController: JSQMessagesViewController {
+class ChatViewController: JSQMessagesViewController, CustomInputToolBarDelegate,UIGestureRecognizerDelegate {
     
     var conversation:EMConversation!
     
@@ -17,18 +18,26 @@ class ChatViewController: JSQMessagesViewController {
     var targetEMUsername:String!
     var targetNickname:String!
     var targetAvatarURL:String!
-    var refreshControl:UIRefreshControl = UIRefreshControl()
     var myEMUsername = EMClient.sharedClient().currentUsername
+    
+    var _inputToolbar : CustomInputToolBar!
+    
+    let refreshHeader = UIRefreshControl()
 
     var firstMessageID:String!
     
-    var messages = [JSQMessage]()
+    var rawmessages:[EMMessage] = []
+    var messages:[JSQMessage] = []
     var avatars = Dictionary<String, JSQMessagesAvatarImage>()
     var incomingBubbleImage = JSQMessagesBubbleImageFactory().incomingMessagesBubbleImageWithColor(UIColor.jsq_messageBubbleLightGrayColor())
     var outgoingBubbleImage = JSQMessagesBubbleImageFactory().outgoingMessagesBubbleImageWithColor(UIColor.jsq_messageBubbleGreenColor())
     var senderImageUrl: String!
     
-    let maximumLoadCount = 5
+    let maximumLoadCount = 30
+    
+    override class func nib()->UINib{
+        return UINib(nibName: "JSQMessagesViewController", bundle: nil)
+    }
     
     convenience init(userid:Int,username:String,nickname:String,avatar:String){
         self.init()
@@ -37,50 +46,196 @@ class ChatViewController: JSQMessagesViewController {
         self.targetNickname = nickname
         self.targetEMUsername = username.lowercaseString
         self.conversation = EMClient.sharedClient().chatManager.getConversation(targetEMUsername, type: EMConversationTypeChat, createIfNotExist: true)
+        
+        
+        RetrieveImageFromS3.instance.retrieveImage(avatar, bucket: S3AvatarsBucketName, completion: {
+            success in
+            if success{
+                let im = UIImage(contentsOfFile: RetrieveImageFromS3.localDirectoryOf(avatar).path!)!
+                self.avatars[self.targetEMUsername] = JSQMessagesAvatarImage(avatarImage: im, highlightedImage: im, placeholderImage: im)
+                self.collectionView.reloadData()
+            }else{
+                
+            }
+        })
+        let myAvatar = UserLoginHandler.instance.avatarImageURL
+        RetrieveImageFromS3.instance.retrieveImage(myAvatar, bucket: S3AvatarsBucketName, completion: {
+            success in
+            if success{
+                let im = UIImage(contentsOfFile: RetrieveImageFromS3.localDirectoryOf(myAvatar).path!)!
+                self.avatars[self.myEMUsername] = JSQMessagesAvatarImage(avatarImage: im, highlightedImage: im, placeholderImage: im)
+                self.collectionView.reloadData()
+            }else{
+                
+            }
+        })
     }
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        //inputToolbar!.contentView!.leftBarButtonItem = nil
+        
+//        self.collectionView.registerNib(JSQMessagesCollectionViewCellIncomingCustom.nib(), forCellWithReuseIdentifier: JSQMessagesCollectionViewCellIncoming.cellReuseIdentifier())
+//        self.collectionView.registerNib(JSQMessagesCollectionViewCellIncomingCustom.nib(), forCellWithReuseIdentifier: JSQMessagesCollectionViewCellIncoming.mediaCellReuseIdentifier())
+//        self.collectionView.registerNib(JSQMessagesCollectionViewCellOutgoingCustom.nib(), forCellWithReuseIdentifier: JSQMessagesCollectionViewCellOutgoing.cellReuseIdentifier())
+//        self.collectionView.registerNib(JSQMessagesCollectionViewCellOutgoingCustom.nib(), forCellWithReuseIdentifier: JSQMessagesCollectionViewCellOutgoing.mediaCellReuseIdentifier())
+        
+        
+        self._inputToolbar = inputToolbar as! CustomInputToolBar
+        inputToolbar.contentView.leftBarButtonItem = nil
+        _inputToolbar.contentView.rightBarButtonItem = nil
+        _inputToolbar.customDelegate = self
+        _inputToolbar.delegate = nil
+        _inputToolbar.chatVC = self
+        
+        let voiceBtn = UIButton(type: .Custom)
+        voiceBtn.setTitle("", forState: .Normal)
+        voiceBtn.setBackgroundImage(UIImage(named: "chatvoice.png"), forState: .Normal)
+        voiceBtn.setBackgroundImage(UIImage(named: "chatvoice-h.png"), forState: .Highlighted)
+        voiceBtn.setBackgroundImage(UIImage(named: "chatkeyboard.png"), forState: .Selected)
+        _inputToolbar.contentView.leftBarButtonItem = voiceBtn
+        
+        let button = CustomToolBarButton(type: .Custom)
+        button.setTitle("", forState: .Normal)
+        button.setBackgroundImage(UIImage(named: "chatadd.png"), forState: .Normal)
+        button.setBackgroundImage(UIImage(named: "chatadd-h.png"), forState: .Highlighted)
+        button.setBackgroundImage(UIImage(named: "chatkeyboard.png"), forState: .Selected)
+        let moreView = setupMoreView()
+        button.associatedView = moreView
+        _inputToolbar.addButtonToRightBar(button)
+        
+        let abutton = CustomToolBarButton(type: .Custom)
+        abutton.setTitle("", forState: .Normal)
+        abutton.setBackgroundImage(UIImage(named: "chatemoji.png"), forState: .Normal)
+        abutton.setBackgroundImage(UIImage(named: "chatemoji-h.png"), forState: .Highlighted)
+        abutton.setBackgroundImage(UIImage(named: "chatkeyboard.png"), forState: .Selected)
+        let aassView = UIView()
+        aassView.backgroundColor = UIColor.greenColor()
+        abutton.associatedView = aassView
+        _inputToolbar.addButtonToRightBar(abutton)
+        
+        
         automaticallyScrollsToMostRecentMessage = true
         
         self.title = targetNickname
         
-        let avatar = UserLoginHandler.instance.avatarImageURL
-        let fileURL = RetrieveImageFromS3.localDirectoryOf(avatar)
-        RetrieveImageFromS3.instance.retrieveImage(avatar, bucket: S3ImagesBucketName){
-            bool in
-            if bool{
-                self.setupAvatarImage(self.myEMUsername, imageUrl: fileURL.path!, incoming: false)
-                self.senderImageUrl = fileURL.path!
-            }else{//TODO: download image fail
-                
-            }
-        }
-        
-        refreshControl.addTarget(self, action: #selector(loadMoreMessageFromDatabase), forControlEvents: .ValueChanged)
-        self.collectionView.addSubview(refreshControl)
-        self.collectionView.alwaysBounceVertical = true
-        
         self.keyboardController.textView.returnKeyType = .Send
         self.keyboardController.textView.placeholder = nil
-        
-        self.collectionView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard)))
         
         self.senderId = myEMUsername
         self.senderDisplayName = UserLoginHandler.instance.nickname
         
-        self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(ChatViewController.dismissKeyboard)))
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(ChatViewController.dismissKeyboard))
+        tap.delegate = self
+        self.collectionView.addGestureRecognizer(tap)
+        
+        let pan = UIPanGestureRecognizer(target: self, action: #selector(ChatViewController.dismissKeyboard))
+        pan.delegate = self
+        self.collectionView.addGestureRecognizer(pan)
+        
+        //set size for avatar to be height of one single row
+        let calculator = JSQMessagesBubblesSizeCalculator.init(cache: NSCache(), minimumBubbleWidth: 100, usesFixedWidthBubbles: false)
+        let testMessage = JSQMessage(senderId: "", displayName: "", text: "test")
+        let onerowSize:CGSize = calculator.messageBubbleSizeForMessageData(testMessage, atIndexPath: NSIndexPath(forItem: 0,inSection: 0), withLayout: self.collectionView.collectionViewLayout)
+        let side = onerowSize.height
+        self.collectionView.collectionViewLayout.incomingAvatarViewSize = CGSize(width: side, height: side)
+        self.collectionView.collectionViewLayout.outgoingAvatarViewSize = CGSize(width: side, height: side)
         
         loadMoreMessageFromDatabase()
     }
     
+    func setupMoreView()->ChatMoreButtonView{
+        var names:[String] = []
+        var icons:[String] = []
+        var callbacks:[()->Void] = []
+        names.appendContentsOf(["照片","拍摄"])
+        icons.appendContentsOf(["chatphoto.png","chatcamera.png"])
+        callbacks.appendContentsOf([showAlbum,showCamera])
+        let view = NSBundle.mainBundle().loadNibNamed("ChatMoreButtonView", owner: self, options: nil).first! as! ChatMoreButtonView
+        view.setupView(names, icons: icons, callbacks: callbacks)
+        return view
+    }
+    
+    func showCamera(){
+        dismissKeyboard()
+        let vc = PhotoCameraViewController()
+        
+        vc.MAXPHOTO = 1
+        vc.callback = {
+            images in
+            if images.count > 0 {
+                self.sendImageMessage(images.first!)
+            }
+        }
+        let vc2 = UINavigationController(rootViewController: vc)
+        self.presentViewController(vc2, animated: true, completion: nil)
+    }
+    
+    func showAlbum(){
+        dismissKeyboard()
+        let vc = PhotoAlbumViewController()
+        vc.MAXPHOTO = 1
+        vc.callback = {
+            images in
+            if images.count > 0 {
+                self.sendImageMessage(images.first!)
+            }
+        }
+        let vc2 = UINavigationController(rootViewController: vc)
+        self.presentViewController(vc2, animated: true, completion: nil)
+    }
+    
+    
+    func toolBarDidMoveUp(height: CGFloat) {
+        let y = self.collectionView.frame.origin.y
+        let width = self.collectionView.frame.width
+        let newHeight = self.collectionView.frame.height-height
+        let offset = self.collectionView.contentOffset.y
+        if height >= 0{
+            UIView.animateWithDuration(0.25, animations: {
+                if self._inputToolbar.keyboardisUp{
+                    
+                }else{
+                    self.collectionView.contentOffset.y = offset + height
+                    self.view.layoutIfNeeded()
+                }
+            }){
+                finished in
+                self.collectionView.frame = CGRect(x: 0, y: y, width: width, height: newHeight)
+                self.collectionView.contentOffset.y = offset + height
+            }
+        }else{
+//            UIView.animateWithDuration(0.25, animations: {
+//                if self._inputToolbar.keyboardisUp{
+//                    
+//                }else{
+//                    self.collectionView.contentOffset.y = offset + height
+//                    self.view.layoutIfNeeded()
+//                }
+//            }){
+//                finished in
+//            }
+//            self.collectionView.frame = CGRect(x: 0, y: y, width: width, height: newHeight)
+        }
+    }
+    
+    func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
+    
     func dismissKeyboard(){
-        self.view.endEditing(true)
+        if _inputToolbar.barisUp{
+            _inputToolbar.moveBarDown()
+        }else{
+            self.view.endEditing(true)
+        }
     }
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
+        self.navigationController!.navigationBar.translucent = false
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(didReceiveMessages), name: "ReceiveNewMessageNotification", object: nil)
         
@@ -89,73 +244,78 @@ class ChatViewController: JSQMessagesViewController {
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
-        
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
+    var isLoading = false
+    
+    override func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
+        if (scrollView.contentOffset.y <= 0){
+            loadMoreMessageFromDatabase()
+        }
+    }
+    
+    
     func loadMoreMessageFromDatabase(){
-        if moremessage{
-            let result = conversation.loadMoreMessagesFromId(firstMessageID, limit: Int32(maximumLoadCount))
-            conversation.markAllMessagesAsRead()
-            if result.count > 0 {
-                firstMessageID = (result[0] as! EMMessage).messageId
-                var tempMsg:[JSQMessage] = []
-                var indexPaths:[NSIndexPath] = []
-                var i = 0
-                for message in result{
-                    indexPaths.append(NSIndexPath(forItem: i, inSection: 0))
-                    let m = message as! EMMessage
-                    let jsq = convertMessage(m)
-                    tempMsg.append(jsq)
-                    i+=1
+        if !isLoading{
+            isLoading = true
+            if moremessage{
+                let result = conversation.loadMoreMessagesFromId(firstMessageID, limit: Int32(maximumLoadCount))
+                conversation.markAllMessagesAsRead()
+                if result.count > 0 {
+                    firstMessageID = (result[0] as! EMMessage).messageId
+                    var tempMsg:[JSQMessage] = []
+                    var tempRawMsg:[EMMessage] = []
+                    var indexPaths:[NSIndexPath] = []
+                    var i = 0
+                    for message in result{
+                        indexPaths.append(NSIndexPath(forItem: i, inSection: 0))
+                        let m = message as! EMMessage
+                        let jsq = convertMessage(m)
+                        tempMsg.append(jsq)
+                        tempRawMsg.append(m)
+                        i+=1
+                    }
+                    
+                    if tempMsg.count == maximumLoadCount{
+                        self.moremessage = true
+                    }else{
+                        self.moremessage = false
+                    }
+                    
+                    tempMsg.appendContentsOf(messages)
+                    tempRawMsg.appendContentsOf(rawmessages)
+                    messages = tempMsg
+                    rawmessages = tempRawMsg
+                    
+                    
+                    
+                    if messages.count <= maximumLoadCount {
+                        self.collectionView?.reloadData()
+                    }else{
+                    
+                        let contentHeight = self.collectionView!.contentSize.height
+                        let offsetY = self.collectionView!.contentOffset.y
+                        
+                        CATransaction.begin()
+                        CATransaction.setDisableActions(true)
+                        
+                        self.collectionView!.performBatchUpdates({
+                            if indexPaths.count > 0 {
+                                self.collectionView!.insertItemsAtIndexPaths(indexPaths)
+                            }
+                            }, completion: {
+                                finished in
+                                print("completed loading of new stuff, animating\(self.collectionView!.contentSize.height)")
+                                let newContentHeight = self.collectionView.contentSize.height
+                                let newOffset = offsetY + newContentHeight-contentHeight
+                                self.collectionView!.contentOffset = CGPointMake(0, newOffset)
+                                CATransaction.commit()
+                        })
+                    }
                 }
-                
-                if tempMsg.count == maximumLoadCount{
-                    self.moremessage = true
-                }else{
-                    self.moremessage = false
-                }
-                
-                tempMsg.appendContentsOf(messages)
-                messages = tempMsg
-                
-                if messages.count <= maximumLoadCount {
-                    self.collectionView?.reloadData()
-                }else{
-                    self.collectionView?.insertItemsAtIndexPaths(indexPaths)
-                    self.collectionView?.scrollToItemAtIndexPath(NSIndexPath(forItem: i,inSection: 0), atScrollPosition: .Top, animated: false)
-                }
-                
-                refreshControl.endRefreshing()
-                
-//                if messages.count <= maximumLoadCount {
-//                    self.collectionView?.reloadData()
-//                    refreshControl.endRefreshing()
-//                }else{
-//                
-//                    let contentHeight = self.collectionView!.contentSize.height
-//                    let offsetY = self.collectionView!.contentOffset.y
-//                    let bottomOffset = contentHeight - offsetY
-//                    
-//                    CATransaction.begin()
-//                    CATransaction.setDisableActions(true)
-//                    
-//                    self.collectionView!.performBatchUpdates({
-//                        if indexPaths.count > 0 {
-//                            self.collectionView!.insertItemsAtIndexPaths(indexPaths)
-//                        }
-//                        }, completion: {
-//                            finished in
-//                            print("completed loading of new stuff, animating\(self.collectionView!.contentSize.height)")
-//                            self.collectionView!.contentOffset = CGPointMake(0, self.collectionView!.contentSize.height - bottomOffset)
-//                            CATransaction.commit()
-//                    })
-//                }
-            }else{
-                refreshControl.endRefreshing()
             }
-        }else{
-            refreshControl.endRefreshing()
+            isLoading = false
         }
     }
     
@@ -183,6 +343,18 @@ class ChatViewController: JSQMessagesViewController {
             let displayname = (message.from == myEMUsername ? UserLoginHandler.instance.nickname : targetNickname)
             let jsq = JSQMessage(senderId: message.from, displayName: displayname, text: body.text)
             return jsq
+        case EMMessageBodyTypeImage:
+            let body = message.body as! EMImageMessageBody
+            let displayname = (message.from == myEMUsername ? UserLoginHandler.instance.nickname : targetNickname)
+            
+            let mediadata:JSQPhotoMediaItem!
+            if body.downloadStatus == EMDownloadStatusSuccessed{
+                mediadata = JSQPhotoMediaItem(image: UIImage(contentsOfFile: body.localPath))
+            }else{
+                mediadata = JSQPhotoMediaItem(image: UIImage(contentsOfFile: body.thumbnailLocalPath))
+            }
+            let jsq = JSQMessage(senderId: message.from, displayName: displayname, media: mediadata)
+            return jsq
         default:
             break
         }
@@ -193,7 +365,10 @@ class ChatViewController: JSQMessagesViewController {
     func didReceiveMessages(notification:NSNotification) {
         let json = notification.userInfo!
         let conversationid = json["id"] as! [String]
+        
         if conversationid.contains(targetEMUsername){
+            
+            JSQSystemSoundPlayer.jsq_playMessageReceivedSound()
             let count = conversation.unreadMessagesCount
             let aMessages = conversation.loadMoreMessagesFromId(nil, limit: count)
             conversation.markAllMessagesAsRead()
@@ -209,7 +384,25 @@ class ChatViewController: JSQMessagesViewController {
         
     }
     
-    func sendMessage(text: String!) {
+    func sendImageMessage(image:UIImage){
+        let body = EMImageMessageBody(data: UIImagePNGRepresentation(image), thumbnailData: nil)
+        let from = EMClient.sharedClient().currentUsername
+        let message = EMMessage(conversationID: targetEMUsername, from: from, to: targetEMUsername, body: body, ext: nil)
+        
+        EMClient.sharedClient().chatManager.asyncSendMessage(message, progress: {
+                progress in
+            }, completion: {
+                message,error in
+                if error == nil{
+                    JSQSystemSoundPlayer.jsq_playMessageSentSound()
+                    self.rawmessages.append(message)
+                    self.messages.append(self.convertMessage(message))
+                    self.finishSendingMessage()
+                }
+        })
+    }
+    
+    func sendTextMessage(text: String!) {
         let body = EMTextMessageBody(text: text)
         let from = EMClient.sharedClient().currentUsername
         let message = EMMessage(conversationID: targetEMUsername, from: from, to: targetEMUsername, body: body, ext: nil)
@@ -218,8 +411,12 @@ class ChatViewController: JSQMessagesViewController {
         EMClient.sharedClient().chatManager.asyncSendMessage(message, progress: nil){
             message,error in
             if error == nil{ //finish sending message
+                JSQSystemSoundPlayer.jsq_playMessageSentSound()
+                self.rawmessages.append(message)
                 self.messages.append(self.convertMessage(message))
                 self.finishSendingMessageAnimated(true)
+            }else{ //send failed
+                
             }
         }
     }
@@ -267,10 +464,7 @@ class ChatViewController: JSQMessagesViewController {
     // ACTIONS
     
     override func didPressSendButton(button: UIButton!, withMessageText text: String!, senderId: String!, senderDisplayName: String!, date: NSDate!) {
-        JSQSystemSoundPlayer.jsq_playMessageSentSound()
-        
-        sendMessage(text)
-        
+        sendTextMessage(text)
     }
     
     override func didPressAccessoryButton(sender: UIButton!) {
@@ -291,12 +485,14 @@ class ChatViewController: JSQMessagesViewController {
         return incomingBubbleImage
     }
     
+    
+    
     override func collectionView(collectionView: JSQMessagesCollectionView!, avatarImageDataForItemAtIndexPath indexPath: NSIndexPath!) -> JSQMessageAvatarImageDataSource! {
         let message = messages[indexPath.item]
         if let avatar = avatars[message.senderId] {
             return avatar
         } else {
-            setupAvatarImage(message.senderId, imageUrl: targetAvatarURL, incoming: true)
+            setupAvatarColor(message.senderId, incoming: true)
             return avatars[message.senderId]
         }
     }
@@ -308,18 +504,23 @@ class ChatViewController: JSQMessagesViewController {
     override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = super.collectionView(collectionView, cellForItemAtIndexPath: indexPath) as! JSQMessagesCollectionViewCell
         
+        //set spacing
+        
+        
         let message = messages[indexPath.item]
-        if message.senderId == myEMUsername {
-            cell.textView!.textColor = UIColor.whiteColor()
-        } else {
-            cell.textView!.textColor = UIColor.blackColor()
+        if !message.isMediaMessage{
+            if message.senderId == myEMUsername {
+                cell.textView!.textColor = UIColor.whiteColor()
+            } else {
+                cell.textView!.textColor = UIColor.blackColor()
+            }
+            
+            let attributes : [String:AnyObject] = [NSForegroundColorAttributeName:cell.textView!.textColor!, NSUnderlineStyleAttributeName: 1]
+            cell.textView!.linkTextAttributes = attributes
+        }else{
+            
         }
         
-        let attributes : [String:AnyObject] = [NSForegroundColorAttributeName:cell.textView!.textColor!, NSUnderlineStyleAttributeName: 1]
-        cell.textView!.linkTextAttributes = attributes
-        
-        //        cell.textView.linkTextAttributes = [NSForegroundColorAttributeName: cell.textView.textColor,
-        //            NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle]
         return cell
     }
     
@@ -332,6 +533,42 @@ class ChatViewController: JSQMessagesViewController {
         }
         let vc = UserOverviewController(userid: userid, nextURL: userPostedURL)
         self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    override func collectionView(collectionView: JSQMessagesCollectionView!, didTapMessageBubbleAtIndexPath indexPath: NSIndexPath!) {
+        if rawmessages[indexPath.item].body is EMImageMessageBody { //download original image
+            let body = rawmessages[indexPath.item].body as! EMImageMessageBody
+            let media = messages[indexPath.row].media as! JSQPhotoMediaItem
+            let previewView = ChatImagePreviewView(image: media.image)
+            previewView.frame = self.navigationController!.view.frame
+            self.navigationController?.view.addSubview(previewView)
+            
+            if body.downloadStatus != EMDownloadStatusSuccessed{
+                let hud = MBProgressHUD.showHUDAddedTo(previewView, animated: true)
+                hud.mode = .AnnularDeterminate
+                hud.userInteractionEnabled = true
+                EMClient.sharedClient().chatManager.asyncDownloadMessageAttachments(rawmessages[indexPath.item], progress: {
+                    progress in
+                    hud.progress = Float(progress)/100.0
+                    }, completion: {
+                        message, error in
+                        hud.hide(true)
+                        if error == nil { //download successfull
+                            let body = message.body as! EMImageMessageBody
+                            let image = UIImage(contentsOfFile:body.localPath)
+                            media.image = UIImage(contentsOfFile:body.localPath)
+                            if let image = image{
+                                previewView.setImage(image)
+                            }else{ // download fail
+                                OverlaySingleton.addToView(previewView, text: "图片加载失败,请稍后再试")
+                            }
+                        }else{ //download fail
+                            OverlaySingleton.addToView(previewView, text: "图片加载失败,请稍后再试")
+                        }
+                })
+            }
+            
+        }
     }
     
     

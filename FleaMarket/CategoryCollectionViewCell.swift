@@ -19,14 +19,19 @@ class CategoryCollectionViewCell: UICollectionViewCell {
         
         self.imageView.image = nil
         
-        let fileURL = LocalIconDirectory.URLByAppendingPathComponent(icon)
-        if NSFileManager.defaultManager().fileExistsAtPath(fileURL.path!){
-            self.imageView.image = UIImage(contentsOfFile: fileURL.path!)!
+        if let image = UIImage(named: icon){
+            self.imageView.image = image
         }else{
-            RetrieveImageFromS3.retrieveCategoryIcon(icon){
-                print(NSFileManager.defaultManager().fileExistsAtPath(fileURL.path!))
-                if (NSFileManager.defaultManager().fileExistsAtPath(fileURL.path!)){
-                    self.imageView.image = UIImage(contentsOfFile: fileURL.path!)!
+        
+            let fileURL = LocalIconDirectory.URLByAppendingPathComponent(icon)
+            if NSFileManager.defaultManager().fileExistsAtPath(fileURL.path!){
+                self.imageView.image = UIImage(contentsOfFile: fileURL.path!)!
+            }else{
+                RetrieveImageFromS3.retrieveCategoryIcon(icon){
+                    print(NSFileManager.defaultManager().fileExistsAtPath(fileURL.path!))
+                    if (NSFileManager.defaultManager().fileExistsAtPath(fileURL.path!)){
+                        self.imageView.image = UIImage(contentsOfFile: fileURL.path!)!
+                    }
                 }
             }
         }
