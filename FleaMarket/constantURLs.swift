@@ -8,9 +8,10 @@
 
 import Foundation
 
-let serverLocation = "http://192.168.1.164:8000/"
+let serverLocation = "http://192.168.0.24:8000/"
 
 let getProductURL = serverLocation+"products/"
+let orderProductURL = serverLocation+"products/order/"
 let buyProductURL = serverLocation+"products/buy/"
 
 let getCategoryURL = serverLocation+"products/primarycategory/"
@@ -25,9 +26,15 @@ let userselfInfoURL = serverLocation+"user/self/overview/"
 let selfPostedURL = serverLocation+"user/self/posted/"
 let selfSoldURL = serverLocation+"user/self/sold/"
 let selfBoughtURL = serverLocation+"user/self/bought/"
+let selfOrderedURL = serverLocation+"user/self/ordered/"
+let selfPendingURL = serverLocation+"user/self/pending/"
+
+
 let userOverviewURL = serverLocation+"user/overview/"
 let userPostedURL = serverLocation+"user/posted/"
 let userModifyURL = serverLocation+"user/update/"
+
+
 let postAPNSTokenURL = serverLocation+"APNSToken/"
 
 let sendChatURL = serverLocation+"chat/sendmessage/"

@@ -116,7 +116,7 @@ class ProductDetailTableViewController: UITableViewController {
             return cell
         case 信息:
             let cell = tableView.dequeueReusableCellWithIdentifier("ProductDetailDetailTableViewCell", forIndexPath: indexPath) as! ProductDetailDetailTableViewCell
-            cell.setupCell(product.amount, date: product.postedTime, brandNew: product.brandNew, bargain: product.bargain, exchange: product.exchange)
+            cell.setupCell(product.amount-product.soldAmount, date: product.postedTime, brandNew: product.brandNew, bargain: product.bargain, exchange: product.exchange)
             cell.selectionStyle = .None
             return cell
         case 描述:
@@ -151,7 +151,7 @@ class ProductDetailTableViewController: UITableViewController {
     
     func chat(){
         if UserLoginHandler.instance.loggedIn(){
-            let vc = ChatViewController(userid: product.userid ,username: targetEMUsername, nickname: product.usernickname, avatar: product.useravatar)
+            let vc = ChatViewController(userid: product.userid ,username: targetEMUsername, nickname: product.usernickname, avatar: product.useravatar, product: product)
             self.navigationController?.pushViewController(vc, animated: true)
         }else{
             

@@ -21,6 +21,8 @@ class MineTableViewController: UITableViewController {
     ------------
     发布的
     卖出的
+    求购的
+    待交易
     买到的
     ------------
     //好友
@@ -74,6 +76,8 @@ class MineTableViewController: UITableViewController {
                         self.posted = json["posted"].intValue
                         self.sold = json["sold"].intValue
                         self.bought = json["bought"].intValue
+                        self.ordered = json["ordered"].intValue
+                        self.pending = json["pending"].intValue
                         self.nickname = json["nickname"].stringValue
                         self.avatar = json["avatar"].stringValue
                         self.loggedIn = true
@@ -103,6 +107,8 @@ class MineTableViewController: UITableViewController {
     var posted = 0
     var sold = 0
     var bought = 0
+    var ordered = 0
+    var pending = 0
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 4
@@ -116,7 +122,7 @@ class MineTableViewController: UITableViewController {
             }else{
                 return 1
             }
-        case 1:return 3
+        case 1:return 5
         case 2:return 0
         case 3:return 2
         default:return 0
@@ -159,6 +165,22 @@ class MineTableViewController: UITableViewController {
             }
             return cell
         case (1,2):
+            let cell = tableView.dequeueReusableCellWithIdentifier("MineNormalTableViewCell", forIndexPath: indexPath) as! MineNormalTableViewCell
+            if loggedIn{
+                cell.setupCell("我求购的",image: UIImage(named: "boughticon.png"), count: ordered)
+            }else{
+                cell.setupCell("我求购的", image: UIImage(named: "boughticon.png"))
+            }
+            return cell
+        case (1,3):
+            let cell = tableView.dequeueReusableCellWithIdentifier("MineNormalTableViewCell", forIndexPath: indexPath) as! MineNormalTableViewCell
+            if loggedIn{
+                cell.setupCell("待交易的",image: UIImage(named: "boughticon.png"), count: pending)
+            }else{
+                cell.setupCell("待交易的", image: UIImage(named: "boughticon.png"))
+            }
+            return cell
+        case (1,4):
             let cell = tableView.dequeueReusableCellWithIdentifier("MineNormalTableViewCell", forIndexPath: indexPath) as! MineNormalTableViewCell
             if loggedIn{
                 cell.setupCell("我买到的",image: UIImage(named: "boughticon.png"), count: bought)
@@ -224,6 +246,18 @@ class MineTableViewController: UITableViewController {
                 vc.hidesBottomBarWhenPushed = true
                 self.navigationController?.pushViewController(vc, animated: true)
             case (1,2):
+                let vc = MineProductsTableViewController()
+                vc.nextURL = selfOrderedURL
+                vc.header = "我求购的"
+                vc.hidesBottomBarWhenPushed = true
+                self.navigationController?.pushViewController(vc, animated: true)
+            case (1,3):
+                let vc = MineProductsTableViewController()
+                vc.nextURL = selfPendingURL
+                vc.header = "待交易的"
+                vc.hidesBottomBarWhenPushed = true
+                self.navigationController?.pushViewController(vc, animated: true)
+            case (1,4):
                 
                 let vc = MineProductsTableViewController()
                 vc.nextURL = selfBoughtURL

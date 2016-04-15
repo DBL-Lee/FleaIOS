@@ -36,6 +36,8 @@ class ConversationTableViewCell: UITableViewCell {
         case EMMessageBodyTypeText:
             let body = lastMessage.body as! EMTextMessageBody
             self.lastMsgLabel.text = body.text
+        case EMMessageBodyTypeImage:
+            self.lastMsgLabel.text = "[图片]"
         default:
             break
         }

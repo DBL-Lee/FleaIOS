@@ -26,6 +26,8 @@ class Product{
     var mainCategory:String!
     var secondaryCategory:String!
     var location:CLPlacemark!
+    
+    var soldAmount:Int!
     var amount:Int!
     var city:String!
     var country:String!
@@ -66,6 +68,7 @@ class Product{
         
         var placemark:CLPlacemark!
         
+        let soldAmount = json["soldAmount"].intValue
         let amount = json["amount"].intValue
         let timestring = json["postedTime"].stringValue
         let dateFormatter = NSDateFormatter()
@@ -77,7 +80,7 @@ class Product{
         let usernickname = json["usernickname"].stringValue
         let useravatar = json["useravatar"].stringValue
         
-        let product = Product(id: id, images: images, title: title,mainimage: mainimage, currentPrice: currentPrice, categoryID: categoryID, city: city, country: country, amount: amount, postedTime: date, originalPrice: json["originalPrice"].string, brandNew: json["brandNew"].bool, bargain: json["bargain"].bool, exchange: json["exchange"].bool, description: json["description"].string,locale:locale,latitude:latitude,longitude:longitude,userid: userid, usernickname: usernickname, useravatar:useravatar)
+        let product = Product(id: id, images: images, title: title,mainimage: mainimage, currentPrice: currentPrice, categoryID: categoryID, city: city, country: country,soldAmount: soldAmount, amount: amount, postedTime: date, originalPrice: json["originalPrice"].string, brandNew: json["brandNew"].bool, bargain: json["bargain"].bool, exchange: json["exchange"].bool, description: json["description"].string,locale:locale,latitude:latitude,longitude:longitude,userid: userid, usernickname: usernickname, useravatar:useravatar)
         
 //        CLGeocoder().reverseGeocodeLocation(location){(placemarks, error) -> Void in
 //            if error != nil {
@@ -93,7 +96,7 @@ class Product{
         return product
     }
     
-    init(id:Int,images:[String],title:String,mainimage:Int,currentPrice:String,categoryID:Int,city:String,country:String,amount:Int,postedTime:NSDate,originalPrice:String?, brandNew:Bool?, bargain:Bool?, exchange:Bool?, description:String?,locale:NSLocale,latitude:Double,longitude:Double,userid:Int,usernickname:String,useravatar:String){
+    init(id:Int,images:[String],title:String,mainimage:Int,currentPrice:String,categoryID:Int,city:String,country:String,soldAmount:Int,amount:Int,postedTime:NSDate,originalPrice:String?, brandNew:Bool?, bargain:Bool?, exchange:Bool?, description:String?,locale:NSLocale,latitude:Double,longitude:Double,userid:Int,usernickname:String,useravatar:String){
         self.id = id
         self.imageUUID = images
         self.title = title
@@ -107,6 +110,8 @@ class Product{
         self.city = city
         self.country = country
         
+        
+        self.soldAmount = soldAmount
         self.amount = amount
         self.postedTime = postedTime
         

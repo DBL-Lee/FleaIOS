@@ -12,6 +12,7 @@ import AWSCore
 import AWSS3
 import Alamofire
 import SwiftyJSON
+import MBProgressHUD
 
 class PostItemTableViewController: UITableViewController {
 
@@ -694,17 +695,25 @@ class PostItemTableViewController: UITableViewController {
             parameter["description"] = productDescription
         }
         
-        Alamofire.request(.POST, getProductURL, parameters: parameter, encoding: .JSON, headers: UserLoginHandler.instance.authorizationHeader()).validate().responseJSON{
+        let hud = MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
+        
+        Alamofire.request(.POST, getProductURL, parameters: parameter, encoding: .JSON, headers: UserLoginHandler.instance.authorizationHeader()).responseJSON{
             response in
+            hud.hide(true)
             switch response.result{
             case .Success:
-                self.callback()
+                if response.response?.statusCode < 400{
+                    self.dismissViewControllerAnimated(true){
+                        self.callback()
+                    }
+                }else{
+                    OverlaySingleton.addToView(self.navigationController!.view, text: "发布失败,请稍后再试")
+                }
             case .Failure(let e):
-                print(e)
+                OverlaySingleton.addToView(self.navigationController!.view, text: NetworkProblemString)
             }
         }
         
-        self.dismissViewControllerAnimated(true, completion: nil)
     }
     
 }

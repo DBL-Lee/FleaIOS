@@ -9,6 +9,8 @@
 import JSQMessagesViewController
 import UIKit
 import MBProgressHUD
+import Alamofire
+import SwiftyJSON
 
 class ChatViewController: JSQMessagesViewController, CustomInputToolBarDelegate,UIGestureRecognizerDelegate {
     
@@ -24,7 +26,7 @@ class ChatViewController: JSQMessagesViewController, CustomInputToolBarDelegate,
     
     let refreshHeader = UIRefreshControl()
 
-    var firstMessageID:String!
+    var firstMessageID:String? = nil
     
     var rawmessages:[EMMessage] = []
     var messages:[JSQMessage] = []
@@ -32,6 +34,7 @@ class ChatViewController: JSQMessagesViewController, CustomInputToolBarDelegate,
     var incomingBubbleImage = JSQMessagesBubbleImageFactory().incomingMessagesBubbleImageWithColor(UIColor.jsq_messageBubbleLightGrayColor())
     var outgoingBubbleImage = JSQMessagesBubbleImageFactory().outgoingMessagesBubbleImageWithColor(UIColor.jsq_messageBubbleGreenColor())
     var senderImageUrl: String!
+    var product:Product?
     
     let maximumLoadCount = 30
     
@@ -39,7 +42,7 @@ class ChatViewController: JSQMessagesViewController, CustomInputToolBarDelegate,
         return UINib(nibName: "JSQMessagesViewController", bundle: nil)
     }
     
-    convenience init(userid:Int,username:String,nickname:String,avatar:String){
+    convenience init(userid:Int,username:String,nickname:String,avatar:String,product:Product? = nil){
         self.init()
         self.targetuserid = userid
         self.targetAvatarURL = avatar
@@ -47,39 +50,13 @@ class ChatViewController: JSQMessagesViewController, CustomInputToolBarDelegate,
         self.targetEMUsername = username.lowercaseString
         self.conversation = EMClient.sharedClient().chatManager.getConversation(targetEMUsername, type: EMConversationTypeChat, createIfNotExist: true)
         
-        
-        RetrieveImageFromS3.instance.retrieveImage(avatar, bucket: S3AvatarsBucketName, completion: {
-            success in
-            if success{
-                let im = UIImage(contentsOfFile: RetrieveImageFromS3.localDirectoryOf(avatar).path!)!
-                self.avatars[self.targetEMUsername] = JSQMessagesAvatarImage(avatarImage: im, highlightedImage: im, placeholderImage: im)
-                self.collectionView.reloadData()
-            }else{
-                
-            }
-        })
-        let myAvatar = UserLoginHandler.instance.avatarImageURL
-        RetrieveImageFromS3.instance.retrieveImage(myAvatar, bucket: S3AvatarsBucketName, completion: {
-            success in
-            if success{
-                let im = UIImage(contentsOfFile: RetrieveImageFromS3.localDirectoryOf(myAvatar).path!)!
-                self.avatars[self.myEMUsername] = JSQMessagesAvatarImage(avatarImage: im, highlightedImage: im, placeholderImage: im)
-                self.collectionView.reloadData()
-            }else{
-                
-            }
-        })
+        self.product = product
     }
     
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-//        self.collectionView.registerNib(JSQMessagesCollectionViewCellIncomingCustom.nib(), forCellWithReuseIdentifier: JSQMessagesCollectionViewCellIncoming.cellReuseIdentifier())
-//        self.collectionView.registerNib(JSQMessagesCollectionViewCellIncomingCustom.nib(), forCellWithReuseIdentifier: JSQMessagesCollectionViewCellIncoming.mediaCellReuseIdentifier())
-//        self.collectionView.registerNib(JSQMessagesCollectionViewCellOutgoingCustom.nib(), forCellWithReuseIdentifier: JSQMessagesCollectionViewCellOutgoing.cellReuseIdentifier())
-//        self.collectionView.registerNib(JSQMessagesCollectionViewCellOutgoingCustom.nib(), forCellWithReuseIdentifier: JSQMessagesCollectionViewCellOutgoing.mediaCellReuseIdentifier())
         
         self.collectionView.collectionViewLayout.minimumLineSpacing = 20
         
@@ -119,6 +96,8 @@ class ChatViewController: JSQMessagesViewController, CustomInputToolBarDelegate,
         
         automaticallyScrollsToMostRecentMessage = true
         
+        
+        
         self.title = targetNickname
         
         self.keyboardController.textView.returnKeyType = .Send
@@ -126,6 +105,29 @@ class ChatViewController: JSQMessagesViewController, CustomInputToolBarDelegate,
         
         self.senderId = myEMUsername
         self.senderDisplayName = UserLoginHandler.instance.nickname
+        
+        //load avatars
+        RetrieveImageFromS3.instance.retrieveImage(targetAvatarURL, bucket: S3AvatarsBucketName, completion: {
+            success in
+            if success{
+                let im = UIImage(contentsOfFile: RetrieveImageFromS3.localDirectoryOf(self.targetAvatarURL).path!)!
+                self.avatars[self.targetEMUsername] = JSQMessagesAvatarImage(avatarImage: im, highlightedImage: im, placeholderImage: im)
+                self.collectionView.reloadData()
+            }else{
+                
+            }
+        })
+        let myAvatar = UserLoginHandler.instance.avatarImageURL
+        RetrieveImageFromS3.instance.retrieveImage(myAvatar, bucket: S3AvatarsBucketName, completion: {
+            success in
+            if success{
+                let im = UIImage(contentsOfFile: RetrieveImageFromS3.localDirectoryOf(myAvatar).path!)!
+                self.avatars[self.myEMUsername] = JSQMessagesAvatarImage(avatarImage: im, highlightedImage: im, placeholderImage: im)
+                self.collectionView.reloadData()
+            }else{
+                
+            }
+        })
         
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(ChatViewController.dismissKeyboard))
@@ -144,7 +146,56 @@ class ChatViewController: JSQMessagesViewController, CustomInputToolBarDelegate,
         self.collectionView.collectionViewLayout.incomingAvatarViewSize = CGSize(width: side, height: side)
         self.collectionView.collectionViewLayout.outgoingAvatarViewSize = CGSize(width: side, height: side)
         
+        self._inputToolbar.maximumHeight = 100
+        
+        if product != nil {
+            let buyButton = UIBarButtonItem(title: "求购", style: .Plain, target: self, action: #selector(wantToBuy))
+            self.navigationItem.rightBarButtonItem = buyButton
+        }
+        
         loadMoreMessageFromDatabase()
+    }
+    
+    func wantToBuy(){
+        let alert = UIAlertController(title: nil, message: "求购多少\n\(self.product!.title)?\n库存:\(product!.amount-product!.soldAmount)", preferredStyle: .Alert)
+        alert.addTextFieldWithConfigurationHandler({
+            textField in
+            
+            textField.keyboardType = .NumberPad
+            textField.placeholder = "请输入想求购的数量"
+            }
+        )
+        let okaction = UIAlertAction(title: "确定", style: .Default, handler: {
+            action in
+            let hud = MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
+            hud.labelText = "请求中"
+            
+            let textField = alert.textFields![0]
+            let amount = textField.text == "" || textField.text == nil ? 1 : Int(textField.text!)
+            let parameter = ["productid":self.product!.id,"amount":amount]
+            Alamofire.request(.POST, orderProductURL, parameters: parameter, encoding: .JSON, headers: UserLoginHandler.instance.authorizationHeader()).responseJSON{
+                response in
+                hud.hide(true)
+                alert.removeFromParentViewController()
+                switch response.result{
+                case .Success:
+                    if response.response?.statusCode<400{
+                        OverlaySingleton.addToView(self.navigationController!.view, text: "求购发布成功,请等待卖家回复!")
+                    }else{
+                        let json = JSON(response.result.value!)
+                        OverlaySingleton.addToView(self.navigationController!.view, text: json["error"].stringValue, duration: 3)
+                    }
+                case .Failure(let e):
+                    print(e)
+                    OverlaySingleton.addToView(self.navigationController!.view, text: NetworkProblemString)
+                }
+            }
+        })
+        let cancelaction = UIAlertAction(title: "取消", style: .Cancel, handler: nil)
+        alert.addAction(okaction)
+        alert.addAction(cancelaction)
+        self.presentViewController(alert, animated: true, completion: nil)
+        
     }
     
     func setupMoreView()->ChatMoreButtonView{
@@ -240,7 +291,7 @@ class ChatViewController: JSQMessagesViewController, CustomInputToolBarDelegate,
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(didReceiveMessages), name: "ReceiveNewMessageNotification", object: nil)
         
-        //collectionView!.collectionViewLayout.springinessEnabled = true
+        collectionView!.collectionViewLayout.springinessEnabled = true
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -389,6 +440,8 @@ class ChatViewController: JSQMessagesViewController, CustomInputToolBarDelegate,
         let body = EMImageMessageBody(data: UIImagePNGRepresentation(image), thumbnailData: nil)
         let from = EMClient.sharedClient().currentUsername
         let message = EMMessage(conversationID: targetEMUsername, from: from, to: targetEMUsername, body: body, ext: nil)
+        message.chatType = EMChatTypeChat
+        message.ext = ["em_apns_ext":["em_push_title":["\(UserLoginHandler.instance.nickname)发来了一张图片"]]]
         
         EMClient.sharedClient().chatManager.asyncSendMessage(message, progress: {
                 progress in
@@ -408,6 +461,9 @@ class ChatViewController: JSQMessagesViewController, CustomInputToolBarDelegate,
         let from = EMClient.sharedClient().currentUsername
         let message = EMMessage(conversationID: targetEMUsername, from: from, to: targetEMUsername, body: body, ext: nil)
         message.chatType = EMChatTypeChat
+        let shortenText:String = text.characters.count > 20 ? text.substringToIndex(text.startIndex.advancedBy(19)) : text
+        let ext:[NSObject:AnyObject] = ["em_apns_ext":["em_push_title":["\(UserLoginHandler.instance.nickname):"+shortenText]]]
+        message.ext = ext
         
         EMClient.sharedClient().chatManager.asyncSendMessage(message, progress: nil){
             message,error in
