@@ -65,6 +65,11 @@ class ChatListTableViewController: UITableViewController {
             }
         }
         
+        if totalUnreadCount == 0{
+            self.navigationController!.tabBarItem.badgeValue = nil
+        }else{
+            self.navigationController!.tabBarItem.badgeValue = "\(totalUnreadCount)"
+        }
         
         if conversations.count == 0 {
             MBProgressHUD.hideHUDForView(self.navigationController!.view, animated: true)
@@ -114,9 +119,21 @@ class ChatListTableViewController: UITableViewController {
     }
 
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let user = conversationUserMap[conversations[indexPath.row]]
+        let conversation = conversations[indexPath.row]
+        let user = conversationUserMap[conversation]
         if let user = user{
             let vc = ChatViewController(userid: user.id,username: user.emusername, nickname: user.nickname, avatar: user.avatar)
+//            let reduce = Int(conversation.unreadMessagesCount)
+//            totalUnreadCount -= reduce
+//            UIApplication.sharedApplication().applicationIconBadgeNumber -= reduce
+//            if let badge = self.navigationController!.tabBarItem.badgeValue{
+//                let value = Int(badge)! - reduce
+//                if value == 0 {
+//                    self.navigationController!.tabBarItem.badgeValue = nil
+//                }else{
+//                    self.navigationController!.tabBarItem.badgeValue = "\(value)"
+//                }
+//            }
             vc.hidesBottomBarWhenPushed = true
             self.navigationController?.pushViewController(vc, animated: true)
         }

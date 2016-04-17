@@ -95,6 +95,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate,EMChatManagerDelegate {
         application.registerUserNotificationSettings(pushNotificationSettings)
         application.registerForRemoteNotifications()
         
+        application.applicationIconBadgeNumber = 0
+        
         return true
     }
     
@@ -119,7 +121,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate,EMChatManagerDelegate {
 
     func applicationWillEnterForeground(application: UIApplication) {
         // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+        
         EMClient.sharedClient().applicationWillEnterForeground(application)
+        application.applicationIconBadgeNumber = 0
     }
 
     func applicationDidBecomeActive(application: UIApplication) {

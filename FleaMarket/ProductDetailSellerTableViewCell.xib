@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9532" systemVersion="14F1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
-        <capability name="Alignment constraints to the first baseline" minToolsVersion="6.0"/>
-        <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <objects>
@@ -48,48 +46,29 @@
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mYj-xX-2KN">
-                        <rect key="frame" x="272" y="8" width="40" height="40"/>
-                        <constraints>
-                            <constraint firstAttribute="width" constant="40" id="s9j-7Y-T76"/>
-                            <constraint firstAttribute="height" constant="40" id="zFN-MC-Q5Y"/>
-                        </constraints>
-                        <state key="normal" title="聊聊"/>
-                        <connections>
-                            <action selector="contactSeller:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="EiO-e7-8kI"/>
-                        </connections>
-                    </button>
                 </subviews>
                 <constraints>
                     <constraint firstItem="J0T-U0-dJ8" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" id="3So-Kk-Xwp"/>
                     <constraint firstItem="6Ma-ux-4np" firstAttribute="top" secondItem="na1-hL-q3j" secondAttribute="bottom" constant="18" id="7pz-Lq-pRn"/>
-                    <constraint firstItem="na1-hL-q3j" firstAttribute="baseline" secondItem="mYj-xX-2KN" secondAttribute="baseline" id="BUz-Qe-ppZ"/>
                     <constraint firstItem="tvb-cM-oeu" firstAttribute="top" secondItem="6Ma-ux-4np" secondAttribute="bottom" constant="8" symbolic="YES" id="C6E-xE-srM"/>
                     <constraint firstItem="na1-hL-q3j" firstAttribute="trailing" secondItem="6Ma-ux-4np" secondAttribute="trailing" id="ELr-Gt-ST5"/>
                     <constraint firstItem="na1-hL-q3j" firstAttribute="leading" secondItem="J0T-U0-dJ8" secondAttribute="trailing" constant="8" symbolic="YES" id="F9C-8K-Pfa"/>
                     <constraint firstItem="J0T-U0-dJ8" firstAttribute="leading" secondItem="6Ma-ux-4np" secondAttribute="leading" id="MkF-hQ-nrb"/>
                     <constraint firstItem="6Ma-ux-4np" firstAttribute="top" secondItem="J0T-U0-dJ8" secondAttribute="bottom" constant="8" symbolic="YES" id="Oob-iT-mBR"/>
-                    <constraint firstItem="mYj-xX-2KN" firstAttribute="trailing" secondItem="H2p-sc-9uM" secondAttribute="trailingMargin" id="c49-eT-LVI"/>
-                    <constraint firstItem="na1-hL-q3j" firstAttribute="baseline" secondItem="mYj-xX-2KN" secondAttribute="firstBaseline" id="cLf-tX-rkD"/>
                     <constraint firstItem="tvb-cM-oeu" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" id="ecN-DJ-v1n"/>
                     <constraint firstItem="6Ma-ux-4np" firstAttribute="leading" secondItem="tvb-cM-oeu" secondAttribute="leading" id="f2g-h5-hvS"/>
-                    <constraint firstItem="mYj-xX-2KN" firstAttribute="leading" secondItem="na1-hL-q3j" secondAttribute="trailing" constant="96" id="fg3-Zq-KWG"/>
                     <constraint firstAttribute="bottomMargin" secondItem="tvb-cM-oeu" secondAttribute="bottom" id="gHD-LD-Ubw"/>
-                    <constraint firstItem="J0T-U0-dJ8" firstAttribute="top" secondItem="mYj-xX-2KN" secondAttribute="top" id="h1R-qW-AGJ"/>
                     <constraint firstItem="na1-hL-q3j" firstAttribute="centerY" secondItem="J0T-U0-dJ8" secondAttribute="centerY" id="iuc-nq-ai9"/>
                     <constraint firstItem="6Ma-ux-4np" firstAttribute="trailing" secondItem="tvb-cM-oeu" secondAttribute="trailing" id="jvJ-Gg-Q15"/>
-                    <constraint firstItem="J0T-U0-dJ8" firstAttribute="bottom" secondItem="mYj-xX-2KN" secondAttribute="bottom" id="yUJ-0L-E2O"/>
                 </constraints>
                 <variation key="default">
                     <mask key="constraints">
                         <exclude reference="7pz-Lq-pRn"/>
-                        <exclude reference="fg3-Zq-KWG"/>
                     </mask>
                 </variation>
             </tableViewCellContentView>
             <connections>
                 <outlet property="avatarImageView" destination="J0T-U0-dJ8" id="Sc7-gu-ckj"/>
-                <outlet property="chatBtn" destination="mYj-xX-2KN" id="s3H-ku-szM"/>
                 <outlet property="feedBackRateLabel" destination="tvb-cM-oeu" id="t5d-9f-iLZ"/>
                 <outlet property="soldItemLabel" destination="6Ma-ux-4np" id="61g-5D-cgp"/>
                 <outlet property="userNameLabel" destination="na1-hL-q3j" id="1cz-jy-U0r"/>

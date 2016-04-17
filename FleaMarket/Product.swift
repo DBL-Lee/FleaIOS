@@ -45,7 +45,6 @@ class Product{
     var description:String?
     
     static func deserialize(json:JSON)->Product{
-        print(json)
         let id = json["id"].intValue
         let title = json["title"].stringValue
         let currentPrice = json["price"].stringValue

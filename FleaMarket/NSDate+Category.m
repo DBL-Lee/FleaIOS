@@ -164,7 +164,7 @@
         [dateFormatter setDateFormat:@"HH:mm"];
         return [NSString stringWithFormat:NSLocalizedString(@"NSDateCategory.text7", @""), [dateFormatter stringFromDate:self]];
     } else {//以前
-        [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm"];
+        [dateFormatter setDateFormat:@"yy-MM-dd HH:mm"];
         return [dateFormatter stringFromDate:self];
     }
 }

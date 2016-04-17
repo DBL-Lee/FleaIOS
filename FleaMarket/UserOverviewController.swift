@@ -108,7 +108,11 @@ class UserOverviewController: UIViewController,UITableViewDelegate,UITableViewDa
                         current += 1
                     }
                     self.products.appendContentsOf(products)
+                    
+                    UIView.setAnimationsEnabled(false)
                     self.tableView.insertRowsAtIndexPaths(indexPaths, withRowAnimation: .None)
+                    UIView.setAnimationsEnabled(true)
+                    
                     if next == ""{
                         self.refreshFooter.endRefreshingWithNoMoreData()
                     }else{

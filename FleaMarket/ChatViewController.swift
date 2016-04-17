@@ -291,7 +291,7 @@ class ChatViewController: JSQMessagesViewController, CustomInputToolBarDelegate,
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(didReceiveMessages), name: "ReceiveNewMessageNotification", object: nil)
         
-        collectionView!.collectionViewLayout.springinessEnabled = true
+        //collectionView!.collectionViewLayout.springinessEnabled = true
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -598,7 +598,12 @@ class ChatViewController: JSQMessagesViewController, CustomInputToolBarDelegate,
             let media = messages[indexPath.row].media as! JSQPhotoMediaItem
             let previewView = ChatImagePreviewView(image: media.image)
             previewView.frame = self.navigationController!.view.frame
+            previewView.alpha = 0
             self.navigationController?.view.addSubview(previewView)
+            UIView.animateWithDuration(0.5, animations: {
+                previewView.alpha = 1
+            })
+            
             
             if body.downloadStatus != EMDownloadStatusSuccessed{
                 let hud = MBProgressHUD.showHUDAddedTo(previewView, animated: true)

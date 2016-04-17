@@ -24,7 +24,7 @@
 + (UIFont *)preferredFontForTextStyle:(NSString *)style
 {
     if ([style isEqualToString:UIFontTextStyleBody])
-        return [UIFont systemFontOfSize:17];
+        return [UIFont systemFontOfSize:15];
     if ([style isEqualToString:UIFontTextStyleHeadline])
         return [UIFont boldSystemFontOfSize:17];
     if ([style isEqualToString:UIFontTextStyleSubheadline])

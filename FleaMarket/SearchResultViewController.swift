@@ -329,7 +329,11 @@ class SearchResultViewController: UIViewController,UITableViewDataSource,UITable
                         indexPaths.append(NSIndexPath(forRow: self.products.count, inSection: 0))
                         self.products.append(Product.deserialize(productjson))
                     }
+                    
+                    UIView.setAnimationsEnabled(false)
                     self.tableView.insertRowsAtIndexPaths(indexPaths, withRowAnimation: .None)
+                    UIView.setAnimationsEnabled(true)
+                    
                     if self.nextURL == ""{
                         self.refreshFooter.endRefreshingWithNoMoreData()
                     }else{

@@ -126,7 +126,11 @@ class FirstScreenViewController: UIViewController,UITableViewDelegate,UITableVie
                         indexPaths.append(NSIndexPath(forRow: self.products.count, inSection: 2))
                         self.products.append(Product.deserialize(productjson))
                     }
+                    
+                    UIView.setAnimationsEnabled(false)
                     self.tableView.insertRowsAtIndexPaths(indexPaths, withRowAnimation: .None)
+                    UIView.setAnimationsEnabled(true)
+                    
                     if self.nextPageURL == ""{
                         self.refreshFooter.endRefreshingWithNoMoreData()
                     }else{

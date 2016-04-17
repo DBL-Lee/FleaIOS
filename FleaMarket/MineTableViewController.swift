@@ -20,12 +20,13 @@ class MineTableViewController: UITableViewController {
     修改资料
     ------------
     发布的
+    待处理
+    待交易的
     卖出的
+    ------------
     求购的
     待交易
     买到的
-    ------------
-    //好友
     ------------
     设置
 
@@ -77,7 +78,9 @@ class MineTableViewController: UITableViewController {
                         self.sold = json["sold"].intValue
                         self.bought = json["bought"].intValue
                         self.ordered = json["ordered"].intValue
-                        self.pending = json["pending"].intValue
+                        self.pendingsell = json["pendingsell"].intValue
+                        self.pendingbuy = json["pendingbuy"].intValue
+                        self.awaiting = json["awaiting"].intValue
                         self.nickname = json["nickname"].stringValue
                         self.avatar = json["avatar"].stringValue
                         self.loggedIn = true
@@ -108,7 +111,9 @@ class MineTableViewController: UITableViewController {
     var sold = 0
     var bought = 0
     var ordered = 0
-    var pending = 0
+    var pendingsell = 0
+    var pendingbuy = 0
+    var awaiting = 0
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 4
@@ -122,8 +127,8 @@ class MineTableViewController: UITableViewController {
             }else{
                 return 1
             }
-        case 1:return 5
-        case 2:return 0
+        case 1:return 4
+        case 2:return 3
         case 3:return 2
         default:return 0
         }
@@ -159,12 +164,28 @@ class MineTableViewController: UITableViewController {
         case (1,1):
             let cell = tableView.dequeueReusableCellWithIdentifier("MineNormalTableViewCell", forIndexPath: indexPath) as! MineNormalTableViewCell
             if loggedIn{
+                cell.setupCell("待处理的求购",image: UIImage(named: "soldicon.png"), count: awaiting)
+            }else{
+                cell.setupCell("待处理的求购",image: UIImage(named: "soldicon.png"))
+            }
+            return cell
+        case (1,2):
+            let cell = tableView.dequeueReusableCellWithIdentifier("MineNormalTableViewCell", forIndexPath: indexPath) as! MineNormalTableViewCell
+            if loggedIn{
+                cell.setupCell("待买家收货的",image: UIImage(named: "soldicon.png"), count: pendingsell)
+            }else{
+                cell.setupCell("待买家收货的",image: UIImage(named: "soldicon.png"))
+            }
+            return cell
+        case (1,3):
+            let cell = tableView.dequeueReusableCellWithIdentifier("MineNormalTableViewCell", forIndexPath: indexPath) as! MineNormalTableViewCell
+            if loggedIn{
                 cell.setupCell("我卖出的",image: UIImage(named: "soldicon.png"), count: sold)
             }else{
                 cell.setupCell("我卖出的",image: UIImage(named: "soldicon.png"))
             }
             return cell
-        case (1,2):
+        case (2,0):
             let cell = tableView.dequeueReusableCellWithIdentifier("MineNormalTableViewCell", forIndexPath: indexPath) as! MineNormalTableViewCell
             if loggedIn{
                 cell.setupCell("我求购的",image: UIImage(named: "boughticon.png"), count: ordered)
@@ -172,15 +193,15 @@ class MineTableViewController: UITableViewController {
                 cell.setupCell("我求购的", image: UIImage(named: "boughticon.png"))
             }
             return cell
-        case (1,3):
+        case (2,1):
             let cell = tableView.dequeueReusableCellWithIdentifier("MineNormalTableViewCell", forIndexPath: indexPath) as! MineNormalTableViewCell
             if loggedIn{
-                cell.setupCell("待交易的",image: UIImage(named: "boughticon.png"), count: pending)
+                cell.setupCell("待确认收货的",image: UIImage(named: "boughticon.png"), count: pendingbuy)
             }else{
-                cell.setupCell("待交易的", image: UIImage(named: "boughticon.png"))
+                cell.setupCell("待确认收货的", image: UIImage(named: "boughticon.png"))
             }
             return cell
-        case (1,4):
+        case (2,2):
             let cell = tableView.dequeueReusableCellWithIdentifier("MineNormalTableViewCell", forIndexPath: indexPath) as! MineNormalTableViewCell
             if loggedIn{
                 cell.setupCell("我买到的",image: UIImage(named: "boughticon.png"), count: bought)
@@ -239,28 +260,36 @@ class MineTableViewController: UITableViewController {
                 vc.hidesBottomBarWhenPushed = true
                 self.navigationController?.pushViewController(vc, animated: true)
             case (1,1):
-                
-                let vc = MineProductsTableViewController()
-                vc.nextURL = selfSoldURL
-                vc.header = "我卖出的"
+                let vc = AwaitingAcceptTableViewController()
+                vc.header = "待处理的求购"
                 vc.hidesBottomBarWhenPushed = true
                 self.navigationController?.pushViewController(vc, animated: true)
             case (1,2):
-                let vc = MineProductsTableViewController()
-                vc.nextURL = selfOrderedURL
-                vc.header = "我求购的"
+                let vc = PendingSellViewController()
+                vc.header = "待买家收货"
                 vc.hidesBottomBarWhenPushed = true
                 self.navigationController?.pushViewController(vc, animated: true)
             case (1,3):
-                let vc = MineProductsTableViewController()
-                vc.nextURL = selfPendingURL
-                vc.header = "待交易的"
+                
+                let vc = FInishedViewController()
+                vc.requestURL = selfSoldURL
+                vc.header = "我卖出的"
                 vc.hidesBottomBarWhenPushed = true
                 self.navigationController?.pushViewController(vc, animated: true)
-            case (1,4):
+            case (2,0):
+                let vc = SelfOrderedViewController()
+                vc.header = "我求购的"
+                vc.hidesBottomBarWhenPushed = true
+                self.navigationController?.pushViewController(vc, animated: true)
+            case (2,1):
+                let vc = PendingBuyViewController()
+                vc.header = "待收货的"
+                vc.hidesBottomBarWhenPushed = true
+                self.navigationController?.pushViewController(vc, animated: true)
+            case (2,2):
                 
-                let vc = MineProductsTableViewController()
-                vc.nextURL = selfBoughtURL
+                let vc = FInishedViewController()
+                vc.requestURL = selfBoughtURL
                 vc.header = "我买到的"
                 vc.hidesBottomBarWhenPushed = true
                 self.navigationController?.pushViewController(vc, animated: true)

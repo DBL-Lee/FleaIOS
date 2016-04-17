@@ -106,7 +106,6 @@ class ProductDetailTableViewController: UITableViewController {
             }
             
             cell.setupCell(product.useravatar, sellername: product.usernickname, soldItemCount: 0, goodFeedBack: 0)
-            cell.chatBtn.addTarget(self, action: #selector(ProductDetailTableViewController.chat), forControlEvents: .TouchUpInside)
 //            if UserLoginHandler.instance.loggedIn(){
 //                if UserLoginHandler.instance.userid==self.product.userid{
 //                    cell.chatBtn.hidden = true
@@ -179,8 +178,8 @@ class ProductDetailTableViewController: UITableViewController {
             let postBtn = UIButton(frame: view.frame)
             postBtn.backgroundColor = UIColor.orangeColor()
             postBtn.tintColor = UIColor.whiteColor()
-            postBtn.setTitle("购买", forState: .Normal)
-            postBtn.addTarget(self, action: #selector(ProductDetailTableViewController.buyNow), forControlEvents: .TouchUpInside)
+            postBtn.setTitle("联系卖家", forState: .Normal)
+            postBtn.addTarget(self, action: #selector(chat), forControlEvents: .TouchUpInside)
             view.addSubview(postBtn)
             return view
         }
@@ -195,32 +194,5 @@ class ProductDetailTableViewController: UITableViewController {
         vc.showDetailButton = false
         self.navigationController?.pushViewController(vc, animated: true)
     }
-    
-    func buyNow(){
-        if !UserLoginHandler.instance.loggedIn(){
-            let vc = UserLoginViewController()
-            self.navigationController?.presentViewController(vc, animated: true, completion: nil)
-            return
-        }
-        MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
-        Alamofire.request(.POST, buyProductURL, parameters: ["id":product.id], encoding: .JSON, headers: UserLoginHandler.instance.authorizationHeader()).responseJSON{
-            response in
-            MBProgressHUD.hideHUDForView(self.navigationController!.view, animated: true)
-            switch response.result{
-            case .Success:
-                if response.response?.statusCode<400{
-                    let alert = UIAlertController(title: nil, message: "购买成功", preferredStyle: .Alert)
-                    alert.addAction(UIAlertAction(title: "好的", style: .Cancel, handler: nil))
-                    self.presentViewController(alert, animated: true, completion: nil)
-                }else{
-                    let json = JSON(response.result.value!)
-                    let alert = UIAlertController(title: nil, message: json["error"].stringValue, preferredStyle: .Alert)
-                    alert.addAction(UIAlertAction(title: "好的", style: .Cancel, handler: nil))
-                    self.presentViewController(alert, animated: true, completion: nil)
-                }
-            case .Failure(let e):
-                OverlaySingleton.addToView(self.navigationController!.view, text: NetworkProblemString)
-            }
-        }
-    }
+
 }

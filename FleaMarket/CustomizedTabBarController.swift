@@ -24,6 +24,39 @@ class CustomizedTabBarController: UITabBarController,UITabBarControllerDelegate 
         
     }
     
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        let conversations = EMClient.sharedClient().chatManager.getAllConversations()
+        var unread = 0
+        for con in conversations{
+            let conversation = con as! EMConversation
+            unread += Int(conversation.unreadMessagesCount)
+        }
+        if unread == 0{
+            self.tabBar.items![3].badgeValue = nil
+        }else{
+            self.tabBar.items![3].badgeValue = "\(unread)"
+        }
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(didReceiveMessages), name: "ReceiveNewMessageNotification", object: nil)
+        
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+    
+    func didReceiveMessages(notification:NSNotification) {
+        let userinfo = notification.userInfo!
+        let count = userinfo["count"] as! Int
+        if let badge = self.tabBar.items![3].badgeValue{
+            self.tabBar.items![3].badgeValue = "\(Int(badge)!+count)"
+        }else{
+            self.tabBar.items![3].badgeValue = "1"
+        }
+    }
+    
     func tabBarController(tabBarController: UITabBarController, shouldSelectViewController viewController: UIViewController) -> Bool {
         if viewController==self.viewControllers![2]{
             return false

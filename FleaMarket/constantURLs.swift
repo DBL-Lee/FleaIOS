@@ -8,7 +8,7 @@
 
 import Foundation
 
-let serverLocation = "http://192.168.0.24:8000/"
+let serverLocation = "http://192.168.0.133:8000/"
 
 let getProductURL = serverLocation+"products/"
 let orderProductURL = serverLocation+"products/order/"
@@ -27,8 +27,13 @@ let selfPostedURL = serverLocation+"user/self/posted/"
 let selfSoldURL = serverLocation+"user/self/sold/"
 let selfBoughtURL = serverLocation+"user/self/bought/"
 let selfOrderedURL = serverLocation+"user/self/ordered/"
-let selfPendingURL = serverLocation+"user/self/pending/"
+let selfPendingBuyURL = serverLocation+"user/self/pendingbuy/"
+let selfPendingSellURL = serverLocation+"user/self/pendingsell/"
+let selfAwaitingURL = serverLocation+"user/self/awaiting/"
+let selfAwaitingPeopleURL = serverLocation+"user/self/awaitingpeople/"
 
+let acceptBuyRequestURL = serverLocation+"products/buy/"
+let confirmGetProductURL = serverLocation+"products/finish/"
 
 let userOverviewURL = serverLocation+"user/overview/"
 let userPostedURL = serverLocation+"user/posted/"

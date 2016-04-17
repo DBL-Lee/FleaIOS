@@ -16,7 +16,6 @@ class ProductDetailSellerTableViewCell: UITableViewCell {
     @IBOutlet weak var feedBackRateLabel: UILabel!
 
     
-    @IBOutlet weak var chatBtn: UIButton!
     override func awakeFromNib() {
         super.awakeFromNib()
         self.avatarImageView.clipsToBounds = true
@@ -35,10 +34,5 @@ class ProductDetailSellerTableViewCell: UITableViewCell {
         
         let res = soldItemCount==0 ? 0 : goodFeedBack*10000/soldItemCount
         self.feedBackRateLabel.text = "好评率\(res/100)" + (res%100==0 ? "%" : ".\(res%100)%")
-    }
-    
-    
-    @IBAction func contactSeller(sender: AnyObject) {
-        
     }
 }

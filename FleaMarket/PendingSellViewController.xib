@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PendingSellViewController" customModule="FleaMarket" customModuleProvider="target">
+            <connections>
+                <outlet property="tableView" destination="xuv-Xa-Npt" id="lUG-nd-PP1"/>
+                <outlet property="topPanel" destination="NdS-Iz-qqV" id="aib-az-NLx"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NdS-Iz-qqV">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="41"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" id="5MM-LE-5Yw"/>
+                    </constraints>
+                </view>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="xuv-Xa-Npt">
+                    <rect key="frame" x="0.0" y="49" width="320" height="519"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                </tableView>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="NdS-Iz-qqV" secondAttribute="trailing" id="5jx-dn-J4Y"/>
+                <constraint firstItem="xuv-Xa-Npt" firstAttribute="top" secondItem="NdS-Iz-qqV" secondAttribute="bottom" id="G8U-of-kcr"/>
+                <constraint firstAttribute="bottom" secondItem="xuv-Xa-Npt" secondAttribute="bottom" id="IlI-M9-Daw"/>
+                <constraint firstItem="xuv-Xa-Npt" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="K2j-FC-vmM"/>
+                <constraint firstItem="NdS-Iz-qqV" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="XFg-TO-Cc7"/>
+                <constraint firstItem="NdS-Iz-qqV" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="hkg-Zv-kA7"/>
+                <constraint firstAttribute="trailing" secondItem="xuv-Xa-Npt" secondAttribute="trailing" id="xOY-bO-pXs"/>
+            </constraints>
+            <point key="canvasLocation" x="318" y="358"/>
+        </view>
+    </objects>
+</document>
