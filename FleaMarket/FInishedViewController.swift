@@ -12,20 +12,16 @@ import MBProgressHUD
 import Alamofire
 import SwiftyJSON
 
-class FInishedViewController: UIViewController,UITableViewDataSource,UITableViewDelegate {
+class FInishedViewController: UIViewController,UITableViewDataSource,UITableViewDelegate,TopTabBarViewDelegate {
 
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var topPanel: UIView!
     
+    @IBOutlet weak var topPanel: TopTabBarView!
     var requestURL:String!
     var nextURL:String = ""
     var refreshFooter:MJRefreshBackFooter!
-    var products:[Product] = []
+    var orders:[Order] = []
     var header = ""
-    //a map between product id and amount ordered
-    var amountOrdered:[Int:Int] = [:]
-    
-    var user:[Int:(String,String)] = [:]
     
     override func viewDidLoad() {
         
@@ -46,15 +42,37 @@ class FInishedViewController: UIViewController,UITableViewDataSource,UITableView
         self.tableView.mj_footer = refreshFooter
         
         
-        reload()
+        topPanel.addButtons(["全部","等待评价","已互评"])
+        topPanel.delegate = self
+        
     }
     
-    func reload(){
-        nextURL = requestURL
-        products = []
-        amountOrdered = [:]
+    func reload(ongoing:Bool?){
+        var query = ""
+        if let ongoing = ongoing{
+            if ongoing{
+                query = "?ongoing=True"
+            }else{
+                query = "?ongoing=False"
+            }
+        }
+        nextURL = requestURL+query
+        orders = []
         let hud = MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
         loadMore()
+    }
+    
+    func didChangeToButtonNumber(number: Int) {
+        switch number{
+        case 0:
+            reload(nil)
+        case 1:
+            reload(true)
+        case 2:
+            reload(false)
+        default:
+            break
+        }
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -65,6 +83,8 @@ class FInishedViewController: UIViewController,UITableViewDataSource,UITableView
         self.edgesForExtendedLayout = .None
         self.navigationItem.title = header
         self.navigationController?.navigationBar.tintColor = UIColor.blackColor()
+        
+        didChangeToButtonNumber(topPanel.currentSelected)
     }
     
     
@@ -81,28 +101,21 @@ class FInishedViewController: UIViewController,UITableViewDataSource,UITableView
                     print(json)
                     let next = json["next"].stringValue
                     self.nextURL = next
-                    var products:[Product] = []
+                    var orders:[Order] = []
                     var indexPaths:[NSIndexPath] = []
-                    var current = self.products.count
-                    for (_,productjson) in json["results"] {
-                        let product = Product.deserialize(productjson["product"])
-                        products.append(product)
-                        self.amountOrdered[product.id] = productjson["amount"].intValue
-                        if product.userid == UserLoginHandler.instance.userid { //I am seller
-                            self.user[product.id] = (productjson["buyernickname"].stringValue,productjson["buyeravatar"].stringValue)
-                        }else{
-                            self.user[product.id] = (product.usernickname,product.useravatar)
-                        }
-                        
+                    var current = self.orders.count
+                    for (_,orderjson) in json["results"] {
+                        let order = Order.deserialize(orderjson)
+                        orders.append(order)
                         indexPaths.append(NSIndexPath(forRow: current, inSection: 0))
                         current += 1
                     }
                     
-                    if self.products.count == 0{
-                        self.products.appendContentsOf(products)
+                    if self.orders.count == 0{
+                        self.orders.appendContentsOf(orders)
                         self.tableView.reloadData()
                     }else{
-                        self.products.appendContentsOf(products)
+                        self.orders.appendContentsOf(orders)
                         UIView.setAnimationsEnabled(false)
                         self.tableView.insertRowsAtIndexPaths(indexPaths, withRowAnimation: UITableViewRowAnimation.None)
                         UIView.setAnimationsEnabled(true)
@@ -130,20 +143,22 @@ class FInishedViewController: UIViewController,UITableViewDataSource,UITableView
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return products.count
+        return orders.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("FinishedTableViewCell", forIndexPath: indexPath) as! FinishedTableViewCell
-        cell.setupCell(products[indexPath.row],amount: amountOrdered[products[indexPath.row].id]!,nickname: self.user[products[indexPath.row].id]!.0, avatar:  self.user[products[indexPath.row].id]!.1,rateCallback: {
+        cell.setupCell(orders[indexPath.row],rateCallback: {
             _ in
-            self.rate(self.products[indexPath.row].id)
+            self.rate(self.orders[indexPath.row])
         })
         cell.selectionStyle = .None
         return cell
     }
     
-    func rate(userid:Int){
-
+    func rate(order:Order){
+        let vc = FeedbackViewController()
+        vc.order = order
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 }

@@ -32,8 +32,11 @@ let selfPendingSellURL = serverLocation+"user/self/pendingsell/"
 let selfAwaitingURL = serverLocation+"user/self/awaiting/"
 let selfAwaitingPeopleURL = serverLocation+"user/self/awaitingpeople/"
 
+let changeOrderAmtURL = serverLocation+"products/changeorder/"
+let cancelOrderURL = serverLocation+"products/cancelorder/"
 let acceptBuyRequestURL = serverLocation+"products/buy/"
 let confirmGetProductURL = serverLocation+"products/finish/"
+let postFeedbackURL = serverLocation+"products/feedback/"
 
 let userOverviewURL = serverLocation+"user/overview/"
 let userPostedURL = serverLocation+"user/posted/"

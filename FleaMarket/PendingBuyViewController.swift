@@ -13,18 +13,17 @@ import MBProgressHUD
 import Alamofire
 import SwiftyJSON
 
-class PendingBuyViewController: UIViewController,UITableViewDelegate,UITableViewDataSource {
+class PendingBuyViewController: UIViewController,UITableViewDelegate,UITableViewDataSource,TopTabBarViewDelegate {
     
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var topPanel: UIView!
+    @IBOutlet weak var topPanel: TopTabBarView!
     
     let requestURL = selfPendingBuyURL
     var nextURL:String = ""
     var refreshFooter:MJRefreshBackFooter!
-    var products:[Product] = []
+    var orders:[Order] = []
     var header = ""
-    //a map between product id and amount ordered
-    var amountOrdered:[Int:Int] = [:]
+    
     
     override func viewDidLoad() {
         
@@ -44,16 +43,40 @@ class PendingBuyViewController: UIViewController,UITableViewDelegate,UITableView
         refreshFooter = MJRefreshBackFooter(refreshingTarget: self, refreshingAction: #selector(loadMore))
         self.tableView.mj_footer = refreshFooter
         
+        topPanel.translatesAutoresizingMaskIntoConstraints = false
+        topPanel.addButtons(["进行中","未完成","全部"])
+        topPanel.delegate = self
         
-        reload()
+        
+        reload(true)
     }
     
-    func reload(){
-        nextURL = requestURL
-        products = []
-        amountOrdered = [:]
+    func reload(ongoing:Bool?){
+        var query = ""
+        if let ongoing = ongoing{
+            if ongoing{
+                query = "?ongoing=True"
+            }else{
+                query = "?ongoing=False"
+            }
+        }
+        nextURL = requestURL+query
+        orders = []
         let hud = MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
         loadMore()
+    }
+    
+    func didChangeToButtonNumber(number: Int) {
+        switch number{
+        case 0:
+            reload(true)
+        case 1:
+            reload(false)
+        case 2:
+            reload(nil)
+        default:
+            break
+        }
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -80,22 +103,21 @@ class PendingBuyViewController: UIViewController,UITableViewDelegate,UITableView
                     print(json)
                     let next = json["next"].stringValue
                     self.nextURL = next
-                    var products:[Product] = []
+                    var orders:[Order] = []
                     var indexPaths:[NSIndexPath] = []
-                    var current = self.products.count
-                    for (_,productjson) in json["results"] {
-                        let product = Product.deserialize(productjson["product"])
-                        products.append(product)
-                        self.amountOrdered[product.id] = productjson["amount"].intValue
+                    var current = self.orders.count
+                    for (_,orderjson) in json["results"] {
+                        let order = Order.deserialize(orderjson)
+                        orders.append(order)
                         indexPaths.append(NSIndexPath(forRow: current, inSection: 0))
                         current += 1
                     }
                     
-                    if self.products.count == 0{
-                        self.products.appendContentsOf(products)
+                    if self.orders.count == 0{
+                        self.orders.appendContentsOf(orders)
                         self.tableView.reloadData()
                     }else{
-                        self.products.appendContentsOf(products)
+                        self.orders.appendContentsOf(orders)
                         UIView.setAnimationsEnabled(false)
                         self.tableView.insertRowsAtIndexPaths(indexPaths, withRowAnimation: UITableViewRowAnimation.None)
                         UIView.setAnimationsEnabled(true)
@@ -123,29 +145,66 @@ class PendingBuyViewController: UIViewController,UITableViewDelegate,UITableView
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return products.count
+        return orders.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("PendingBuyTableViewCell", forIndexPath: indexPath) as! PendingBuyTableViewCell
-        cell.setupCell(products[indexPath.row],amount: amountOrdered[products[indexPath.row].id]!,confirmCallback: {
+        cell.setupCell(orders[indexPath.row],cancelCallback: {
+            self.confirm(self.orders[indexPath.row])
+            },confirmCallback: {
             _ in
-            self.confirm(self.products[indexPath.row].id)
+            self.confirm(self.orders[indexPath.row])
         })
         cell.selectionStyle = .None
         return cell
     }
     
-    func confirm(productid:Int){
+    func showCancelAlert(order:Order){
+        let alert = UIAlertController(title: "取消订单", message: "你确定要取消订单吗?", preferredStyle: .Alert)
+        let okaction = UIAlertAction(title: "确定", style: .Default, handler: {
+            action in
+            let hud = MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
+            hud.labelText = "请求中"
+            
+            let parameter = ["productid":order.product.id]
+            Alamofire.request(.POST, cancelOrderURL, parameters: parameter, encoding: .JSON, headers: UserLoginHandler.instance.authorizationHeader()).responseJSON{
+                response in
+                hud.hide(true)
+                alert.removeFromParentViewController()
+                switch response.result{
+                case .Success:
+                    if response.response?.statusCode<400{
+                        OverlaySingleton.addToView(self.navigationController!.view, text: "订单已取消")
+                        self.didChangeToButtonNumber(self.topPanel.currentSelected)
+                    }else{
+                        let json = JSON(response.result.value!)
+                        OverlaySingleton.addToView(self.navigationController!.view, text: json["error"].stringValue, duration: 3)
+                    }
+                case .Failure(let e):
+                    print(e)
+                    OverlaySingleton.addToView(self.navigationController!.view, text: NetworkProblemString)
+                }
+            }
+        })
+        let cancelaction = UIAlertAction(title: "取消", style: .Cancel, handler: nil)
+        alert.addAction(okaction)
+        alert.addAction(cancelaction)
+        self.presentViewController(alert, animated: true, completion: nil)
+    }
+    
+    
+    
+    func confirm(order:Order){
         var parameter:[String:AnyObject] = [:]
-        parameter["productid"] = productid
+        parameter["productid"] = order.product.id
         Alamofire.request(.POST, confirmGetProductURL, parameters: parameter, encoding: .JSON, headers: UserLoginHandler.instance.authorizationHeader()).responseJSON{
             response in
             switch response.result{
             case .Success:
                 if response.response?.statusCode<400{
                     //OverlaySingleton.addToView(self.navigationController!.view, text: "成功")
-                    self.reload()
+                    self.didChangeToButtonNumber(self.topPanel.currentSelected)
                 }else{
                     OverlaySingleton.addToView(self.navigationController!.view, text: JSON(response.result.value!)["error"].stringValue)
                 }

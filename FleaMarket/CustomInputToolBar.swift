@@ -121,19 +121,18 @@ class CustomInputToolBar: JSQMessagesInputToolbar,JSQMessagesInputToolbarDelegat
             
         }
         
-        button.associatedView.frame = CGRect(x: 0, y: self.frame.height, width: self.frame.width, height: assViewHeight)
+        button.associatedView.frame = CGRectZero
         
         button.associatedView.translatesAutoresizingMaskIntoConstraints = false
-        self.addSubview(button.associatedView)
+        self.superview!.addSubview(button.associatedView)
         let heightConstraint = NSLayoutConstraint(item: button.associatedView, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: assViewHeight)
         button.associatedView.addConstraint(heightConstraint)
         let constraint = NSLayoutConstraint(item: button.associatedView, attribute: .Width, relatedBy: .Equal, toItem: self, attribute: .Width, multiplier: 1.0, constant: 1.0)
         let topbtmConstraint = NSLayoutConstraint(item: self, attribute: .Bottom, relatedBy: .Equal, toItem: button.associatedView, attribute: .Top, multiplier: 1, constant: 0)
         let centerConstraint = NSLayoutConstraint(item: self, attribute: .CenterX, relatedBy: .Equal, toItem: button.associatedView, attribute: .CenterX, multiplier: 1, constant: 0)
-        self.addConstraints([constraint,topbtmConstraint,centerConstraint])
+        self.superview!.addConstraints([constraint,topbtmConstraint,centerConstraint])
         
         button.associatedView.hidden = true
-        //button.associatedView.autoresizingMask = [.FlexibleWidth]
         
         rightButtons.insert(button, atIndex: 0)
     }
@@ -174,12 +173,12 @@ class CustomInputToolBar: JSQMessagesInputToolbar,JSQMessagesInputToolbarDelegat
             self.endEditing(true)
             let height = self.frame.maxY-(assViewHeight-displacement)
             sender.associatedView.hidden = false
-            self.bringSubviewToFront(sender.associatedView)
+            self.superview!.bringSubviewToFront(sender.associatedView)
             moveBarToHeight(height, fromKeyboard: false){}
             sender.selected = !sender.selected
         }else{
             sender.associatedView.hidden = false
-            self.bringSubviewToFront(sender.associatedView)
+            self.superview!.bringSubviewToFront(sender.associatedView)
             if sender.selected{ //should start keyboard
                 self.contentView.textView.becomeFirstResponder()
             }else{
@@ -233,13 +232,7 @@ class CustomInputToolBar: JSQMessagesInputToolbar,JSQMessagesInputToolbarDelegat
         if !fromKeyboard{
             self.customDelegate.toolBarDidMoveUp(y-height)
         }
-//
-//        UIView.animateWithDuration(duration, delay: 0, options: option, animations: {
-//            self.frame = CGRect(x: 0, y: height, width: self.frame.width, height: self.frame.height)
-//        }){
-//            finished in
-//            completion()
-//        }
+
     }
     
     override func pointInside(point: CGPoint, withEvent event: UIEvent?) -> Bool {
@@ -248,18 +241,19 @@ class CustomInputToolBar: JSQMessagesInputToolbar,JSQMessagesInputToolbarDelegat
         return frame.contains(point)
     }
     
-//    override func hitTest(point: CGPoint, withEvent event: UIEvent?) -> UIView? {
-//        for btn in rightButtons{
-//            if !btn.associatedView.hidden{
-//                let translatedPoint = btn.associatedView.convertPoint(point, fromView: self)
-//                
-//                if (CGRectContainsPoint(btn.associatedView.bounds, translatedPoint)) {
-//                    return btn.associatedView.hitTest(translatedPoint, withEvent: event)
-//                }
-//            }
-//        }
-//        return super.hitTest(point, withEvent: event)
-//    }
+    func currentAssView()->UIView?{
+        if barisUp{
+            for btn in rightButtons{
+                if btn.selected{
+                    return btn.associatedView
+                }
+            }
+        }
+        return nil
+    }
+
+    
+
 }
 
 class CustomToolBarButton :UIButton{

@@ -14,12 +14,16 @@ class SelfOrderedTableViewCell: UITableViewCell {
     @IBOutlet weak var cancelOrderBtn: UIButton!
     @IBOutlet weak var sellerAvatarImageView: UIImageView!
 
+    @IBOutlet weak var statusLabel: UILabel!
     @IBOutlet weak var sellerNameLabel: UILabel!
     
     @IBOutlet weak var productImageView: UIImageView!
     @IBOutlet weak var productTitleLabel: UILabel!
     @IBOutlet weak var productPriceLabel: UILabel!
     @IBOutlet weak var orderAmountLabel: UILabel!
+    
+    var cancelCallback:()->Void = {_ in}
+    var changeAmtCallback:()->Void = {_ in}
     
     override func awakeFromNib() {
         changeAmtBtn.layer.borderWidth = 1
@@ -36,15 +40,41 @@ class SelfOrderedTableViewCell: UITableViewCell {
         sellerAvatarImageView.clipsToBounds = true
         productImageView.contentMode = .ScaleAspectFill
         productImageView.clipsToBounds = true
+        
+        statusLabel.adjustsFontSizeToFitWidth = true
     }
     
-    func setupCell(product:Product,amount:Int){
+    func setupCell(order:Order,changeAmtCallback:()->Void,cancelCallback:()->Void){
+        let product = order.product
         AvatarFactory.setupAvatarImageView(sellerAvatarImageView, avatar: product.useravatar)
-        AvatarFactory.setupAvatarImageView(productImageView, avatar: product.imageUUID[product.mainimage], square: true)
+        AvatarFactory.setupNormalImageView(productImageView, image: product.imageUUID[product.mainimage])
+        
+        
         sellerNameLabel.text = product.usernickname
         productTitleLabel.text = product.title
         productTitleLabel.sizeToFit()
         productPriceLabel.text = product.getCurrentPriceWithCurrency()
-        orderAmountLabel.text = "×\(amount)"
+        
+        if !order.ongoing {
+            changeAmtBtn.hidden = true
+            cancelOrderBtn.hidden = true
+        }else{
+            changeAmtBtn.hidden = false
+            cancelOrderBtn.hidden = false
+            
+        }
+        
+        orderAmountLabel.text = "×\(order.amount)"
+        
+        self.statusLabel.text = order.status()
+        
+        self.changeAmtCallback = changeAmtCallback
+        self.cancelCallback = cancelCallback
+    }
+    @IBAction func changeAmt(sender: AnyObject) {
+        changeAmtCallback()
+    }
+    @IBAction func cancel(sender: AnyObject) {
+        cancelCallback()
     }
 }

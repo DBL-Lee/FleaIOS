@@ -8,7 +8,3 @@
 
 
 #import "JSQMessagesViewController+Category.h"
-//#import "JSQMessagesCollectionViewCell+Custom.h"
-//#import "JSQMessagesCollectionViewCellIncoming+Custom.h"
-//#import "JSQMessagesCollectionViewCellOutgoing+Custom.h"
-//#import "JSQMessagesCollectionView+Custom.h"

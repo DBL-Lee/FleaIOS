@@ -14,12 +14,15 @@ class PendingSellTableViewCell: UITableViewCell {
     @IBOutlet weak var cancelOrderBtn: UIButton!
     @IBOutlet weak var sellerAvatarImageView: UIImageView!
     
+    @IBOutlet weak var statusLabel: UILabel!
     @IBOutlet weak var sellerNameLabel: UILabel!
     
     @IBOutlet weak var productImageView: UIImageView!
     @IBOutlet weak var productTitleLabel: UILabel!
     @IBOutlet weak var productPriceLabel: UILabel!
     @IBOutlet weak var orderAmountLabel: UILabel!
+    
+    var cancelCallback:()->Void = {_ in}
     
     override func awakeFromNib() {
         confirmBtn.layer.borderWidth = 1
@@ -38,14 +41,21 @@ class PendingSellTableViewCell: UITableViewCell {
         productImageView.clipsToBounds = true
     }
     
-    func setupCell(product:Product,amount:Int,buyernickname:String,buyeravatar:String){
-        AvatarFactory.setupAvatarImageView(sellerAvatarImageView, avatar: buyeravatar)
-        AvatarFactory.setupAvatarImageView(productImageView, avatar: product.imageUUID[product.mainimage], square: true)
-        sellerNameLabel.text = buyernickname
-        productTitleLabel.text = product.title
+    func setupCell(order:Order,cancelCallback:()->Void){
+        AvatarFactory.setupAvatarImageView(sellerAvatarImageView, avatar: order.buyeravatar)
+        AvatarFactory.setupNormalImageView(productImageView, image: order.product.imageUUID[order.product.mainimage])
+        sellerNameLabel.text = order.buyernickname
+        productTitleLabel.text = order.product.title
         productTitleLabel.sizeToFit()
-        productPriceLabel.text = product.getCurrentPriceWithCurrency()
-        orderAmountLabel.text = "×\(amount)"
+        productPriceLabel.text = order.product.getCurrentPriceWithCurrency()
+        orderAmountLabel.text = "×\(order.amount)"
+        
+        self.statusLabel.text = order.status()
+        
+        self.cancelCallback = cancelCallback
     }
     
+    @IBAction func cancel(sender: AnyObject) {
+        cancelCallback()
+    }
 }

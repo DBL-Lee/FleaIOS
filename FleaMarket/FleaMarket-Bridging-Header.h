@@ -7,3 +7,6 @@
 #import "NSDateFormatter+Category.h"
 #import "EMSDK.h"
 #import "JSQOverride.h"
+#import "ISEmojiView.h"
+#import "AGEmojiKeyBoardView.h"
+#import "AGEmojiPageView.h"

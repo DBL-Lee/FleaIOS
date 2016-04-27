@@ -24,7 +24,7 @@
                         </constraints>
                     </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lB6-55-h7v">
-                        <rect key="frame" x="56" y="17" width="256" height="21"/>
+                        <rect key="frame" x="56" y="17" width="168" height="21"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="21" id="PNh-ro-1Qm"/>
                         </constraints>
@@ -98,11 +98,11 @@
                             <mask key="constraints">
                                 <exclude reference="KMM-7P-vXw"/>
                                 <exclude reference="vUr-y1-ka3"/>
-                                <exclude reference="Gh1-jI-7vL"/>
-                                <exclude reference="Enl-xG-Zjs"/>
-                                <exclude reference="Xj5-wB-cA4"/>
-                                <exclude reference="Dja-O2-pzM"/>
                                 <exclude reference="33U-Fo-VHr"/>
+                                <exclude reference="Dja-O2-pzM"/>
+                                <exclude reference="Enl-xG-Zjs"/>
+                                <exclude reference="Gh1-jI-7vL"/>
+                                <exclude reference="Xj5-wB-cA4"/>
                                 <exclude reference="mHM-UU-ZEe"/>
                                 <exclude reference="z9g-kd-dOo"/>
                             </mask>
@@ -118,6 +118,9 @@
                         <state key="normal" title="取消订单">
                             <color key="titleColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         </state>
+                        <connections>
+                            <action selector="cancel:" destination="BYh-jx-qoK" eventType="touchUpInside" id="nut-5V-0g5"/>
+                        </connections>
                     </button>
                     <button hidden="YES" opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2ph-LD-Dd1">
                         <rect key="frame" x="144" y="162" width="80" height="28"/>
@@ -137,6 +140,16 @@
                             <constraint firstAttribute="height" constant="10" id="3g0-q5-z1b"/>
                         </constraints>
                     </view>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q0r-ur-S2N">
+                        <rect key="frame" x="232" y="17" width="80" height="21"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="21" id="83a-8k-r6R"/>
+                            <constraint firstAttribute="width" constant="120" id="9I1-Gv-upT"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                        <color key="textColor" red="1" green="0.5" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
                 <constraints>
                     <constraint firstItem="mDT-Ex-G7E" firstAttribute="top" secondItem="XbS-Je-pjM" secondAttribute="topMargin" id="0qe-dT-y4R"/>
@@ -144,6 +157,7 @@
                     <constraint firstItem="tog-Vf-3sV" firstAttribute="top" secondItem="WGZ-3l-fbs" secondAttribute="bottom" constant="8" id="4LD-JE-9cI"/>
                     <constraint firstItem="2ph-LD-Dd1" firstAttribute="top" secondItem="iCN-zg-y5T" secondAttribute="bottom" constant="8" id="4eA-Ey-Qpb"/>
                     <constraint firstItem="lB6-55-h7v" firstAttribute="centerY" secondItem="mDT-Ex-G7E" secondAttribute="centerY" id="7HN-YX-nqb"/>
+                    <constraint firstItem="Q0r-ur-S2N" firstAttribute="trailing" secondItem="XbS-Je-pjM" secondAttribute="trailingMargin" id="9vS-1t-0zu"/>
                     <constraint firstItem="tog-Vf-3sV" firstAttribute="leading" secondItem="XbS-Je-pjM" secondAttribute="leadingMargin" constant="-8" id="IfQ-CO-8uo"/>
                     <constraint firstItem="WGZ-3l-fbs" firstAttribute="top" secondItem="iCN-zg-y5T" secondAttribute="bottom" constant="8" id="McL-Nz-KzE"/>
                     <constraint firstItem="WGZ-3l-fbs" firstAttribute="bottom" secondItem="XbS-Je-pjM" secondAttribute="bottomMargin" id="Mux-dW-9kP"/>
@@ -154,17 +168,19 @@
                     <constraint firstItem="lB6-55-h7v" firstAttribute="leading" secondItem="mDT-Ex-G7E" secondAttribute="trailing" constant="8" id="XJv-gT-vxc"/>
                     <constraint firstItem="iCN-zg-y5T" firstAttribute="leading" secondItem="XbS-Je-pjM" secondAttribute="leadingMargin" constant="-8" id="blg-fb-77d"/>
                     <constraint firstAttribute="trailingMargin" secondItem="tog-Vf-3sV" secondAttribute="trailing" constant="-8" id="cPs-hx-gGk"/>
+                    <constraint firstItem="Q0r-ur-S2N" firstAttribute="centerY" secondItem="lB6-55-h7v" secondAttribute="centerY" id="es2-Kp-LcQ"/>
                     <constraint firstItem="2ph-LD-Dd1" firstAttribute="bottom" secondItem="XbS-Je-pjM" secondAttribute="bottomMargin" id="fIW-x2-RoB"/>
                     <constraint firstItem="WGZ-3l-fbs" firstAttribute="trailing" secondItem="XbS-Je-pjM" secondAttribute="trailingMargin" id="hzQ-Xg-cFj"/>
                     <constraint firstItem="mDT-Ex-G7E" firstAttribute="leading" secondItem="XbS-Je-pjM" secondAttribute="leadingMargin" id="kJN-Ko-ufP"/>
+                    <constraint firstItem="Q0r-ur-S2N" firstAttribute="leading" secondItem="lB6-55-h7v" secondAttribute="trailing" constant="8" id="oLj-Sf-D29"/>
                     <constraint firstItem="iCN-zg-y5T" firstAttribute="top" secondItem="mDT-Ex-G7E" secondAttribute="bottom" constant="8" id="rwv-aJ-EZV"/>
                     <constraint firstItem="WGZ-3l-fbs" firstAttribute="leading" secondItem="2ph-LD-Dd1" secondAttribute="trailing" constant="8" id="uZV-kS-iP2"/>
                     <constraint firstItem="lB6-55-h7v" firstAttribute="leading" secondItem="mDT-Ex-G7E" secondAttribute="trailing" constant="8" id="wj5-UU-d8k"/>
                 </constraints>
                 <variation key="default">
                     <mask key="constraints">
-                        <exclude reference="fIW-x2-RoB"/>
                         <exclude reference="4eA-Ey-Qpb"/>
+                        <exclude reference="fIW-x2-RoB"/>
                         <exclude reference="Mux-dW-9kP"/>
                     </mask>
                 </variation>
@@ -178,6 +194,7 @@
                 <outlet property="productTitleLabel" destination="a8c-xg-lL9" id="c5i-J7-kuD"/>
                 <outlet property="sellerAvatarImageView" destination="mDT-Ex-G7E" id="dzf-46-FtT"/>
                 <outlet property="sellerNameLabel" destination="lB6-55-h7v" id="xsN-R3-uc8"/>
+                <outlet property="statusLabel" destination="Q0r-ur-S2N" id="cQd-bX-y9J"/>
             </connections>
             <point key="canvasLocation" x="172" y="243"/>
         </tableViewCell>

@@ -10,8 +10,9 @@ import UIKit
 import Alamofire
 import SwiftyJSON
 import MJRefresh
+import DZNEmptyDataSet
 
-class SearchResultViewController: UIViewController,UITableViewDataSource,UITableViewDelegate,UIScrollViewDelegate,UISearchBarDelegate,UIGestureRecognizerDelegate {
+class SearchResultViewController: UIViewController,UITableViewDataSource,UITableViewDelegate,UIScrollViewDelegate,UISearchBarDelegate,UIGestureRecognizerDelegate,DZNEmptyDataSetSource,DZNEmptyDataSetDelegate {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var topPanel: UIView!
 
@@ -57,7 +58,7 @@ class SearchResultViewController: UIViewController,UITableViewDataSource,UITable
         self.tableView.rowHeight = UITableViewAutomaticDimension
         self.tableView.estimatedRowHeight = 120
         tableView.backgroundColor = UIColor.groupTableViewBackgroundColor()
-        
+        tableView.tableFooterView = UIView()
         
         
         tableView.registerNib(UINib(nibName: "SearchResultTableViewCell", bundle: nil), forCellReuseIdentifier: "SearchResultTableViewCell")
@@ -141,13 +142,23 @@ class SearchResultViewController: UIViewController,UITableViewDataSource,UITable
         
         refreshFooter = MJRefreshBackNormalFooter(refreshingTarget: self, refreshingAction: #selector(loadMore))
         self.tableView.mj_footer = refreshFooter
+        
+        self.tableView.emptyDataSetSource = self
+        self.tableView.emptyDataSetDelegate = self
+        
     }
+    
     
     func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool {
         if touch.view!.isDescendantOfView(categoryView) || touch.view!.isDescendantOfView(filterView){
             return false
         }
         return true
+    }
+    
+    func titleForEmptyDataSet(scrollView: UIScrollView!) -> NSAttributedString! {
+        let string = "没有搜索到你要的商品!"
+        return NSAttributedString(string: string)
     }
     
     func tapOnOverlay(tap:UITapGestureRecognizer){

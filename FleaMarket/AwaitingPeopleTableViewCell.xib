@@ -15,11 +15,11 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="97"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="f9r-Ic-agd">
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="f9r-Ic-agd">
                         <rect key="frame" x="8" y="8" width="76" height="76"/>
                         <constraints>
-                            <constraint firstAttribute="height" constant="76" id="KWh-pD-rRB"/>
-                            <constraint firstAttribute="width" constant="76" id="iTH-Yf-TGq"/>
+                            <constraint firstAttribute="height" constant="86" id="KWh-pD-rRB"/>
+                            <constraint firstAttribute="width" constant="86" id="iTH-Yf-TGq"/>
                         </constraints>
                     </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5PF-Ve-zV4">
@@ -64,6 +64,21 @@
                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                         <nil key="highlightedColor"/>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="eAW-TC-ygQ"/>
+                            </mask>
+                        </variation>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MFc-Ff-Vz9">
+                        <rect key="frame" x="270" y="35" width="42" height="21"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="20" id="BC2-uD-JJc"/>
+                            <constraint firstAttribute="width" constant="80" id="wcg-7v-6WO"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                        <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
                     </label>
                 </subviews>
                 <constraints>
@@ -80,14 +95,18 @@
                     <constraint firstItem="xvn-IL-oqQ" firstAttribute="top" secondItem="5PF-Ve-zV4" secondAttribute="bottom" constant="8" id="Rh4-zF-52q"/>
                     <constraint firstItem="Y54-so-ueS" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="1" id="T22-IY-HhG"/>
                     <constraint firstItem="5PF-Ve-zV4" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" id="Te9-BC-zyD"/>
+                    <constraint firstItem="MFc-Ff-Vz9" firstAttribute="leading" secondItem="f9r-Ic-agd" secondAttribute="trailing" constant="8" id="Ttn-ka-J0R"/>
+                    <constraint firstItem="MFc-Ff-Vz9" firstAttribute="trailing" secondItem="H2p-sc-9uM" secondAttribute="trailingMargin" id="YOJ-KZ-jwM"/>
                     <constraint firstItem="f9r-Ic-agd" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" id="aC1-PU-uue"/>
                     <constraint firstItem="xvn-IL-oqQ" firstAttribute="trailing" secondItem="H2p-sc-9uM" secondAttribute="trailingMargin" id="aXY-Ni-r9L"/>
                     <constraint firstItem="Y54-so-ueS" firstAttribute="leading" secondItem="5PF-Ve-zV4" secondAttribute="trailing" constant="8" id="bOb-zf-5zP"/>
+                    <constraint firstItem="MFc-Ff-Vz9" firstAttribute="top" secondItem="Y54-so-ueS" secondAttribute="bottom" constant="8" id="dQN-wX-lnM"/>
                     <constraint firstItem="Y54-so-ueS" firstAttribute="trailing" secondItem="H2p-sc-9uM" secondAttribute="trailingMargin" id="fa1-Hh-QLG"/>
                     <constraint firstItem="Y54-so-ueS" firstAttribute="trailing" secondItem="H2p-sc-9uM" secondAttribute="trailingMargin" id="hrt-QY-4Xh"/>
                     <constraint firstItem="5PF-Ve-zV4" firstAttribute="trailing" secondItem="H2p-sc-9uM" secondAttribute="trailingMargin" id="iLt-34-uzX"/>
                     <constraint firstItem="Y54-so-ueS" firstAttribute="top" secondItem="xvn-IL-oqQ" secondAttribute="bottom" constant="8" id="rg0-Wo-DdA"/>
                     <constraint firstItem="Y54-so-ueS" firstAttribute="leading" secondItem="f9r-Ic-agd" secondAttribute="trailing" constant="8" id="t4e-uw-plb"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="MFc-Ff-Vz9" secondAttribute="bottom" id="vEA-QO-j1y"/>
                 </constraints>
                 <variation key="default">
                     <mask key="constraints">
@@ -98,6 +117,8 @@
                         <exclude reference="hrt-QY-4Xh"/>
                         <exclude reference="rg0-Wo-DdA"/>
                         <exclude reference="t4e-uw-plb"/>
+                        <exclude reference="Ttn-ka-J0R"/>
+                        <exclude reference="vEA-QO-j1y"/>
                     </mask>
                 </variation>
             </tableViewCellContentView>
@@ -107,6 +128,7 @@
                 <outlet property="avatarImageView" destination="f9r-Ic-agd" id="8zi-mF-vRd"/>
                 <outlet property="infoLabel" destination="xvn-IL-oqQ" id="yMX-tC-Auw"/>
                 <outlet property="nameLabel" destination="5PF-Ve-zV4" id="7Lo-gh-e19"/>
+                <outlet property="timeLabel" destination="MFc-Ff-Vz9" id="2oN-eN-Dba"/>
             </connections>
             <point key="canvasLocation" x="126" y="128"/>
         </tableViewCell>

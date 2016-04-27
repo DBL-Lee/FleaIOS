@@ -11,8 +11,23 @@ import UIKit
 import MBProgressHUD
 import Alamofire
 import SwiftyJSON
+//import AGEmojiKeyboard
 
-class ChatViewController: JSQMessagesViewController, CustomInputToolBarDelegate,UIGestureRecognizerDelegate {
+class CustomChatLayout : JSQMessagesCollectionViewFlowLayout {
+    
+}
+
+enum MessageStatus{
+    case Sending
+    case Success
+    case Failed
+}
+
+class Message : JSQMessage{
+    var status:MessageStatus = .Sending
+}
+
+class ChatViewController: JSQMessagesViewController, CustomInputToolBarDelegate,UIGestureRecognizerDelegate,AGEmojiKeyboardViewDelegate,AGEmojiKeyboardViewDataSource {
     
     var conversation:EMConversation!
     
@@ -29,7 +44,7 @@ class ChatViewController: JSQMessagesViewController, CustomInputToolBarDelegate,
     var firstMessageID:String? = nil
     
     var rawmessages:[EMMessage] = []
-    var messages:[JSQMessage] = []
+    var messages:[Message] = []
     var avatars = Dictionary<String, JSQMessagesAvatarImage>()
     var incomingBubbleImage = JSQMessagesBubbleImageFactory().incomingMessagesBubbleImageWithColor(UIColor.jsq_messageBubbleLightGrayColor())
     var outgoingBubbleImage = JSQMessagesBubbleImageFactory().outgoingMessagesBubbleImageWithColor(UIColor.jsq_messageBubbleGreenColor())
@@ -37,6 +52,7 @@ class ChatViewController: JSQMessagesViewController, CustomInputToolBarDelegate,
     var product:Product?
     
     let maximumLoadCount = 30
+    
     
     override class func nib()->UINib{
         return UINib(nibName: "JSQMessagesViewController", bundle: nil)
@@ -58,6 +74,19 @@ class ChatViewController: JSQMessagesViewController, CustomInputToolBarDelegate,
     override func viewDidLoad() {
         super.viewDidLoad()
         
+//        self.incomingCellIdentifier = CustomMessageCellIncoming.cellReuseIdentifier()
+//        self.incomingMediaCellIdentifier = CustomMessageCellIncoming.mediaCellReuseIdentifier()
+//        self.outgoingCellIdentifier = CustomMessageCellOutgoing.cellReuseIdentifier()
+//        self.outgoingMediaCellIdentifier = CustomMessageCellOutgoing.mediaCellReuseIdentifier()
+//        
+//        self.collectionView.registerNib(CustomMessageCellIncoming.nib(), forCellWithReuseIdentifier: CustomMessageCellIncoming.cellReuseIdentifier())
+//        self.collectionView.registerNib(CustomMessageCellIncoming.nib(), forCellWithReuseIdentifier: CustomMessageCellIncoming.mediaCellReuseIdentifier())
+//        self.collectionView.registerNib(CustomMessageCellOutgoing.nib(), forCellWithReuseIdentifier: CustomMessageCellOutgoing.cellReuseIdentifier())
+//        self.collectionView.registerNib(CustomMessageCellOutgoing.nib(), forCellWithReuseIdentifier: CustomMessageCellOutgoing.mediaCellReuseIdentifier())
+        
+        
+        
+        self.collectionView.backgroundColor = UIColor.groupTableViewBackgroundColor()
         self.collectionView.collectionViewLayout.minimumLineSpacing = 20
         
         self._inputToolbar = inputToolbar as! CustomInputToolBar
@@ -88,11 +117,15 @@ class ChatViewController: JSQMessagesViewController, CustomInputToolBarDelegate,
         abutton.setBackgroundImage(UIImage(named: "chatemoji.png"), forState: .Normal)
         abutton.setBackgroundImage(UIImage(named: "chatemoji-h.png"), forState: .Highlighted)
         abutton.setBackgroundImage(UIImage(named: "chatkeyboard.png"), forState: .Selected)
-        let aassView = UIView()
-        aassView.backgroundColor = UIColor.greenColor()
-        abutton.associatedView = aassView
-        _inputToolbar.addButtonToRightBar(abutton)
-        
+        let emojiView = AGEmojiKeyboardView(frame: CGRect(x: 50, y: 100, width: 300, height: 300), dataSource: self)
+        emojiView.backgroundColor = UIColor.groupTableViewBackgroundColor()
+        emojiView.delegate = self
+        abutton.associatedView = emojiView
+        //self.view.addSubview(emojiView)
+        //_inputToolbar.addButtonToRightBar(abutton)
+//        emojiView.emojiPagesScrollView.canCancelContentTouches = true
+//        emojiView.emojiPagesScrollView.delaysContentTouches = false
+        self.view.addSubview(emojiView)
         
         automaticallyScrollsToMostRecentMessage = true
         
@@ -140,7 +173,7 @@ class ChatViewController: JSQMessagesViewController, CustomInputToolBarDelegate,
         
         //set size for avatar to be height of one single row
         let calculator = JSQMessagesBubblesSizeCalculator.init(cache: NSCache(), minimumBubbleWidth: 100, usesFixedWidthBubbles: false)
-        let testMessage = JSQMessage(senderId: "", displayName: "", text: "test")
+        let testMessage = Message(senderId: "", displayName: "", text: "test")
         let onerowSize:CGSize = calculator.messageBubbleSizeForMessageData(testMessage, atIndexPath: NSIndexPath(forItem: 0,inSection: 0), withLayout: self.collectionView.collectionViewLayout)
         let side = onerowSize.height
         self.collectionView.collectionViewLayout.incomingAvatarViewSize = CGSize(width: side, height: side)
@@ -259,19 +292,35 @@ class ChatViewController: JSQMessagesViewController, CustomInputToolBarDelegate,
                 self.collectionView.contentOffset.y = offset + height
             }
         }else{
-//            UIView.animateWithDuration(0.25, animations: {
-//                if self._inputToolbar.keyboardisUp{
-//                    
-//                }else{
-//                    self.collectionView.contentOffset.y = offset + height
-//                    self.view.layoutIfNeeded()
-//                }
-//            }){
-//                finished in
-//            }
-//            self.collectionView.frame = CGRect(x: 0, y: y, width: width, height: newHeight)
+            //do nothing
         }
     }
+    
+    //MARK: EMOJI DELEGATE
+    func emojiKeyBoardView(emojiKeyBoardView: AGEmojiKeyboardView!, didUseEmoji emoji: String!) {
+        self._inputToolbar.contentView.textView.text = self._inputToolbar.contentView.textView.text + emoji
+    }
+    
+    func emojiKeyBoardViewDidPressBackSpace(emojiKeyBoardView: AGEmojiKeyboardView!) {
+        self._inputToolbar.contentView.textView.deleteBackward()
+    }
+    
+    //MARK: EMOJI DATASOURCE
+    func emojiKeyboardView(emojiKeyboardView: AGEmojiKeyboardView!, imageForSelectedCategory category: AGEmojiKeyboardViewCategoryImage) -> UIImage! {
+        return UIColor.greenColor().toImage()
+    }
+    
+    func emojiKeyboardView(emojiKeyboardView: AGEmojiKeyboardView!, imageForNonSelectedCategory category: AGEmojiKeyboardViewCategoryImage) -> UIImage! {
+        return UIColor.redColor().toImage()
+    }
+    
+    func backSpaceButtonImageForEmojiKeyboardView(emojiKeyboardView: AGEmojiKeyboardView!) -> UIImage! {
+        return UIColor.blackColor().toImage()
+    }
+    
+    
+    
+    
     
     func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return true
@@ -311,18 +360,26 @@ class ChatViewController: JSQMessagesViewController, CustomInputToolBarDelegate,
     func loadMoreMessageFromDatabase(){
         if !isLoading{
             isLoading = true
+            
+            self.title = "加载中..."
+            
             if moremessage{
                 let result = conversation.loadMoreMessagesFromId(firstMessageID, limit: Int32(maximumLoadCount))
                 conversation.markAllMessagesAsRead()
                 if result.count > 0 {
                     firstMessageID = (result[0] as! EMMessage).messageId
-                    var tempMsg:[JSQMessage] = []
+                    var tempMsg:[Message] = []
                     var tempRawMsg:[EMMessage] = []
                     var indexPaths:[NSIndexPath] = []
                     var i = 0
                     for message in result{
                         indexPaths.append(NSIndexPath(forItem: i, inSection: 0))
                         let m = message as! EMMessage
+                        
+                        //if still displayed as pending then display as failed
+                        if m.status == EMMessageStatusPending || m.status == EMMessageStatusDelivering{
+                            m.status = EMMessageStatusFailed
+                        }
                         let jsq = convertMessage(m)
                         tempMsg.append(jsq)
                         tempRawMsg.append(m)
@@ -367,6 +424,8 @@ class ChatViewController: JSQMessagesViewController, CustomInputToolBarDelegate,
                     }
                 }
             }
+            
+            self.title = targetNickname
             isLoading = false
         }
     }
@@ -388,29 +447,44 @@ class ChatViewController: JSQMessagesViewController, CustomInputToolBarDelegate,
     
 
     
-    func convertMessage(message:EMMessage)->JSQMessage{
+    func convertMessage(message:EMMessage)->Message{
+        var jsq:Message!
         switch message.body.type{
         case EMMessageBodyTypeText:
             let body = message.body as! EMTextMessageBody
             let displayname = (message.from == myEMUsername ? UserLoginHandler.instance.nickname : targetNickname)
-            let jsq = JSQMessage(senderId: message.from, displayName: displayname, text: body.text)
-            return jsq
+            jsq = Message(senderId: message.from, displayName: displayname, text: body.text)
         case EMMessageBodyTypeImage:
             let body = message.body as! EMImageMessageBody
             let displayname = (message.from == myEMUsername ? UserLoginHandler.instance.nickname : targetNickname)
             
             let mediadata:JSQPhotoMediaItem!
-            if body.downloadStatus == EMDownloadStatusSuccessed{
-                mediadata = JSQPhotoMediaItem(image: UIImage(contentsOfFile: body.localPath))
+            if message.direction == EMMessageDirectionSend {
+                mediadata = CustomJSQPhotoMediaItem(image: UIImage(contentsOfFile: body.localPath)) // not used
             }else{
-                mediadata = JSQPhotoMediaItem(image: UIImage(contentsOfFile: body.thumbnailLocalPath))
+                if body.downloadStatus == EMDownloadStatusSuccessed{
+                    mediadata = CustomJSQPhotoMediaItem(image: UIImage(contentsOfFile: body.localPath))
+                }else{
+                    mediadata = CustomJSQPhotoMediaItem(image: UIImage(contentsOfFile: body.thumbnailLocalPath))
+                }
+                mediadata.appliesMediaViewMaskAsOutgoing = false
             }
-            let jsq = JSQMessage(senderId: message.from, displayName: displayname, media: mediadata)
-            return jsq
+            
+            jsq = Message(senderId: message.from, displayName: displayname, media: mediadata)
         default:
-            break
+            jsq = Message(senderId: message.from, displayName: "", text: "")
         }
-        return JSQMessage()
+        switch message.status{
+        case EMMessageStatusFailed:
+            jsq.status = .Failed
+        case EMMessageStatusPending,EMMessageStatusDelivering:
+            jsq.status = .Sending
+        case EMMessageStatusSuccessed:
+            jsq.status = .Success
+        default:
+            jsq.status = .Success
+        }
+        return jsq
     }
     
     
@@ -443,16 +517,34 @@ class ChatViewController: JSQMessagesViewController, CustomInputToolBarDelegate,
         message.chatType = EMChatTypeChat
         message.ext = ["em_apns_ext":["em_push_title":["\(UserLoginHandler.instance.nickname)发来了一张图片"]]]
         
+        self.rawmessages.append(message)
+        
+        let mediadata:CustomJSQPhotoMediaItem = CustomJSQPhotoMediaItem(image: image)
+        
+        //used to show the overlay
+        mediadata.updateProgress(0.0)
+        let jsqmessage = Message(senderId: myEMUsername, displayName: UserLoginHandler.instance.nickname, media: mediadata)
+        self.messages.append(jsqmessage)
+        
+        
+        
+        self.finishSendingMessageAnimated(true)
+        
         EMClient.sharedClient().chatManager.asyncSendMessage(message, progress: {
-                progress in
-            }, completion: {
-                message,error in
-                if error == nil{
-                    JSQSystemSoundPlayer.jsq_playMessageSentSound()
-                    self.rawmessages.append(message)
-                    self.messages.append(self.convertMessage(message))
-                    self.finishSendingMessage()
-                }
+            progress in
+            print(progress)
+            let float = Float(progress) / Float(100)
+            mediadata.updateProgress(float)
+        }, completion: {
+            message,error in
+            if error == nil{
+                jsqmessage.status = .Success
+                JSQSystemSoundPlayer.jsq_playMessageSentSound()
+                self.finishSendingMessageAnimated(false)
+            }else{
+                jsqmessage.status = .Failed
+                self.finishSendingMessageAnimated(false)
+            }
         })
     }
     
@@ -462,25 +554,26 @@ class ChatViewController: JSQMessagesViewController, CustomInputToolBarDelegate,
         let message = EMMessage(conversationID: targetEMUsername, from: from, to: targetEMUsername, body: body, ext: nil)
         message.chatType = EMChatTypeChat
         let shortenText:String = text.characters.count > 20 ? text.substringToIndex(text.startIndex.advancedBy(19)) : text
-        let ext:[NSObject:AnyObject] = ["em_apns_ext":["em_push_title":["\(UserLoginHandler.instance.nickname):"+shortenText]]]
+        let ext:[NSObject:AnyObject] = ["em_apns_ext":["em_push_title":"\(UserLoginHandler.instance.nickname):"+shortenText]]
         message.ext = ext
+        
+        //temp sending message
+        self.rawmessages.append(message)
+        let jsqmessage = self.convertMessage(message)
+        self.messages.append(jsqmessage)
+        self.finishSendingMessageAnimated(true)
         
         EMClient.sharedClient().chatManager.asyncSendMessage(message, progress: nil){
             message,error in
             if error == nil{ //finish sending message
                 JSQSystemSoundPlayer.jsq_playMessageSentSound()
-                self.rawmessages.append(message)
-                self.messages.append(self.convertMessage(message))
-                self.finishSendingMessageAnimated(true)
+                jsqmessage.status = .Success
+                self.finishSendingMessageAnimated(false)
             }else{ //send failed
-                
+                jsqmessage.status = .Failed
+                self.finishSendingMessageAnimated(false)
             }
         }
-    }
-    
-    func tempSendMessage(text: String!) {
-        let message = JSQMessage(senderId: myEMUsername, displayName: UserLoginHandler.instance.nickname, text: text)
-        messages.append(message)
     }
     
     func setupAvatarImage(name: String, imageUrl: String?, incoming: Bool) {
@@ -544,6 +637,7 @@ class ChatViewController: JSQMessagesViewController, CustomInputToolBarDelegate,
     
     
     
+    
     override func collectionView(collectionView: JSQMessagesCollectionView!, avatarImageDataForItemAtIndexPath indexPath: NSIndexPath!) -> JSQMessageAvatarImageDataSource! {
         let message = messages[indexPath.item]
         if let avatar = avatars[message.senderId] {
@@ -561,10 +655,56 @@ class ChatViewController: JSQMessagesViewController, CustomInputToolBarDelegate,
     override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = super.collectionView(collectionView, cellForItemAtIndexPath: indexPath) as! JSQMessagesCollectionViewCell
         
-        //set spacing
-        
+        if let accessoryView = cell.accessoryView{
+            accessoryView.removeFromSuperview()
+        }
         
         let message = messages[indexPath.item]
+        
+        switch message.status{
+        case .Failed:
+            let sendFailedBtn = UIButton(type:.Custom)
+            sendFailedBtn.setImage(UIImage(named: "sendfailed.png"), forState: .Normal)
+            sendFailedBtn.translatesAutoresizingMaskIntoConstraints = false
+            cell.contentView.addSubview(sendFailedBtn)
+            let centerC = NSLayoutConstraint(item: sendFailedBtn, attribute: .CenterY, relatedBy: .Equal, toItem: cell.messageBubbleContainerView, attribute: .CenterY, multiplier: 1, constant: 0)
+            var horizontalC:NSLayoutConstraint!
+            if message.senderId == self.senderId{ // outgoing
+                horizontalC = NSLayoutConstraint(item: sendFailedBtn, attribute: .Trailing, relatedBy: .Equal, toItem: cell.messageBubbleContainerView, attribute: .Leading, multiplier: 1, constant: -8)
+            }else{ //incoming
+                horizontalC = NSLayoutConstraint(item: sendFailedBtn, attribute: .Leading, relatedBy: .Equal, toItem: cell.messageBubbleContainerView, attribute: .Trailing, multiplier: 1, constant: 8)
+            }
+            let heightC = NSLayoutConstraint(item: sendFailedBtn, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: 30)
+            let widthC = NSLayoutConstraint(item: sendFailedBtn, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: 30)
+            sendFailedBtn.addConstraints([widthC,heightC])
+            cell.contentView.addConstraints([centerC,horizontalC])
+            
+            cell.accessoryView = sendFailedBtn
+        case .Sending:
+            if !message.isMediaMessage {
+                let activityindicator = UIActivityIndicatorView(activityIndicatorStyle: .Gray)
+                activityindicator.translatesAutoresizingMaskIntoConstraints = false
+                cell.contentView.addSubview(activityindicator)
+                let centerC = NSLayoutConstraint(item: activityindicator, attribute: .CenterY, relatedBy: .Equal, toItem: cell.messageBubbleContainerView, attribute: .CenterY, multiplier: 1, constant: 0)
+                var horizontalC:NSLayoutConstraint!
+                if message.senderId == self.senderId{ // outgoing
+                    horizontalC = NSLayoutConstraint(item: activityindicator, attribute: .Trailing, relatedBy: .Equal, toItem: cell.messageBubbleContainerView, attribute: .Leading, multiplier: 1, constant: -8)
+                }else{ //incoming
+                    horizontalC = NSLayoutConstraint(item: activityindicator, attribute: .Leading, relatedBy: .Equal, toItem: cell.messageBubbleContainerView, attribute: .Trailing, multiplier: 1, constant: 8)
+                }
+                let heightC = NSLayoutConstraint(item: activityindicator, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: 30)
+                let widthC = NSLayoutConstraint(item: activityindicator, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: 30)
+                activityindicator.addConstraints([widthC,heightC])
+                cell.contentView.addConstraints([centerC,horizontalC])
+                activityindicator.startAnimating()
+                
+                cell.accessoryView = activityindicator
+            }
+            
+        case .Success:
+            break
+        }
+        
         if !message.isMediaMessage{
             if message.senderId == myEMUsername {
                 cell.textView!.textColor = UIColor.whiteColor()
@@ -588,7 +728,7 @@ class ChatViewController: JSQMessagesViewController, CustomInputToolBarDelegate,
         }else{
             userid = targetuserid
         }
-        let vc = UserOverviewController(userid: userid, nextURL: userPostedURL)
+        let vc = UserOverviewController(userid: userid)
         self.navigationController?.pushViewController(vc, animated: true)
     }
     

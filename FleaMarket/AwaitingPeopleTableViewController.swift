@@ -15,11 +15,13 @@ class AwaitingPeopleTableViewController: UITableViewController {
     var productid:Int!
     var totalAmount:Int!
     
+    var orders:[Order] = []
     var avatar:[String] = []
     var nickname:[String] = []
     var amount:[Int] = []
     var userid:[Int] = []
-    var checked:[Bool] = []
+    var time:[NSDate] = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -34,7 +36,19 @@ class AwaitingPeopleTableViewController: UITableViewController {
         self.tableView.estimatedRowHeight = 200
         self.view.backgroundColor = UIColor.groupTableViewBackgroundColor()
         
+        loadData()
+        
+    }
+    
+    func loadData(){
         let hud = MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
+        
+        orders = []
+        avatar = []
+        nickname = []
+        amount = []
+        userid = []
+        time = []
         
         Alamofire.request(.GET, selfAwaitingPeopleURL+"?productid=\(productid)", parameters: nil, encoding: .JSON, headers: UserLoginHandler.instance.authorizationHeader()).validate().responseJSON{
             response in
@@ -46,15 +60,22 @@ class AwaitingPeopleTableViewController: UITableViewController {
                     self.avatar.append(order["avatar"].stringValue)
                     self.nickname.append(order["nickname"].stringValue)
                     self.amount.append(order["amount"].intValue)
-                    self.userid.append(order["buyerid"].intValue)
-                    self.checked.append(false)
+                    self.userid.append(order["userid"].intValue)
+                    
+                    let timestring = order["time_ordered"].stringValue
+                    let dateFormatter = NSDateFormatter()
+                    dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSZ"
+                    dateFormatter.timeZone = NSTimeZone(name: "UTC")
+                    let time_ordered = dateFormatter.dateFromString(timestring)!
+                    
+                    self.time.append(time_ordered)
+                    
                 }
                 self.tableView.reloadData()
             case .Failure(let e):
                 OverlaySingleton.addToView(self.navigationController!.view, text: NetworkProblemString)
             }
         }
-        
     }
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -67,15 +88,15 @@ class AwaitingPeopleTableViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("AwaitingPeopleTableViewCell", forIndexPath: indexPath) as! AwaitingPeopleTableViewCell
-        cell.setupCell(avatar[indexPath.row], nickname: nickname[indexPath.row], amount: amount[indexPath.row],callback: {
+        cell.setupCell(avatar[indexPath.row], nickname: nickname[indexPath.row], amount: amount[indexPath.row],time: self.time[indexPath.row],callback: {
             _ in
-            self.chooseUser(self.userid[indexPath.row])
+            self.chooseUser(self.userid[indexPath.row],amount: self.amount[indexPath.row])
         })
         
         return cell
     }
     
-    func chooseUser(userid:Int){
+    func chooseUser(userid:Int,amount:Int){
         let hud = MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
         var parameter:[String:AnyObject] = [:]
         parameter["productid"] = productid
@@ -86,6 +107,9 @@ class AwaitingPeopleTableViewController: UITableViewController {
             switch response.result{
             case .Success:
                 if response.response?.statusCode<400{
+                    self.totalAmount = self.totalAmount - amount
+                    self.title = "库存:\(self.totalAmount)"
+                    self.loadData()
                     
                 }else{
                     OverlaySingleton.addToView(self.navigationController!.view, text: NetworkProblemString)

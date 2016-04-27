@@ -15,6 +15,7 @@ class FinishedTableViewCell: UITableViewCell {
     
     @IBOutlet weak var sellerNameLabel: UILabel!
     
+    @IBOutlet weak var statusLabel: UILabel!
     @IBOutlet weak var productImageView: UIImageView!
     @IBOutlet weak var productTitleLabel: UILabel!
     @IBOutlet weak var productPriceLabel: UILabel!
@@ -34,18 +35,28 @@ class FinishedTableViewCell: UITableViewCell {
         sellerAvatarImageView.clipsToBounds = true
         productImageView.contentMode = .ScaleAspectFill
         productImageView.clipsToBounds = true
+        
     }
     
-    func setupCell(product:Product,amount:Int,nickname:String,avatar:String,rateCallback:()->Void){
-        AvatarFactory.setupAvatarImageView(sellerAvatarImageView, avatar: avatar)
-        AvatarFactory.setupAvatarImageView(productImageView, avatar: product.imageUUID[product.mainimage], square: true)
-        sellerNameLabel.text = nickname
-        productTitleLabel.text = product.title
+    func setupCell(order:Order,rateCallback:()->Void){
+        let imseller:Bool = order.product.userid == UserLoginHandler.instance.userid
+        AvatarFactory.setupAvatarImageView(sellerAvatarImageView, avatar: imseller ? order.buyeravatar : order.product.useravatar)
+        AvatarFactory.setupAvatarImageView(productImageView, avatar: order.product.imageUUID[order.product.mainimage], square: true)
+        sellerNameLabel.text = imseller ? order.buyernickname : order.product.usernickname
+        productTitleLabel.text = order.product.title
         productTitleLabel.sizeToFit()
-        productPriceLabel.text = product.getCurrentPriceWithCurrency()
-        orderAmountLabel.text = "×\(amount)"
+        productPriceLabel.text = order.product.getCurrentPriceWithCurrency()
+        orderAmountLabel.text = "×\(order.amount)"
+        
+        self.statusLabel.text = order.status()
         
         self.rateCallback = rateCallback
+        
+        if order.notfeedbacked(){
+            rateBtn.hidden = false
+        }else{
+            rateBtn.hidden = true
+        }
     }
     @IBAction func rateBtnPressed(sender: AnyObject) {
         self.rateCallback()

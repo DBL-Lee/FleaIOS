@@ -11,6 +11,7 @@ import UIKit
 class AwaitingPeopleTableViewCell: UITableViewCell {
     @IBOutlet weak var avatarImageView: UIImageView!
 
+    @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var acceptBtn: UIButton!
     @IBOutlet weak var infoLabel: UILabel!
     @IBOutlet weak var amountLabel: UILabel!
@@ -26,12 +27,14 @@ class AwaitingPeopleTableViewCell: UITableViewCell {
         acceptBtn.layer.cornerRadius = 3
     }
     
-    func setupCell(avatar:String,nickname:String,amount:Int,text:String = "",callback:()->Void){
+    func setupCell(avatar:String,nickname:String,amount:Int,text:String = "",time:NSDate,callback:()->Void){
         AvatarFactory.setupAvatarImageView(self.avatarImageView, avatar: avatar, square: false)
         self.nameLabel.text = nickname
         self.amountLabel.text = "求购数量: \(amount)"
         self.infoLabel.text = text
         self.infoLabel.sizeToFit()
+        
+        self.timeLabel.text = time.formattedTime()
         self.callback = callback
     }
     @IBAction func acceptClicked(sender: AnyObject) {

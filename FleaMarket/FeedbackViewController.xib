@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="FeedbackViewController" customModule="FleaMarket" customModuleProvider="target">
+            <connections>
+                <outlet property="confirmBtn" destination="evm-uJ-UQR" id="Gdu-Qr-YD8"/>
+                <outlet property="textView" destination="u7q-sJ-r4s" id="dyK-3q-ghx"/>
+                <outlet property="topPanel" destination="Ksv-fm-n6j" id="s6J-tV-kIg"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+                <outlet property="wordCountLabel" destination="u3j-is-gT5" id="QPo-ya-oP8"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ksv-fm-n6j" customClass="TopTabBarView" customModule="FleaMarket" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="32" width="320" height="41"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="40" id="njF-MP-LLt"/>
+                    </constraints>
+                </view>
+                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="u7q-sJ-r4s">
+                    <rect key="frame" x="0.0" y="81" width="320" height="183"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="200" id="4Dg-9a-yv1"/>
+                    </constraints>
+                    <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                </textView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="u3j-is-gT5">
+                    <rect key="frame" x="8" y="272" width="304" height="21"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="21" id="4ss-Mw-ZFa"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="evm-uJ-UQR">
+                    <rect key="frame" x="8" y="301" width="304" height="30"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="40" id="uTc-f2-rg9"/>
+                    </constraints>
+                    <state key="normal" title="Button"/>
+                    <connections>
+                        <action selector="confirm:" destination="-1" eventType="touchUpInside" id="xf3-ou-asZ"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="evm-uJ-UQR" firstAttribute="top" secondItem="u3j-is-gT5" secondAttribute="bottom" constant="8" id="2Pz-05-CeU"/>
+                <constraint firstAttribute="trailing" secondItem="u3j-is-gT5" secondAttribute="trailing" constant="8" id="8G6-SM-cej"/>
+                <constraint firstAttribute="trailing" secondItem="evm-uJ-UQR" secondAttribute="trailing" constant="8" id="9no-QD-waH"/>
+                <constraint firstAttribute="trailing" secondItem="Ksv-fm-n6j" secondAttribute="trailing" id="F7O-WN-uDG"/>
+                <constraint firstItem="Ksv-fm-n6j" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="KPA-pp-LmH"/>
+                <constraint firstItem="u3j-is-gT5" firstAttribute="top" secondItem="u7q-sJ-r4s" secondAttribute="bottom" constant="8" id="Vgy-2o-4Ex"/>
+                <constraint firstItem="evm-uJ-UQR" firstAttribute="top" secondItem="u3j-is-gT5" secondAttribute="bottom" constant="8" id="WPF-as-WlX"/>
+                <constraint firstItem="evm-uJ-UQR" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="8" id="akk-EK-dS7"/>
+                <constraint firstItem="u3j-is-gT5" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="8" id="dSX-ag-rgV"/>
+                <constraint firstAttribute="trailing" secondItem="u7q-sJ-r4s" secondAttribute="trailing" id="gEw-g9-u0q"/>
+                <constraint firstItem="u7q-sJ-r4s" firstAttribute="top" secondItem="Ksv-fm-n6j" secondAttribute="bottom" id="juX-VL-M8C"/>
+                <constraint firstItem="Ksv-fm-n6j" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="lJb-6O-Wfe"/>
+                <constraint firstItem="u7q-sJ-r4s" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="lOj-sT-JnA"/>
+            </constraints>
+            <point key="canvasLocation" x="154" y="282"/>
+        </view>
+    </objects>
+</document>

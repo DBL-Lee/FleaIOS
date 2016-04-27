@@ -147,6 +147,16 @@ class ProductDetailTableViewController: UITableViewController {
         return UITableViewCell()
     }
     
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        switch indexPath.row{
+        case 卖家:
+            let vc = UserOverviewController(userid: product.userid)
+            self.navigationController!.pushViewController(vc, animated: true)
+        default:
+            break
+        }
+    }
+    
     
     func chat(){
         if UserLoginHandler.instance.loggedIn(){

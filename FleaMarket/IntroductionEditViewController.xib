@@ -41,7 +41,7 @@
                 <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BSa-Bu-puP">
                     <rect key="frame" x="8" y="243" width="304" height="30"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="30" id="DbK-ne-sYc"/>
+                        <constraint firstAttribute="height" constant="40" id="DbK-ne-sYc"/>
                     </constraints>
                     <state key="normal" title="完成">
                         <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>

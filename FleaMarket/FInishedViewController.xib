@@ -8,7 +8,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="FInishedViewController" customModule="FleaMarket" customModuleProvider="target">
             <connections>
                 <outlet property="tableView" destination="A0p-OK-Lh6" id="sPf-Cc-LXK"/>
-                <outlet property="topPanel" destination="rZn-ty-J9f" id="XcR-Za-Myf"/>
+                <outlet property="topPanel" destination="rZn-ty-J9f" id="YGR-lH-rEa"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -17,11 +17,11 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rZn-ty-J9f">
+                <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rZn-ty-J9f" customClass="TopTabBarView" customModule="FleaMarket" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="38"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
-                        <constraint firstAttribute="height" id="0Hh-An-R1z"/>
+                        <constraint firstAttribute="height" constant="40" id="0Hh-An-R1z"/>
                     </constraints>
                 </view>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="A0p-OK-Lh6">

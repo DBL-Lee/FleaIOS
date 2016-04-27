@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = 'D68D9899A18295B4FEAC15D7'
+               BlueprintIdentifier = '43D60F9AD49799FF1B98EDF2'
                BlueprintName = 'FastttCamera'
                ReferencedContainer = 'container:Pods.xcodeproj'
                BuildableName = 'FastttCamera.framework'>

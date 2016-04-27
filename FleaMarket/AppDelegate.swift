@@ -20,8 +20,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate,EMChatManagerDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         //AWSLogger.defaultLogger().logLevel = .Verbose
-        
-        //UIBarButtonItem.appearance().setBackButtonBackgroundImage(UIImage(named: "backButton.png")!.thumbnailOfSize(CGSize(width: 30, height: 30)), forState: .Normal, barMetrics: .Default)
+        let image = UIImage(named: "backButton.png")!.thumbnailOfSize(CGSize(width: 40, height: 40)).imageWithRenderingMode(.AlwaysTemplate)
+        UIBarButtonItem.appearance().setBackButtonBackgroundImage(image, forState: .Normal, barMetrics: .Default)
+        UIBarButtonItem.appearance().setBackButtonTitlePositionAdjustment(UIOffset(horizontal: -1000,vertical: -1000), forBarMetrics: .Default)
         
         let appkey = "fleamarket#fleamarket"
         let certname = "FleaMarket"

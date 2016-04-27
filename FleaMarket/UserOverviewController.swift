@@ -23,12 +23,11 @@ class UserOverviewController: UIViewController,UITableViewDelegate,UITableViewDa
     var userid:Int!
     var refreshFooter:MJRefreshBackFooter!
     
-    var nextURL:String = ""
+    var nextURL:String = userPostedURL
     
-    convenience init(userid:Int?,nextURL:String){
+    convenience init(userid:Int?){
         self.init()
         self.userid = userid
-        self.nextURL = nextURL
     }
     
     override func viewDidLoad() {

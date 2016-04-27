@@ -40,6 +40,8 @@ class UserOverviewTopTableViewCell: UITableViewCell {
                 self.locationLabel.text = gender
             }else if let location = location{
                 self.locationLabel.text = location
+            }else{
+                self.locationLabel.text = ""
             }
         }
         if let intro = auxi {

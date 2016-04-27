@@ -8,8 +8,9 @@
 
 import UIKit
 import MBProgressHUD
+//import AGEmojiKeyboard
 
-class ChatListTableViewController: UITableViewController {
+class ChatListTableViewController: UITableViewController,AGEmojiKeyboardViewDataSource,AGEmojiKeyboardViewDelegate {
 
     var chatManager:IEMChatManager!
     var conversations:[EMConversation] = []
@@ -21,15 +22,42 @@ class ChatListTableViewController: UITableViewController {
         super.viewDidLoad()
         chatManager = EMClient.sharedClient().chatManager
         
-//        let result = chatManager.getAllConversations()
-//        users = [User](count: result.count,repeatedValue: User(id: 0, emusername: "", nickname: "", avatar: "default", transaction: 0, goodfeedback: 0, posted: 0))
-        
         self.tableView.registerNib(UINib(nibName: "ConversationTableViewCell",bundle: nil), forCellReuseIdentifier: "ConversationTableViewCell")
         self.tableView.rowHeight = UITableViewAutomaticDimension
         self.tableView.estimatedRowHeight = 76
         self.tableView.tableFooterView = UIView()
         
-        
+        let emojiView = AGEmojiKeyboardView(frame: CGRect(x: 50, y: 100, width: 300, height: 300), dataSource: self)
+        emojiView.backgroundColor = UIColor.groupTableViewBackgroundColor()
+        emojiView.delegate = self
+        //abutton.associatedView = emojiView
+        //self.view.addSubview(emojiView)
+        //_inputToolbar.addButtonToRightBar(abutton)
+        //        emojiView.emojiPagesScrollView.canCancelContentTouches = true
+        //        emojiView.emojiPagesScrollView.delaysContentTouches = false
+        self.view.addSubview(emojiView)
+    }
+    
+    //MARK: EMOJI DELEGATE
+    func emojiKeyBoardView(emojiKeyBoardView: AGEmojiKeyboardView!, didUseEmoji emoji: String!) {
+        //self._inputToolbar.contentView.textView.text = self._inputToolbar.contentView.textView.text + emoji
+    }
+    
+    func emojiKeyBoardViewDidPressBackSpace(emojiKeyBoardView: AGEmojiKeyboardView!) {
+       // self._inputToolbar.contentView.textView.deleteBackward()
+    }
+    
+    //MARK: EMOJI DATASOURCE
+    func emojiKeyboardView(emojiKeyboardView: AGEmojiKeyboardView!, imageForSelectedCategory category: AGEmojiKeyboardViewCategoryImage) -> UIImage! {
+        return UIColor.greenColor().toImage()
+    }
+    
+    func emojiKeyboardView(emojiKeyboardView: AGEmojiKeyboardView!, imageForNonSelectedCategory category: AGEmojiKeyboardViewCategoryImage) -> UIImage! {
+        return UIColor.redColor().toImage()
+    }
+    
+    func backSpaceButtonImageForEmojiKeyboardView(emojiKeyboardView: AGEmojiKeyboardView!) -> UIImage! {
+        return UIColor.blackColor().toImage()
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -91,7 +119,8 @@ class ChatListTableViewController: UITableViewController {
                     self.conversationUserMap[conversation] = user
                     if count == 0 {
                         self.tableView.reloadData()
-                         MBProgressHUD.hideHUDForView(self.navigationController!.view, animated: true)
+                         MBProgressHUD.hideAllHUDsForView(self.navigationController!.view, animated: true)
+                        
                     }
                 }
             }
@@ -123,17 +152,6 @@ class ChatListTableViewController: UITableViewController {
         let user = conversationUserMap[conversation]
         if let user = user{
             let vc = ChatViewController(userid: user.id,username: user.emusername, nickname: user.nickname, avatar: user.avatar)
-//            let reduce = Int(conversation.unreadMessagesCount)
-//            totalUnreadCount -= reduce
-//            UIApplication.sharedApplication().applicationIconBadgeNumber -= reduce
-//            if let badge = self.navigationController!.tabBarItem.badgeValue{
-//                let value = Int(badge)! - reduce
-//                if value == 0 {
-//                    self.navigationController!.tabBarItem.badgeValue = nil
-//                }else{
-//                    self.navigationController!.tabBarItem.badgeValue = "\(value)"
-//                }
-//            }
             vc.hidesBottomBarWhenPushed = true
             self.navigationController?.pushViewController(vc, animated: true)
         }

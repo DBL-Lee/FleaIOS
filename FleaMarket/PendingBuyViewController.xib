@@ -8,6 +8,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PendingBuyViewController" customModule="FleaMarket" customModuleProvider="target">
             <connections>
                 <outlet property="tableView" destination="9tW-vD-7Jm" id="vJS-3N-Q9a"/>
+                <outlet property="topPanel" destination="p7F-fE-ymH" id="x4f-hM-bBo"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -16,11 +17,11 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="p7F-fE-ymH">
+                <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="p7F-fE-ymH" customClass="TopTabBarView" customModule="FleaMarket" customModuleProvider="target">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="36"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
-                        <constraint firstAttribute="height" id="3xa-j8-3q7"/>
+                        <constraint firstAttribute="height" constant="40" id="3xa-j8-3q7"/>
                     </constraints>
                 </view>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="9tW-vD-7Jm">

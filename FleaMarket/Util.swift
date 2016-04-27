@@ -7,6 +7,7 @@
 //
 import UIKit
 
+
 extension UIColor{
     func toImage()->UIImage{
         let rect = CGSize(width: 1, height: 1)
@@ -252,3 +253,22 @@ class OverlaySingleton{
         }
     }
 }
+
+
+
+import JSQMessagesViewController
+
+private var accessoryViewKey : UInt8 = 0
+
+extension JSQMessagesCollectionViewCell{
+    var accessoryView:UIView! {
+            get {
+                return objc_getAssociatedObject(self, &accessoryViewKey) as? UIView
+            }
+            set(newValue) {
+                objc_setAssociatedObject(self, &accessoryViewKey, newValue, objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN)
+            }
+        }
+}
+
+

@@ -38,25 +38,18 @@ class MineTableViewController: UITableViewController {
         self.tableView.registerNib(UINib(nibName: "MineNormalTableViewCell", bundle: nil), forCellReuseIdentifier: "MineNormalTableViewCell")
         self.tableView.tableFooterView = UIView()
         
-        let hud = MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
-        hud.labelText = "登录中"
+        
         
         self.tableView.rowHeight = UITableViewAutomaticDimension
         self.tableView.estimatedRowHeight = 44
+        
+        
+        let hud = MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: false)
+        hud.labelText = "登录中"
     }
     
-    var loggedIn = false
-    
-    override func viewWillAppear(animated: Bool) {
-        
-        super.viewWillAppear(animated)
-        self.navigationController?.navigationBar.barStyle = .Default
-        self.navigationController?.navigationBar.translucent = false
-        self.navigationController?.navigationBar.tintColor = UIColor.blackColor()
-        self.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
-        
-        self.edgesForExtendedLayout = .None
-        self.navigationItem.title = "我的"
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(true)
         if UserLoginHandler.instance.loggedIn(){
             Alamofire.request(.GET, userselfInfoURL, parameters: nil, encoding: .JSON, headers: UserLoginHandler.instance.authorizationHeader()).responseJSON{
                 response in
@@ -102,6 +95,21 @@ class MineTableViewController: UITableViewController {
         }else{
             MBProgressHUD.hideHUDForView(self.navigationController!.view, animated: true)
         }
+    }
+    
+    var loggedIn = false
+    
+    override func viewWillAppear(animated: Bool) {
+        
+        super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.barStyle = .Default
+        self.navigationController?.navigationBar.translucent = false
+        self.navigationController?.navigationBar.tintColor = UIColor.blackColor()
+        self.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
+        
+        self.edgesForExtendedLayout = .None
+        self.navigationItem.title = "我的"
+        
 
     }
     var id = 0
@@ -236,7 +244,6 @@ class MineTableViewController: UITableViewController {
 //                NSBundle.mainBundle().loadNibNamed("UserOverviewController", owner: vc, options: nil)
                 let vc = UserOverviewController(nibName: "UserOverviewController", bundle: nil)
                 vc.userid = self.id
-                vc.nextURL = userPostedURL
                 vc.hidesBottomBarWhenPushed = true
                 self.navigationController?.pushViewController(vc, animated: true)
             case (0,1): //改资料
@@ -244,7 +251,7 @@ class MineTableViewController: UITableViewController {
                 vc.hidesBottomBarWhenPushed = true
                 self.navigationController?.pushViewController(vc, animated: true)
             case (3,1): //注销
-                let hud = MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
+                let hud = MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: false)
                 hud.labelText = "注销中"
                 UserLoginHandler.instance.logoutUser{
                     MBProgressHUD.hideHUDForView(self.navigationController!.view, animated: true)

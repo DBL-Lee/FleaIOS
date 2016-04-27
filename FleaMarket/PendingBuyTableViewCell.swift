@@ -16,13 +16,15 @@ class PendingBuyTableViewCell: UITableViewCell {
     
     @IBOutlet weak var sellerNameLabel: UILabel!
     
+    @IBOutlet weak var statusLabel: UILabel!
     @IBOutlet weak var productImageView: UIImageView!
     @IBOutlet weak var productTitleLabel: UILabel!
     @IBOutlet weak var productPriceLabel: UILabel!
     @IBOutlet weak var orderAmountLabel: UILabel!
     
     var confirmCallback:()->Void = {_ in}
-    
+    var cancelCallback:()->Void = {_ in}
+
     override func awakeFromNib() {
         confirmBtn.layer.borderWidth = 1
         confirmBtn.layer.borderColor = UIColor.blackColor().CGColor
@@ -40,16 +42,19 @@ class PendingBuyTableViewCell: UITableViewCell {
         productImageView.clipsToBounds = true
     }
     
-    func setupCell(product:Product,amount:Int,confirmCallback:()->Void){
-        AvatarFactory.setupAvatarImageView(sellerAvatarImageView, avatar: product.useravatar)
-        AvatarFactory.setupAvatarImageView(productImageView, avatar: product.imageUUID[product.mainimage], square: true)
-        sellerNameLabel.text = product.usernickname
-        productTitleLabel.text = product.title
+    func setupCell(order:Order,cancelCallback:()->Void,confirmCallback:()->Void){
+        AvatarFactory.setupAvatarImageView(sellerAvatarImageView, avatar: order.product.useravatar)
+        AvatarFactory.setupNormalImageView(productImageView, image: order.product.imageUUID[order.product.mainimage])
+        sellerNameLabel.text = order.product.usernickname
+        productTitleLabel.text = order.product.title
         productTitleLabel.sizeToFit()
-        productPriceLabel.text = product.getCurrentPriceWithCurrency()
-        orderAmountLabel.text = "×\(amount)"
+        productPriceLabel.text = order.product.getCurrentPriceWithCurrency()
+        orderAmountLabel.text = "×\(order.amount)"
         
+        self.cancelCallback = cancelCallback
         self.confirmCallback = confirmCallback
+        
+        self.statusLabel.text = order.status()
     }
     
     @IBAction func confirm(sender: AnyObject) {
@@ -57,5 +62,6 @@ class PendingBuyTableViewCell: UITableViewCell {
     }
     
     @IBAction func cancel(sender: AnyObject) {
+        cancelCallback()
     }
 }
