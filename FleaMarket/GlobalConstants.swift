@@ -24,3 +24,8 @@ let LocalIconDirectory = NSURL(fileURLWithPath: AppDirectory.stringByAppendingPa
 
 
 let NetworkProblemString = "网络有问题,请检查网络或稍后再试"
+
+
+let ReceiveNewMessageNotificationName = "ReceiveNewMessageNotification"
+let LocationChangeNotificationName = "LocationChangeNotification"
+let CityChangeNotificationName = "CityChangeNotification"

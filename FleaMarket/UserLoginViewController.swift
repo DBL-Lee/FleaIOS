@@ -15,7 +15,7 @@ class UserLoginViewController: UIViewController,UITableViewDataSource,UITableVie
     @IBOutlet weak var loginTable: UITableView!
     var usernameTextField:UITextField!
     var passwordTextField:UITextField!
-    
+    var finishLoginCallback:()->Void = {_ in}
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,11 +45,9 @@ class UserLoginViewController: UIViewController,UITableViewDataSource,UITableVie
     }
     
     override func viewWillAppear(animated: Bool) {
-        self.navigationController?.navigationBar.barStyle = .Default
-        self.navigationController?.navigationBar.translucent = false
         self.edgesForExtendedLayout = .None
         self.navigationItem.title = "登录"
-        let image = UIImage(named: "backButton.png")
+        let image = UIImage(named: "backButton.png")?.imageWithRenderingMode(.AlwaysTemplate)
         let button = UIButton(type: .Custom)
         button.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
         button.setImage(image, forState: .Normal)
@@ -117,7 +115,7 @@ class UserLoginViewController: UIViewController,UITableViewDataSource,UITableVie
         self.view.endEditing(true)
         UserLoginHandler.instance.login(usernameTextField.text!, password: passwordTextField.text!, completion: loginResponse)
         let hud = MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
-        hud.labelText = "登录中"
+        hud.label.text = "登录中"
     }
     
     @IBAction func signUp(sender: AnyObject) {
@@ -131,6 +129,7 @@ class UserLoginViewController: UIViewController,UITableViewDataSource,UITableVie
     func loginResponse(response:Bool){
         MBProgressHUD.hideHUDForView(self.navigationController!.view, animated: true)
         if response{
+            finishLoginCallback()
             self.dismiss()
         }else{
             let alert = UIAlertController(title: nil, message: "用户名或密码不正确", preferredStyle: .Alert)

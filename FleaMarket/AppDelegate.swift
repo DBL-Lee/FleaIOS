@@ -20,9 +20,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate,EMChatManagerDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         //AWSLogger.defaultLogger().logLevel = .Verbose
-        let image = UIImage(named: "backButton.png")!.thumbnailOfSize(CGSize(width: 40, height: 40)).imageWithRenderingMode(.AlwaysTemplate)
-        UIBarButtonItem.appearance().setBackButtonBackgroundImage(image, forState: .Normal, barMetrics: .Default)
-        UIBarButtonItem.appearance().setBackButtonTitlePositionAdjustment(UIOffset(horizontal: -1000,vertical: -1000), forBarMetrics: .Default)
+        //let image = UIImage(named: "backButton.png")!.imageWithRenderingMode(.AlwaysTemplate).resizableImageWithCapInsets(UIEdgeInsetsZero, resizingMode: .Stretch)
+        //UIBarButtonItem.appearance().setBackButtonBackgroundImage(image, forState: .Normal, barMetrics: .Default)
+        //UIBarButtonItem.appearance().setBackButtonTitlePositionAdjustment(UIOffset(horizontal: -1000,vertical: -1000), forBarMetrics: .Default)
+        UINavigationBar.appearance().tintColor = UIColor.whiteColor()
+        UINavigationBar.appearance().barTintColor = UIColor.orangeColor()
+        UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName : UIColor.whiteColor()]
+        UIApplication.sharedApplication().statusBarStyle = .LightContent
+        
+        let instance = LocationManager.instance
         
         let appkey = "fleamarket#fleamarket"
         let certname = "FleaMarket"

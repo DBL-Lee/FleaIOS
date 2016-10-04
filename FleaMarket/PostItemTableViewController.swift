@@ -48,6 +48,44 @@ class PostItemTableViewController: UITableViewController {
     var locale:NSLocale!
     var callback:()->Void = {}
     var uploading = 0
+    var editingProduct:Product?
+    var editProductCallback:Product->Void = {_ in}
+    var header:String = "发布商品"
+    
+    init(product:Product,editProductCallback:Product->Void){ // initializer for edit product
+        super.init(style: .Plain)
+        self.imagesUUID = product.imageUUID
+        self.mainIm = product.mainimage
+        
+        self.productTitle = product.title
+        self.mainCategory = product.mainCategory
+        self.secondaryCategory = product.secondaryCategory
+        self.categoryID = product.categoryID
+        
+        self.currentCity = product.city
+        self.currentCountry = product.country
+        self.location = product.location
+        self.currentPrice = product.currentPrice
+        self.amount = product.amount
+        self.originalPrice = product.originalPrice
+        self.brandNew = product.brandNew
+        self.bargain = product.bargain
+        self.exchange = product.exchange
+        
+        self.productDescription = product.description
+        self.editingProduct = product
+        self.header = "修改商品"
+        
+        self.editProductCallback = editProductCallback
+    }
+    
+    init(){
+        super.init(style: .Plain)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -68,27 +106,27 @@ class PostItemTableViewController: UITableViewController {
         staticCell.width = self.view.frame.width
         staticCell.setImages([], deleteCallBack: deleteImageAtIndex, additionCallBack: takeAdditionalPhotos,tapHandler: presentPreviewVC)
         
-        let temp = self.images
-        self.images = []
-        self.addImages(temp)
-        
+        if editingProduct == nil {
+            let temp = self.images
+            self.images = []
+            self.addImages(temp)
+        }else{
+            self.loadImages(self.imagesUUID)
+        }
         //LoadingOverlay.shared.hideOverlayView()
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        self.navigationItem.title = "发布商品"
+        self.navigationItem.title = header
         self.navigationItem.hidesBackButton = true
-        let image = UIImage(named: "backButton.png")
+        let image = UIImage(named: "backButton.png")?.imageWithRenderingMode(.AlwaysTemplate)
         let button = UIButton(type: .Custom)
         button.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
         button.setImage(image, forState: .Normal)
         button.addTarget(self, action: #selector(PostItemTableViewController.dismiss), forControlEvents: .TouchUpInside)
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: button)
-        self.navigationController?.navigationBar.barStyle = UIBarStyle.Default
-        self.navigationController?.navigationBar.translucent = false
-        self.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
-        self.navigationController?.navigationBar.tintColor = UIColor.blackColor()
+        
     }
 
     func setupUploadRequest(image:UIImage,thumbnailUUID:String? = nil)->AWSS3TransferManagerUploadRequest{
@@ -152,6 +190,14 @@ class PostItemTableViewController: UITableViewController {
             }
             return nil
         }
+    }
+    
+    func loadImages(imageUUIDs:[String]){
+        self.images = [UIImage](count: imageUUIDs.count, repeatedValue: UIImage())
+        self.staticCell.loadPhotos(imageUUIDs,callback:{
+            i, image in
+            self.images[i] = image
+        })
     }
     
     /*
@@ -335,6 +381,7 @@ class PostItemTableViewController: UITableViewController {
         
         AWSS3.defaultS3().deleteObjects(deleteRequest)
         
+        self.navigationController?.popViewControllerAnimated(true)
         self.dismissViewControllerAnimated(true, completion: nil)
     }
 
@@ -482,7 +529,11 @@ class PostItemTableViewController: UITableViewController {
             let postBtn = UIButton(frame: view.frame)
             postBtn.backgroundColor = UIColor.orangeColor()
             postBtn.tintColor = UIColor.whiteColor()
-            postBtn.setTitle("发布", forState: .Normal)
+            if editingProduct == nil {
+                postBtn.setTitle("发布", forState: .Normal)
+            }else{
+                postBtn.setTitle("修改", forState: .Normal)
+            }
             postBtn.addTarget(self, action: #selector(PostItemTableViewController.postNewItem), forControlEvents: .TouchUpInside)
             view.addSubview(postBtn)
             return view
@@ -697,20 +748,39 @@ class PostItemTableViewController: UITableViewController {
         
         let hud = MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
         
-        Alamofire.request(.POST, getProductURL, parameters: parameter, encoding: .JSON, headers: UserLoginHandler.instance.authorizationHeader()).responseJSON{
-            response in
-            hud.hide(true)
-            switch response.result{
-            case .Success:
-                if response.response?.statusCode < 400{
-                    self.dismissViewControllerAnimated(true){
-                        self.callback()
+        if let editingProduct = editingProduct{
+            let product = Product(id: editingProduct.id, images: imagesUUID, title: self.productTitle!, mainimage: self.mainIm, currentPrice: self.currentPrice!, categoryID: self.categoryID!, city: self.currentCity!, country: self.currentCountry!, soldAmount: editingProduct.soldAmount, amount: self.amount, postedTime: editingProduct.postedTime, originalPrice: self.originalPrice, brandNew: self.brandNew, bargain: self.bargain, exchange: self.exchange, description: self.productDescription, locale: self.locale, latitude: coor.latitude, longitude: coor.longitude, userid: editingProduct.id, usernickname: editingProduct.usernickname, useravatar: editingProduct.useravatar)
+            Alamofire.request(.PATCH, updateProductURL+"\(editingProduct.id)/", parameters: parameter, encoding: .JSON, headers: UserLoginHandler.instance.authorizationHeader()).responseJSON{
+                response in
+                hud.hideAnimated(true)
+                switch response.result{
+                case .Success:
+                    if response.response?.statusCode < 400{
+                        self.navigationController?.popViewControllerAnimated(true)
+                        self.editProductCallback(product)
+                    }else{
+                        OverlaySingleton.addToView(self.navigationController!.view, text: "修改失败,请稍后再试")
                     }
-                }else{
-                    OverlaySingleton.addToView(self.navigationController!.view, text: "发布失败,请稍后再试")
+                case .Failure(let e):
+                    OverlaySingleton.addToView(self.navigationController!.view, text: NetworkProblemString)
                 }
-            case .Failure(let e):
-                OverlaySingleton.addToView(self.navigationController!.view, text: NetworkProblemString)
+            }
+        }else{
+            Alamofire.request(.POST, getProductURL, parameters: parameter, encoding: .JSON, headers: UserLoginHandler.instance.authorizationHeader()).responseJSON{
+                response in
+                hud.hideAnimated(true)
+                switch response.result{
+                case .Success:
+                    if response.response?.statusCode < 400{
+                        self.dismissViewControllerAnimated(true){
+                            self.callback()
+                        }
+                    }else{
+                        OverlaySingleton.addToView(self.navigationController!.view, text: "发布失败,请稍后再试")
+                    }
+                case .Failure(let e):
+                    OverlaySingleton.addToView(self.navigationController!.view, text: NetworkProblemString)
+                }
             }
         }
         

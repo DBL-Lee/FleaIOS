@@ -82,11 +82,8 @@ class PendingBuyViewController: UIViewController,UITableViewDelegate,UITableView
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        self.navigationController?.navigationBar.barStyle = .Default
-        self.navigationController?.navigationBar.translucent = false
         self.edgesForExtendedLayout = .None
         self.navigationItem.title = header
-        self.navigationController?.navigationBar.tintColor = UIColor.blackColor()
     }
     
     
@@ -165,12 +162,12 @@ class PendingBuyViewController: UIViewController,UITableViewDelegate,UITableView
         let okaction = UIAlertAction(title: "确定", style: .Default, handler: {
             action in
             let hud = MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
-            hud.labelText = "请求中"
+            hud.label.text = "请求中"
             
             let parameter = ["productid":order.product.id]
             Alamofire.request(.POST, cancelOrderURL, parameters: parameter, encoding: .JSON, headers: UserLoginHandler.instance.authorizationHeader()).responseJSON{
                 response in
-                hud.hide(true)
+                hud.hideAnimated(true)
                 alert.removeFromParentViewController()
                 switch response.result{
                 case .Success:

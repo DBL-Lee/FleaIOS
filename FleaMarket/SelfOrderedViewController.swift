@@ -52,11 +52,8 @@ class SelfOrderedViewController: UIViewController,UITableViewDelegate,UITableVie
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        self.navigationController?.navigationBar.barStyle = .Default
-        self.navigationController?.navigationBar.translucent = false
         self.edgesForExtendedLayout = .None
         self.navigationItem.title = header
-        self.navigationController?.navigationBar.tintColor = UIColor.blackColor()
     }
     
     func didChangeToButtonNumber(number: Int) {
@@ -168,14 +165,14 @@ class SelfOrderedViewController: UIViewController,UITableViewDelegate,UITableVie
         let okaction = UIAlertAction(title: "确定", style: .Default, handler: {
             action in
             let hud = MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
-            hud.labelText = "请求中"
+            hud.label.text = "请求中"
             
             let textField = alert.textFields![0]
             let amount = textField.text == "" || textField.text == nil ? 1 : Int(textField.text!)
             let parameter = ["productid":order.product.id,"amount":amount]
             Alamofire.request(.POST, changeOrderAmtURL, parameters: parameter, encoding: .JSON, headers: UserLoginHandler.instance.authorizationHeader()).responseJSON{
                 response in
-                hud.hide(false)
+                hud.hideAnimated(false)
                 alert.removeFromParentViewController()
                 switch response.result{
                 case .Success:
@@ -203,12 +200,12 @@ class SelfOrderedViewController: UIViewController,UITableViewDelegate,UITableVie
         let okaction = UIAlertAction(title: "确定", style: .Default, handler: {
             action in
             let hud = MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
-            hud.labelText = "请求中"
+            hud.label.text = "请求中"
             
             let parameter = ["productid":order.product.id]
             Alamofire.request(.POST, cancelOrderURL, parameters: parameter, encoding: .JSON, headers: UserLoginHandler.instance.authorizationHeader()).responseJSON{
                 response in
-                hud.hide(false)
+                hud.hideAnimated(false)
                 alert.removeFromParentViewController()
                 switch response.result{
                 case .Success:

@@ -24,6 +24,9 @@
 
 @interface TOCropToolbar : UIView
 
+/* In horizontal mode, offsets all of the buttons vertically by 20 points. */
+@property (nonatomic, assign) BOOL statusBarVisible;
+
 /* The 'Done' buttons to commit the crop. The text button is displayed
  in portrait mode and the icon one, in landscape. */
 @property (nonatomic, strong, readonly) UIButton *doneTextButton;
@@ -50,12 +53,13 @@
 @property (nonatomic, copy) void (^clampButtonTapped)(void);
 @property (nonatomic, copy) void (^resetButtonTapped)(void);
 
-/* Aspect ratio button settings */
-@property (nonatomic, assign) BOOL clampButtonHidden;
+/* State management for the 'clamp' button */
 @property (nonatomic, assign) BOOL clampButtonGlowing;
 @property (nonatomic, readonly) CGRect clampButtonFrame;
 
-@property (nonatomic, assign) BOOL rotateCounterClockwiseButtonHidden;
+/* Aspect ratio button visibility settings */
+@property (nonatomic, assign) BOOL clampButtonHidden;
+@property (nonatomic, assign) BOOL rotateCounterclockwiseButtonHidden;
 @property (nonatomic, assign) BOOL rotateClockwiseButtonHidden;
 
 /* Enable the reset button */

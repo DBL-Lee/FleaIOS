@@ -26,6 +26,7 @@ class Product{
     var mainCategory:String!
     var secondaryCategory:String!
     var location:CLPlacemark!
+    var categoryID:Int!
     
     var soldAmount:Int!
     var amount:Int!
@@ -109,6 +110,11 @@ class Product{
         self.city = city
         self.country = country
         
+        self.categoryID = categoryID
+        if let (mainCategory,secondaryCategory) = CoreDataHandler.instance.getCategoryName(categoryID){
+            self.mainCategory = mainCategory
+            self.secondaryCategory = secondaryCategory
+        }
         
         self.soldAmount = soldAmount
         self.amount = amount
@@ -123,6 +129,21 @@ class Product{
         self.locale = locale
         self.latitude = latitude
         self.longitude = longitude
+        
+        let location = CLLocation(latitude: latitude, longitude: longitude)
+        CLGeocoder().reverseGeocodeLocation(location){
+            (placemarks,error) in
+            if placemarks == nil{
+                
+            }else{
+                if placemarks![0].locality != nil{
+                    self.city = placemarks![0].locality!
+                }else{
+                    self.country = placemarks![0].name!
+                }
+                self.location = placemarks![0]
+            }
+        }
     }
     
     func getCity()->String{
@@ -153,5 +174,10 @@ class Product{
     func getOriginalPriceWithCurrency()->String{
         if originalPrice == nil {return ""}
         return originalPrice!.toCurrencyInLocale(locale)
+    }
+    
+    func getCurrencyLength()->Int{
+        return (locale.objectForKey(NSLocaleCurrencySymbol) as! String).characters.count
+//        return currentPrice.toCurrencyInLocale(locale).characters.count-currentPrice.characters.count
     }
 }

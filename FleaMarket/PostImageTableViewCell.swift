@@ -27,7 +27,57 @@ class PostImageTableViewCell: UITableViewCell {
     var imageViews:[ImageWithDeletionView] = []
     var addPhotoView:UIButton = UIButton(type: UIButtonType.Custom)
     
-    
+    func loadPhotos(imagesUUIDs:[String],callback:(Int,UIImage)->Void){
+        let count = imagesUUIDs.count
+        
+        if count<GLOBAL_MAXIMUMPHOTO {
+            //show add photo button
+            row = count/column+1
+        }else{
+            //does not show add photo button
+            row = (count-1)/column+1
+        }
+        
+        //adjust height for container view
+        self.heightConstraint.constant = side*CGFloat(row)+offset*2
+        
+        var i = imageViews.count/column
+        var j = imageViews.count%column
+        for imageUUID in imagesUUIDs{
+            let origin = CGPoint(x: offset+CGFloat(j)*(side+margin), y: offset+CGFloat(i)*(side+margin))
+            let size = CGSize(width: side, height: side)
+            let frame = CGRect(origin: origin, size: size)
+            let view = ImageWithDeletionView(frame: frame, image: UIColor.lightGrayColor().toImage(),callback: removeImageAtIndex,index:i*column+j,mainIm: mainIm==i*column+j,overlay: true)
+            
+            AvatarFactory.setupNormalImageView(view.imageView, image: imageUUID, percentageHandler: {
+                percentage in
+                view.setPercentage(percentage)
+                },completion: {
+                    callback(i*self.column+j,view.imageView.image!)
+            })
+            
+            
+            let tap = UITapGestureRecognizer(target: self, action: #selector(PostImageTableViewCell.handleTap(_:)))
+            view.addGestureRecognizer(tap)
+            self.containerView.addSubview(view)
+            imageViews.append(view)
+            j += 1
+            if j==column{
+                j=0
+                i += 1
+            }
+        }
+        
+        let origin = CGPoint(x: offset+CGFloat(j)*(side+margin)+10, y: offset+CGFloat(i)*(side+margin)+10)
+        let size = CGSize(width: side-10, height: side-10)
+        let frame = CGRect(origin: origin, size: size)
+        
+        self.addPhotoView.frame = frame
+        if count==GLOBAL_MAXIMUMPHOTO {
+            //does not show add photo button
+            self.addPhotoView.hidden = true
+        }
+    }
     
     func addPhotos(images:[UIImage]){
         let count = images.count+imageViews.count
@@ -46,7 +96,7 @@ class PostImageTableViewCell: UITableViewCell {
         var i = imageViews.count/column
         var j = imageViews.count%column
         for image in images{
-            let origin = CGPoint(x: offset+CGFloat(j)*side+margin*CGFloat(j-1), y: offset+CGFloat(i)*side+CGFloat(i-1)*margin)
+            let origin = CGPoint(x: offset+CGFloat(j)*(side+margin), y: offset+CGFloat(i)*(side+margin))
             let size = CGSize(width: side, height: side)
             let frame = CGRect(origin: origin, size: size)
             let view = ImageWithDeletionView(frame: frame, image: image,callback: removeImageAtIndex,index:i*column+j,mainIm: mainIm==i*column+j,overlay: true)
@@ -61,8 +111,8 @@ class PostImageTableViewCell: UITableViewCell {
             }
         }
         
-        let origin = CGPoint(x: offset+CGFloat(j)*side+offset, y: offset+CGFloat(i)*side+offset)
-        let size = CGSize(width: side-offset, height: side-offset)
+        let origin = CGPoint(x: offset+CGFloat(j)*(side+margin)+10, y: offset+CGFloat(i)*(side+margin)+10)
+        let size = CGSize(width: side-10, height: side-10)
         let frame = CGRect(origin: origin, size: size)
         
         self.addPhotoView.frame = frame

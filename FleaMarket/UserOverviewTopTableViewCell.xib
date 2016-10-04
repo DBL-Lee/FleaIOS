@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -15,6 +15,13 @@
                 <rect key="frame" x="0.0" y="0.0" width="372" height="239"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="S2F-MU-VDw">
+                        <rect key="frame" x="8" y="23" width="128" height="128"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="105" id="O3v-Ey-ICk"/>
+                            <constraint firstAttribute="width" constant="105" id="nfX-tn-qs0"/>
+                        </constraints>
+                    </imageView>
                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8y7-BB-CNx">
                         <rect key="frame" x="8" y="23" width="128" height="128"/>
                         <constraints>
@@ -71,9 +78,26 @@
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QHa-7s-hD6">
+                        <rect key="frame" x="117" y="150" width="1" height="40"/>
+                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="40" id="dtQ-OJ-bJW"/>
+                            <constraint firstAttribute="width" constant="1" id="dw0-gA-vL7"/>
+                        </constraints>
+                    </view>
+                    <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iri-HL-IWW">
+                        <rect key="frame" x="237" y="175" width="1" height="40"/>
+                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="40" id="AyN-k3-sLr"/>
+                            <constraint firstAttribute="width" constant="1" id="XLs-PF-q6p"/>
+                        </constraints>
+                    </view>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="Zhn-1Q-Cj2" firstAttribute="leading" secondItem="8y7-BB-CNx" secondAttribute="trailing" constant="8" symbolic="YES" id="3aI-vG-jan"/>
+                    <constraint firstItem="S2F-MU-VDw" firstAttribute="centerY" secondItem="8y7-BB-CNx" secondAttribute="centerY" id="0xC-W1-O3D"/>
+                    <constraint firstItem="Zhn-1Q-Cj2" firstAttribute="leading" secondItem="8y7-BB-CNx" secondAttribute="trailing" constant="20" id="3aI-vG-jan"/>
                     <constraint firstItem="SyV-I2-97i" firstAttribute="leading" secondItem="5hy-n8-Kgj" secondAttribute="trailing" constant="8" id="3dT-7c-6bu"/>
                     <constraint firstItem="rbt-wP-BUS" firstAttribute="leading" secondItem="SyV-I2-97i" secondAttribute="trailing" constant="8" id="3wG-4B-0Nd"/>
                     <constraint firstAttribute="trailingMargin" secondItem="rbt-wP-BUS" secondAttribute="trailing" id="5wp-xt-qCt"/>
@@ -85,23 +109,28 @@
                     <constraint firstItem="rbt-wP-BUS" firstAttribute="bottom" secondItem="H2p-sc-9uM" secondAttribute="bottomMargin" id="BW5-lP-wgg"/>
                     <constraint firstItem="gcU-ty-8gy" firstAttribute="top" secondItem="54E-gk-S1c" secondAttribute="bottom" constant="8" symbolic="YES" id="L7D-Ic-GFA"/>
                     <constraint firstItem="rbt-wP-BUS" firstAttribute="top" secondItem="gcU-ty-8gy" secondAttribute="bottom" constant="33" id="Pdu-OV-duy"/>
+                    <constraint firstItem="SyV-I2-97i" firstAttribute="leading" secondItem="QHa-7s-hD6" secondAttribute="trailing" id="Pid-C4-1bi"/>
                     <constraint firstItem="SyV-I2-97i" firstAttribute="bottom" secondItem="H2p-sc-9uM" secondAttribute="bottomMargin" id="SRp-NL-lrX"/>
                     <constraint firstItem="54E-gk-S1c" firstAttribute="leading" secondItem="Zhn-1Q-Cj2" secondAttribute="leading" id="UC4-XM-ym2"/>
                     <constraint firstAttribute="bottomMargin" secondItem="8y7-BB-CNx" secondAttribute="bottom" constant="14" id="Wjd-Ht-qUg"/>
-                    <constraint firstItem="8y7-BB-CNx" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="20" id="bde-p3-jfh"/>
+                    <constraint firstItem="rbt-wP-BUS" firstAttribute="leading" secondItem="iri-HL-IWW" secondAttribute="trailing" id="bSk-pf-FcT"/>
+                    <constraint firstItem="8y7-BB-CNx" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="80" id="bde-p3-jfh"/>
+                    <constraint firstItem="iri-HL-IWW" firstAttribute="centerY" secondItem="SyV-I2-97i" secondAttribute="centerY" id="bgC-q3-qop"/>
                     <constraint firstItem="54E-gk-S1c" firstAttribute="trailing" secondItem="gcU-ty-8gy" secondAttribute="trailing" id="c8v-4K-biy"/>
                     <constraint firstItem="5hy-n8-Kgj" firstAttribute="bottom" secondItem="H2p-sc-9uM" secondAttribute="bottomMargin" id="hI4-o1-luo"/>
                     <constraint firstItem="Zhn-1Q-Cj2" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="39" id="lf8-sN-GJQ"/>
                     <constraint firstItem="gcU-ty-8gy" firstAttribute="leading" secondItem="54E-gk-S1c" secondAttribute="leading" id="lh0-R4-so0"/>
                     <constraint firstItem="SyV-I2-97i" firstAttribute="top" secondItem="rbt-wP-BUS" secondAttribute="top" id="mK0-Ls-v7t"/>
                     <constraint firstItem="SyV-I2-97i" firstAttribute="height" secondItem="rbt-wP-BUS" secondAttribute="height" id="ogA-AU-SEy"/>
+                    <constraint firstItem="QHa-7s-hD6" firstAttribute="centerY" secondItem="5hy-n8-Kgj" secondAttribute="centerY" id="q4R-X4-Ygx"/>
                     <constraint firstItem="gcU-ty-8gy" firstAttribute="trailing" secondItem="H2p-sc-9uM" secondAttribute="trailingMargin" id="soI-N0-LW1"/>
                     <constraint firstItem="SyV-I2-97i" firstAttribute="width" secondItem="rbt-wP-BUS" secondAttribute="width" id="srh-IN-oeh"/>
+                    <constraint firstItem="S2F-MU-VDw" firstAttribute="centerX" secondItem="8y7-BB-CNx" secondAttribute="centerX" id="svh-J6-7IX"/>
                     <constraint firstItem="SyV-I2-97i" firstAttribute="leading" secondItem="5hy-n8-Kgj" secondAttribute="trailing" constant="8" id="vIE-Nl-0hv"/>
                     <constraint firstItem="54E-gk-S1c" firstAttribute="trailing" secondItem="Zhn-1Q-Cj2" secondAttribute="trailing" id="wBy-S5-68F"/>
                     <constraint firstItem="SyV-I2-97i" firstAttribute="top" secondItem="5hy-n8-Kgj" secondAttribute="top" id="wZN-aQ-hqZ"/>
                     <constraint firstItem="54E-gk-S1c" firstAttribute="centerY" secondItem="8y7-BB-CNx" secondAttribute="centerY" id="xl5-xL-ucr"/>
-                    <constraint firstItem="8y7-BB-CNx" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" id="y5V-ry-JPU"/>
+                    <constraint firstItem="8y7-BB-CNx" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="10" id="y5V-ry-JPU"/>
                 </constraints>
                 <variation key="default">
                     <mask key="constraints">
@@ -114,6 +143,7 @@
             <connections>
                 <outlet property="auxiLabel" destination="gcU-ty-8gy" id="azV-Bw-vDd"/>
                 <outlet property="avatarImageView" destination="8y7-BB-CNx" id="Z8G-mr-H86"/>
+                <outlet property="backImageView" destination="S2F-MU-VDw" id="NUC-t5-Or8"/>
                 <outlet property="label1" destination="5hy-n8-Kgj" id="qc1-Ed-N5V"/>
                 <outlet property="label2" destination="SyV-I2-97i" id="Nk3-fb-SI0"/>
                 <outlet property="label3" destination="rbt-wP-BUS" id="FjF-bZ-Xng"/>

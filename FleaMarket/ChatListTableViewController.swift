@@ -10,7 +10,7 @@ import UIKit
 import MBProgressHUD
 //import AGEmojiKeyboard
 
-class ChatListTableViewController: UITableViewController,AGEmojiKeyboardViewDataSource,AGEmojiKeyboardViewDelegate {
+class ChatListTableViewController: UITableViewController {
 
     var chatManager:IEMChatManager!
     var conversations:[EMConversation] = []
@@ -27,46 +27,18 @@ class ChatListTableViewController: UITableViewController,AGEmojiKeyboardViewData
         self.tableView.estimatedRowHeight = 76
         self.tableView.tableFooterView = UIView()
         
-        let emojiView = AGEmojiKeyboardView(frame: CGRect(x: 50, y: 100, width: 300, height: 300), dataSource: self)
-        emojiView.backgroundColor = UIColor.groupTableViewBackgroundColor()
-        emojiView.delegate = self
-        //abutton.associatedView = emojiView
-        //self.view.addSubview(emojiView)
-        //_inputToolbar.addButtonToRightBar(abutton)
-        //        emojiView.emojiPagesScrollView.canCancelContentTouches = true
-        //        emojiView.emojiPagesScrollView.delaysContentTouches = false
-        self.view.addSubview(emojiView)
+        self.title = "消息"
     }
     
-    //MARK: EMOJI DELEGATE
-    func emojiKeyBoardView(emojiKeyBoardView: AGEmojiKeyboardView!, didUseEmoji emoji: String!) {
-        //self._inputToolbar.contentView.textView.text = self._inputToolbar.contentView.textView.text + emoji
-    }
-    
-    func emojiKeyBoardViewDidPressBackSpace(emojiKeyBoardView: AGEmojiKeyboardView!) {
-       // self._inputToolbar.contentView.textView.deleteBackward()
-    }
-    
-    //MARK: EMOJI DATASOURCE
-    func emojiKeyboardView(emojiKeyboardView: AGEmojiKeyboardView!, imageForSelectedCategory category: AGEmojiKeyboardViewCategoryImage) -> UIImage! {
-        return UIColor.greenColor().toImage()
-    }
-    
-    func emojiKeyboardView(emojiKeyboardView: AGEmojiKeyboardView!, imageForNonSelectedCategory category: AGEmojiKeyboardViewCategoryImage) -> UIImage! {
-        return UIColor.redColor().toImage()
-    }
-    
-    func backSpaceButtonImageForEmojiKeyboardView(emojiKeyboardView: AGEmojiKeyboardView!) -> UIImage! {
-        return UIColor.blackColor().toImage()
-    }
+
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(didReceiveMessages), name: "ReceiveNewMessageNotification", object: nil)
+         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(didReceiveMessages), name: ReceiveNewMessageNotificationName, object: nil)
         
         let hud = MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
-        hud.labelText = "加载中"
+        hud.label.text = "加载中"
         reloadConversations()
     }
     
@@ -89,7 +61,7 @@ class ChatListTableViewController: UITableViewController,AGEmojiKeyboardViewData
                 conversations.append(con)
                 totalUnreadCount += Int(con.unreadMessagesCount)
             }else{ //delete empty conversations
-                chatManager.deleteConversation(con.conversationId, deleteMessages: true)
+                chatManager.deleteConversation(con.conversationId, isDeleteMessages: true, completion: nil)
             }
         }
         

@@ -20,6 +20,7 @@ target 'FleaMarket' do
  pod 'MBProgressHUD'
  pod 'MJRefresh'
  pod 'DZNEmptyDataSet'
+ pod 'HyphenateSDK'
 end
 
 target 'FleaMarketTests' do

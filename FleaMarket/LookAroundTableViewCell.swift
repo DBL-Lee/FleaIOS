@@ -13,6 +13,7 @@ class LookAroundTableViewCell: UITableViewCell,UICollectionViewDataSource,UIColl
     @IBOutlet weak var accountID: UILabel!
     @IBOutlet weak var timeStamp: UILabel!
     @IBOutlet weak var imagesCollectionView: UICollectionView!
+    @IBOutlet weak var bottomView: UIView!
 
     @IBOutlet weak var priceLabel: UILabel!
     @IBOutlet weak var descriptionLabel: UILabel!
@@ -20,11 +21,15 @@ class LookAroundTableViewCell: UITableViewCell,UICollectionViewDataSource,UIColl
     var product:Product!
     var row:Int = 0
     var callback:(Int,Int)->Void = {_,_ in}
+    var usercallback:Int->Void = {_ in }
     
     override func awakeFromNib() {
         super.awakeFromNib()
         self.avatarView.contentMode = .ScaleAspectFill
         self.avatarView.clipsToBounds = true
+        
+        bottomView.addBorder(edges: .Top, colour: UIColor.lightGrayColor(), thickness: 0.5)
+        
         
         imagesCollectionView.registerNib(UINib(nibName: "LookAroundCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "LookAroundCollectionViewCell")
         imagesCollectionView.delegate = self
@@ -53,13 +58,21 @@ class LookAroundTableViewCell: UITableViewCell,UICollectionViewDataSource,UIColl
         return "1个月以上"
     }
 
-    func setUpLookAroundCell(product:Product,row:Int,callback:(Int,Int)->Void){
+    func setUpLookAroundCell(product:Product,row:Int,callback:(Int,Int)->Void,usercallback:Int->Void){
         let sellerName = product.usernickname
+        self.usercallback = usercallback
         
         self.avatarView.image = UIImage(named:"defaultavatar.png")
         
         avatarView.tag = self.tag
-        AvatarFactory.setupAvatarImageView(self.avatarView, avatar: product.useravatar)
+        
+        AvatarFactory.setupAvatarImageView(self.avatarView, avatar: product.useravatar, square: false, percentageHandler: {
+            _ in
+            }, completion: {
+                let tap = UITapGestureRecognizer(target: self, action: #selector(self.handleAvatarTap(_:)))
+                self.avatarView.addGestureRecognizer(tap)
+                self.avatarView.userInteractionEnabled = true
+        })
         
         self.row = row
         self.callback = callback
@@ -77,34 +90,34 @@ class LookAroundTableViewCell: UITableViewCell,UICollectionViewDataSource,UIColl
         
         self.accountID.text = sellerName
         let timeElapse = NSDate().timeIntervalSinceDate(product.postedTime)
-        self.timeStamp.text = " "+stringFromTimeInterval(timeElapse)
+        self.timeStamp.text = stringFromTimeInterval(timeElapse)
         
         //price attributed string
         let currentPrice = NSMutableAttributedString(string: product.getCurrentPriceWithCurrency()+" ")
+        let currencyLength = product.getCurrencyLength()
         currentPrice.addAttribute(NSForegroundColorAttributeName, value: UIColor.orangeColor(), range: NSMakeRange(0, currentPrice.length))
-        currentPrice.addAttribute(NSFontAttributeName, value: UIFont.systemFontOfSize(20), range: NSMakeRange(0, currentPrice.length))
-        let usualPrice = NSMutableAttributedString(string: product.getOriginalPriceWithCurrency())
-        usualPrice.addAttribute(NSForegroundColorAttributeName, value: UIColor.grayColor(), range: NSMakeRange(0, usualPrice.length))
-        usualPrice.addAttribute(NSStrikethroughStyleAttributeName, value: 1, range: NSMakeRange(0, usualPrice.length))
-        usualPrice.addAttribute(NSFontAttributeName, value: UIFont.systemFontOfSize(15), range: NSMakeRange(0, usualPrice.length))
-        currentPrice.appendAttributedString(usualPrice)
+        currentPrice.addAttribute(NSFontAttributeName, value: UIFont.systemFontOfSize(15), range: NSMakeRange(0, currencyLength))
+        currentPrice.addAttribute(NSFontAttributeName, value: UIFont.systemFontOfSize(20), range: NSMakeRange(currencyLength, currentPrice.length-currencyLength))
+        
+        let originalString = product.getOriginalPriceWithCurrency()
+        if originalString != "" {
+            let usualPrice = NSMutableAttributedString(string: product.getOriginalPriceWithCurrency())
+            usualPrice.addAttribute(NSForegroundColorAttributeName, value: UIColor.grayColor(), range: NSMakeRange(0, usualPrice.length))
+            usualPrice.addAttribute(NSStrikethroughStyleAttributeName, value: 1, range: NSMakeRange(0, usualPrice.length))
+            usualPrice.addAttribute(NSFontAttributeName, value: UIFont.systemFontOfSize(15), range: NSMakeRange(0, usualPrice.length))
+            currentPrice.appendAttributedString(usualPrice)
+        }
         self.priceLabel.attributedText = currentPrice
         
         self.descriptionLabel.text = product.description == nil ? "" : product.description!
         
-        //
-        let attachment = NSTextAttachment()
-        let im = UIImage(named: "location.png")!
-        let height = self.locationLabel.frame.height*0.5
-        let scale = height/im.size.height
-        attachment.image = UIImage(CGImage: im.CGImage!, scale: 1/scale, orientation: .Up)
-        let attachmentString = NSMutableAttributedString(attributedString: NSAttributedString(attachment: attachment))
-        let string = NSAttributedString(string: " "+product.getLocation())
-        attachmentString.appendAttributedString(string)
-        attachmentString.addAttribute(NSForegroundColorAttributeName, value: UIColor.grayColor(), range: NSMakeRange(0, attachmentString.length))
-        self.locationLabel.attributedText = attachmentString
+        let string = product.getLocation()
+        locationLabel.text = string
+        locationLabel.font = UIFont.systemFontOfSize(13)
+        locationLabel.textColor = UIColor.grayColor()
         
         self.imagesCollectionView.reloadData()
+        self.imagesCollectionView.scrollToItemAtIndexPath(NSIndexPath(forItem: 0,inSection: 0), atScrollPosition: .Left, animated: false)
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
@@ -132,6 +145,10 @@ class LookAroundTableViewCell: UITableViewCell,UICollectionViewDataSource,UIColl
             }
         }
         return cell
+    }
+    
+    func handleAvatarTap(tap:UITapGestureRecognizer){
+        usercallback(product.userid)
     }
     
     func handleTap(tap:UITapGestureRecognizer){

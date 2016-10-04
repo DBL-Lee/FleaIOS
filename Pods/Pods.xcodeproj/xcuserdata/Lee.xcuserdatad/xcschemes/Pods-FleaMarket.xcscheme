@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = '8AC18FE3EF440A5974C7EA47'
+               BlueprintIdentifier = 'E4FF349A3E3FA8CA29164520'
                BlueprintName = 'Pods-FleaMarket'
                ReferencedContainer = 'container:Pods.xcodeproj'
                BuildableName = 'Pods_FleaMarket.framework'>

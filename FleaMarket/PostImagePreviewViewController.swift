@@ -34,7 +34,7 @@ class PostImagePreviewViewController: UIViewController {
        
         button3.frame = CGRect(x: 0, y: 0, width: 100, height: 40)
         button3.setTitle(mainTitle, forState: .Normal)
-        button3.setTitleColor(UIColor.yellowColor(), forState: .Normal)
+        button3.setTitleColor(UIColor.orangeColor(), forState: .Normal)
         if mainTitleIsButton{
             button3.addTarget(self, action: #selector(PostImagePreviewViewController.setMainIm), forControlEvents: .TouchUpInside)
         }
@@ -57,10 +57,14 @@ class PostImagePreviewViewController: UIViewController {
         mainImageCallBack(id)
         dismiss()
     }
+    
+    var barTintColor:UIColor!
     override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
         self.navigationController?.setNavigationBarHidden(false, animated: false)
-        self.navigationController?.navigationBar.barStyle = UIBarStyle.Black
-        self.navigationController?.navigationBar.translucent = false
+        barTintColor = self.navigationController?.navigationBar.barTintColor
+        
         self.navigationController?.navigationBar.barTintColor = UIColor.blackColor()
         self.navigationController?.edgesForExtendedLayout = .None
         
@@ -69,6 +73,11 @@ class PostImagePreviewViewController: UIViewController {
         button3.setTitle(mainTitle, forState: .Normal)
         self.imageView.contentMode = .ScaleAspectFit
         self.imageView.image = im
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.navigationController?.navigationBar.barTintColor = barTintColor
     }
     
     override func prefersStatusBarHidden() -> Bool {

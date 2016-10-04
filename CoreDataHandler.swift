@@ -42,19 +42,25 @@ class CoreDataHandler{
     var users:[User] = []
     
     init(){
-        appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        managedContext = appDelegate.managedObjectContext
-        let fetch = NSFetchRequest()
-        fetch.entity = NSEntityDescription.entityForName("User", inManagedObjectContext: appDelegate.managedObjectContext)
-        do{
-            let fetchResult = try managedContext.executeFetchRequest(fetch)
-            for f in fetchResult{
-                let user = User(id: f.valueForKey("id") as! Int, emusername: f.valueForKey("emusername") as! String, nickname: f.valueForKey("nickname") as! String, avatar: f.valueForKey("avatar") as! String, transaction: f.valueForKey("transaction") as! Int, goodfeedback: f.valueForKey("goodfeedback") as! Int, posted: f.valueForKey("posted") as! Int, gender: f.valueForKey("gender") as! String, location: f.valueForKey("location") as! String, introduction: f.valueForKey("introduction") as! String)
-                users.append(user)
+        self.appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        self.managedContext = self.appDelegate.managedObjectContext
+        dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INTERACTIVE, 0), {
+            
+            let fetch = NSFetchRequest()
+            fetch.entity = NSEntityDescription.entityForName("User", inManagedObjectContext: self.appDelegate.managedObjectContext)
+            do{
+                let fetchResult = try self.managedContext.executeFetchRequest(fetch)
+                for f in fetchResult{
+                    let user = User(id: f.valueForKey("id") as! Int, emusername: f.valueForKey("emusername") as! String, nickname: f.valueForKey("nickname") as! String, avatar: f.valueForKey("avatar") as! String, transaction: f.valueForKey("transaction") as! Int, goodfeedback: f.valueForKey("goodfeedback") as! Int, posted: f.valueForKey("posted") as! Int, gender: f.valueForKey("gender") as! String, location: f.valueForKey("location") as! String, introduction: f.valueForKey("introduction") as! String)
+                    self.users.append(user)
+                }
+            }catch let error{
+                print(error)
             }
-        }catch let error{
-            print(error)
-        }
+            print("CoreData finished\n")
+        })
+        
+
     }
     
     func findUser(userid:Int?,emusername:String?)->User?{
@@ -78,33 +84,10 @@ class CoreDataHandler{
             completion(user)
         }else{
             UserLoginHandler.instance.getUserDetailFromCloud(userid, emusername: emusername){
-                user in
+                user,bool in
                 completion(user)
             }
         }
-//        let fetchRequest = NSFetchRequest(entityName: "User")
-//        var predicate:NSPredicate!
-//        if userid != nil{
-//            predicate = NSPredicate(format: "id=%d", userid!)
-//        }
-//        if emusername != nil {
-//            predicate = NSPredicate(format: "emusername=%@", emusername!)
-//        }
-//        fetchRequest.predicate = predicate
-//        do {
-//            let fetchResult = try managedContext.executeFetchRequest(fetchRequest)
-//            
-//            if fetchResult.count>0{
-//                completion(fetchResult[0] as? NSManagedObject)
-//            }else{
-//                UserLoginHandler.instance.getUserDetail(userid, emusername: emusername){
-//                    user in
-//                    completion(user)
-//                }
-//            }
-//        }catch let error{
-//            print(error)
-//        }
     }
     
     func updateUserToCoreData(id:Int,emusername:String,nickname:String,avatar:String,transaction:Int,goodfeedback:Int,posted:Int,gender:String,location:String,introduction:String)->User?{
@@ -302,6 +285,51 @@ class CoreDataHandler{
             try managedContext.save()
         }catch let error{
             print(error)
+        }
+    }
+    
+    func getCategoryName(id:Int) -> (String,String)? {
+        let fetchRequest = NSFetchRequest(entityName: "SecondaryCategory")
+        let predicate = NSPredicate(format: "id=%d", id)
+        fetchRequest.predicate = predicate
+        do {
+            let fetchResult = try managedContext.executeFetchRequest(fetchRequest)
+            var category:NSManagedObject!
+            if fetchResult.count>0{
+                category = fetchResult[0] as! NSManagedObject
+                let primary = category.valueForKey("primary") as! NSManagedObject
+                return (primary.valueForKey("title") as! String,category.valueForKey("title") as! String)
+            }else{
+                return nil
+            }
+        } catch {
+            return nil
+        }
+    }
+    
+    func getPrimaryCategoryID(name:String) -> Int? {
+        return getCategoryID(name, category: "PrimaryCategory")
+    }
+    
+    func getSecondaryCategoryID(name:String) -> Int? {
+        return getCategoryID(name, category: "SecondaryCategory")
+    }
+    
+    func getCategoryID(name:String,category:String)->Int?{
+        let fetchRequest = NSFetchRequest(entityName: category)
+        let predicate = NSPredicate(format: "title=%s", name)
+        fetchRequest.predicate = predicate
+        do {
+            let fetchResult = try managedContext.executeFetchRequest(fetchRequest)
+            var category:NSManagedObject!
+            if fetchResult.count>0{
+                category = fetchResult[0] as! NSManagedObject
+                return category.valueForKey("id") as! Int
+            }else{
+                return nil
+            }
+        } catch {
+            return nil
         }
     }
     

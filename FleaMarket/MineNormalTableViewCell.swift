@@ -17,6 +17,9 @@ class MineNormalTableViewCell: UITableViewCell {
         super.awakeFromNib()
         iconImageView.contentMode = .ScaleAspectFit
         iconImageView.clipsToBounds = true
+        
+        self.iconImageView.tintColor = UIColor.darkGrayColor()
+        self.titleLabel.textColor = UIColor.darkGrayColor()
     }
     
     func setupCell(title:String,image:UIImage? = nil,count:Int? = nil){

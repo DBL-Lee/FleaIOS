@@ -23,7 +23,7 @@ class IntroductionEditViewController: UIViewController,UITextViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        self.title = "修改简介"
         textView.delegate = self
         wordLimitLabel.textColor = UIColor.lightGrayColor()
         
@@ -31,6 +31,7 @@ class IntroductionEditViewController: UIViewController,UITextViewDelegate {
         self.textView.text = text
         self.wordLimitLabel.text = "\(textView.text.characters.count)/\(limit)"
         self.confirmBtn.setBackgroundImage(UIColor.orangeColor().toImage(), forState: .Normal)
+        self.confirmBtn.setTitleColor(UIColor.whiteColor(), forState: .Normal)
     }
     
     override func viewDidAppear(animated: Bool) {

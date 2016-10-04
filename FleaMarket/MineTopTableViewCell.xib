@@ -12,11 +12,11 @@
         <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="121" id="KGk-i7-Jjw" customClass="MineTopTableViewCell" customModule="FleaMarket" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="402" height="121"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" ambiguous="YES" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
                 <rect key="frame" x="0.0" y="0.0" width="402" height="120"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="defaultavatar.png" translatesAutoresizingMaskIntoConstraints="NO" id="Uex-0j-Psl">
+                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" image="defaultavatar.png" translatesAutoresizingMaskIntoConstraints="NO" id="Uex-0j-Psl">
                         <rect key="frame" x="19" y="20" width="80" height="80"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="80" id="3dQ-Ho-9kF"/>
@@ -31,7 +31,7 @@
                             </mask>
                         </variation>
                     </imageView>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="您还没有登录。" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rgq-WD-rU0">
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="您还没有登录。" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rgq-WD-rU0">
                         <rect key="frame" x="107" y="49" width="148" height="21"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="148" id="Lrc-ax-l89"/>
@@ -46,7 +46,7 @@
                             </mask>
                         </variation>
                     </label>
-                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ghw-0L-fdM">
+                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ghw-0L-fdM">
                         <rect key="frame" x="317" y="45" width="77" height="30"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="80" id="9oU-le-di9"/>
@@ -67,6 +67,7 @@
                     <constraint firstItem="ghw-0L-fdM" firstAttribute="trailing" secondItem="H2p-sc-9uM" secondAttribute="trailingMargin" constant="20" id="IDo-K4-w33"/>
                     <constraint firstAttribute="bottomMargin" secondItem="Uex-0j-Psl" secondAttribute="bottom" constant="10" id="Iol-fD-6dg"/>
                     <constraint firstItem="rgq-WD-rU0" firstAttribute="leading" secondItem="Uex-0j-Psl" secondAttribute="trailing" constant="10" id="NAV-5r-D8V"/>
+                    <constraint firstItem="rgq-WD-rU0" firstAttribute="centerY" secondItem="Uex-0j-Psl" secondAttribute="centerY" id="QjG-qi-wDj"/>
                     <constraint firstItem="ghw-0L-fdM" firstAttribute="leading" secondItem="rgq-WD-rU0" secondAttribute="trailing" constant="8" id="Qn0-qk-P0N"/>
                     <constraint firstItem="Uex-0j-Psl" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="10" id="TB4-ZP-cAH"/>
                     <constraint firstAttribute="bottomMargin" secondItem="Uex-0j-Psl" secondAttribute="bottom" constant="20" id="Vw4-oY-HDz"/>
@@ -81,7 +82,9 @@
                         <exclude reference="8b1-Wn-6qi"/>
                         <exclude reference="Vw4-oY-HDz"/>
                         <exclude reference="aeR-oP-Vkp"/>
+                        <exclude reference="xGw-Uw-inM"/>
                         <exclude reference="HtV-bP-REO"/>
+                        <exclude reference="cVQ-TD-1mV"/>
                         <exclude reference="1Zm-iy-RNA"/>
                         <exclude reference="Al6-7u-IGM"/>
                         <exclude reference="IDo-K4-w33"/>

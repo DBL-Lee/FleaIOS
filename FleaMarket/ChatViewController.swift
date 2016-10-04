@@ -27,7 +27,7 @@ class Message : JSQMessage{
     var status:MessageStatus = .Sending
 }
 
-class ChatViewController: JSQMessagesViewController, CustomInputToolBarDelegate,UIGestureRecognizerDelegate,AGEmojiKeyboardViewDelegate,AGEmojiKeyboardViewDataSource {
+class ChatViewController: JSQMessagesViewController, CustomInputToolBarDelegate,UIGestureRecognizerDelegate {
     
     var conversation:EMConversation!
     
@@ -96,12 +96,12 @@ class ChatViewController: JSQMessagesViewController, CustomInputToolBarDelegate,
         _inputToolbar.delegate = nil
         _inputToolbar.chatVC = self
         
-        let voiceBtn = UIButton(type: .Custom)
-        voiceBtn.setTitle("", forState: .Normal)
-        voiceBtn.setBackgroundImage(UIImage(named: "chatvoice.png"), forState: .Normal)
-        voiceBtn.setBackgroundImage(UIImage(named: "chatvoice-h.png"), forState: .Highlighted)
-        voiceBtn.setBackgroundImage(UIImage(named: "chatkeyboard.png"), forState: .Selected)
-        _inputToolbar.contentView.leftBarButtonItem = voiceBtn
+//        let voiceBtn = UIButton(type: .Custom)
+//        voiceBtn.setTitle("", forState: .Normal)
+//        voiceBtn.setBackgroundImage(UIImage(named: "chatvoice.png"), forState: .Normal)
+//        voiceBtn.setBackgroundImage(UIImage(named: "chatvoice-h.png"), forState: .Highlighted)
+//        voiceBtn.setBackgroundImage(UIImage(named: "chatkeyboard.png"), forState: .Selected)
+//        _inputToolbar.contentView.leftBarButtonItem = voiceBtn
         
         let button = CustomToolBarButton(type: .Custom)
         button.setTitle("", forState: .Normal)
@@ -112,20 +112,20 @@ class ChatViewController: JSQMessagesViewController, CustomInputToolBarDelegate,
         button.associatedView = moreView
         _inputToolbar.addButtonToRightBar(button)
         
-        let abutton = CustomToolBarButton(type: .Custom)
-        abutton.setTitle("", forState: .Normal)
-        abutton.setBackgroundImage(UIImage(named: "chatemoji.png"), forState: .Normal)
-        abutton.setBackgroundImage(UIImage(named: "chatemoji-h.png"), forState: .Highlighted)
-        abutton.setBackgroundImage(UIImage(named: "chatkeyboard.png"), forState: .Selected)
-        let emojiView = AGEmojiKeyboardView(frame: CGRect(x: 50, y: 100, width: 300, height: 300), dataSource: self)
-        emojiView.backgroundColor = UIColor.groupTableViewBackgroundColor()
-        emojiView.delegate = self
-        abutton.associatedView = emojiView
-        //self.view.addSubview(emojiView)
-        //_inputToolbar.addButtonToRightBar(abutton)
+//        let abutton = CustomToolBarButton(type: .Custom)
+//        abutton.setTitle("", forState: .Normal)
+//        abutton.setBackgroundImage(UIImage(named: "chatemoji.png"), forState: .Normal)
+//        abutton.setBackgroundImage(UIImage(named: "chatemoji-h.png"), forState: .Highlighted)
+//        abutton.setBackgroundImage(UIImage(named: "chatkeyboard.png"), forState: .Selected)
+//        let emojiView = AGEmojiKeyboardView(frame: CGRect(x: 50, y: 100, width: 300, height: 300), dataSource: self)
+//        emojiView.backgroundColor = UIColor.groupTableViewBackgroundColor()
+//        emojiView.delegate = self
+//        abutton.associatedView = emojiView
+//        self.view.addSubview(emojiView)
+//        _inputToolbar.addButtonToRightBar(abutton)
 //        emojiView.emojiPagesScrollView.canCancelContentTouches = true
 //        emojiView.emojiPagesScrollView.delaysContentTouches = false
-        self.view.addSubview(emojiView)
+        //self.view.addSubview(emojiView)
         
         automaticallyScrollsToMostRecentMessage = true
         
@@ -201,14 +201,14 @@ class ChatViewController: JSQMessagesViewController, CustomInputToolBarDelegate,
         let okaction = UIAlertAction(title: "确定", style: .Default, handler: {
             action in
             let hud = MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
-            hud.labelText = "请求中"
+            hud.label.text = "请求中"
             
             let textField = alert.textFields![0]
             let amount = textField.text == "" || textField.text == nil ? 1 : Int(textField.text!)
             let parameter = ["productid":self.product!.id,"amount":amount]
             Alamofire.request(.POST, orderProductURL, parameters: parameter, encoding: .JSON, headers: UserLoginHandler.instance.authorizationHeader()).responseJSON{
                 response in
-                hud.hide(true)
+                hud.hideAnimated(true)
                 alert.removeFromParentViewController()
                 switch response.result{
                 case .Success:
@@ -296,29 +296,7 @@ class ChatViewController: JSQMessagesViewController, CustomInputToolBarDelegate,
         }
     }
     
-    //MARK: EMOJI DELEGATE
-    func emojiKeyBoardView(emojiKeyBoardView: AGEmojiKeyboardView!, didUseEmoji emoji: String!) {
-        self._inputToolbar.contentView.textView.text = self._inputToolbar.contentView.textView.text + emoji
-    }
-    
-    func emojiKeyBoardViewDidPressBackSpace(emojiKeyBoardView: AGEmojiKeyboardView!) {
-        self._inputToolbar.contentView.textView.deleteBackward()
-    }
-    
-    //MARK: EMOJI DATASOURCE
-    func emojiKeyboardView(emojiKeyboardView: AGEmojiKeyboardView!, imageForSelectedCategory category: AGEmojiKeyboardViewCategoryImage) -> UIImage! {
-        return UIColor.greenColor().toImage()
-    }
-    
-    func emojiKeyboardView(emojiKeyboardView: AGEmojiKeyboardView!, imageForNonSelectedCategory category: AGEmojiKeyboardViewCategoryImage) -> UIImage! {
-        return UIColor.redColor().toImage()
-    }
-    
-    func backSpaceButtonImageForEmojiKeyboardView(emojiKeyboardView: AGEmojiKeyboardView!) -> UIImage! {
-        return UIColor.blackColor().toImage()
-    }
-    
-    
+        
     
     
     
@@ -338,11 +316,14 @@ class ChatViewController: JSQMessagesViewController, CustomInputToolBarDelegate,
         super.viewDidAppear(animated)
         self.navigationController!.navigationBar.translucent = false
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(didReceiveMessages), name: "ReceiveNewMessageNotification", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(didReceiveMessages), name: ReceiveNewMessageNotificationName, object: nil)
         
         //collectionView!.collectionViewLayout.springinessEnabled = true
     }
-    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.setNavigationBarHidden(false, animated: true)
+    }
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         NSNotificationCenter.defaultCenter().removeObserver(self)
@@ -364,7 +345,7 @@ class ChatViewController: JSQMessagesViewController, CustomInputToolBarDelegate,
             self.title = "加载中..."
             
             if moremessage{
-                let result = conversation.loadMoreMessagesFromId(firstMessageID, limit: Int32(maximumLoadCount))
+                let result = conversation.loadMoreMessagesFromId(firstMessageID, limit: Int32(maximumLoadCount), direction: EMMessageSearchDirectionUp)
                 conversation.markAllMessagesAsRead()
                 if result.count > 0 {
                     firstMessageID = (result[0] as! EMMessage).messageId
@@ -496,7 +477,7 @@ class ChatViewController: JSQMessagesViewController, CustomInputToolBarDelegate,
             
             JSQSystemSoundPlayer.jsq_playMessageReceivedSound()
             let count = conversation.unreadMessagesCount
-            let aMessages = conversation.loadMoreMessagesFromId(nil, limit: count)
+            let aMessages = conversation.loadMoreMessagesFromId(nil, limit: count,direction: EMMessageSearchDirectionUp)
             conversation.markAllMessagesAsRead()
             for m in aMessages{
                 let message:EMMessage = m as! EMMessage
@@ -529,22 +510,21 @@ class ChatViewController: JSQMessagesViewController, CustomInputToolBarDelegate,
         
         
         self.finishSendingMessageAnimated(true)
-        
-        EMClient.sharedClient().chatManager.asyncSendMessage(message, progress: {
+        EMClient.sharedClient().chatManager.sendMessage(message, progress: {
             progress in
             print(progress)
             let float = Float(progress) / Float(100)
             mediadata.updateProgress(float)
-        }, completion: {
-            message,error in
-            if error == nil{
-                jsqmessage.status = .Success
-                JSQSystemSoundPlayer.jsq_playMessageSentSound()
-                self.finishSendingMessageAnimated(false)
-            }else{
-                jsqmessage.status = .Failed
-                self.finishSendingMessageAnimated(false)
-            }
+            }, completion: {
+                message,error in
+                if error == nil{
+                    jsqmessage.status = .Success
+                    JSQSystemSoundPlayer.jsq_playMessageSentSound()
+                    self.finishSendingMessageAnimated(false)
+                }else{
+                    jsqmessage.status = .Failed
+                    self.finishSendingMessageAnimated(false)
+                }
         })
     }
     
@@ -554,7 +534,7 @@ class ChatViewController: JSQMessagesViewController, CustomInputToolBarDelegate,
         let message = EMMessage(conversationID: targetEMUsername, from: from, to: targetEMUsername, body: body, ext: nil)
         message.chatType = EMChatTypeChat
         let shortenText:String = text.characters.count > 20 ? text.substringToIndex(text.startIndex.advancedBy(19)) : text
-        let ext:[NSObject:AnyObject] = ["em_apns_ext":["em_push_title":"\(UserLoginHandler.instance.nickname):"+shortenText]]
+        let ext:[NSObject:AnyObject] = ["em_apns_ext":["em_push_title":"\(UserLoginHandler.instance.nickname): "+shortenText]]
         message.ext = ext
         
         //temp sending message
@@ -563,7 +543,7 @@ class ChatViewController: JSQMessagesViewController, CustomInputToolBarDelegate,
         self.messages.append(jsqmessage)
         self.finishSendingMessageAnimated(true)
         
-        EMClient.sharedClient().chatManager.asyncSendMessage(message, progress: nil){
+        EMClient.sharedClient().chatManager.sendMessage(message, progress: nil){
             message,error in
             if error == nil{ //finish sending message
                 JSQSystemSoundPlayer.jsq_playMessageSentSound()
@@ -749,12 +729,13 @@ class ChatViewController: JSQMessagesViewController, CustomInputToolBarDelegate,
                 let hud = MBProgressHUD.showHUDAddedTo(previewView, animated: true)
                 hud.mode = .AnnularDeterminate
                 hud.userInteractionEnabled = true
-                EMClient.sharedClient().chatManager.asyncDownloadMessageAttachments(rawmessages[indexPath.item], progress: {
+                
+                EMClient.sharedClient().chatManager.downloadMessageAttachment(rawmessages[indexPath.item], progress: {
                     progress in
                     hud.progress = Float(progress)/100.0
                     }, completion: {
                         message, error in
-                        hud.hide(true)
+                        hud.hideAnimated(true)
                         if error == nil { //download successfull
                             let body = message.body as! EMImageMessageBody
                             let image = UIImage(contentsOfFile:body.localPath)

@@ -21,6 +21,8 @@ class PreviewImagesViewController: UIViewController,UICollectionViewDataSource,U
     var showDetailButton = false
     var productid:Int = 0
     
+    var cachedImages:[UIImage?] = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.title = "\(currentImage+1)/\(imagesUUID.count)"
@@ -37,6 +39,8 @@ class PreviewImagesViewController: UIViewController,UICollectionViewDataSource,U
         if showDetailButton{
             self.btmViewPanel.addSubview(detailButton)
         }
+        
+        cachedImages = [UIImage?](count: imagesUUID.count, repeatedValue: nil)
         
         self.imagesCollectionView.delegate = self
         self.imagesCollectionView.dataSource = self
@@ -56,6 +60,8 @@ class PreviewImagesViewController: UIViewController,UICollectionViewDataSource,U
                 bool in
                     if bool{
                         self.downloadPercentage[i] = 100
+                        let image = UIImage(contentsOfFile: (LocalDownloadDirectory.URLByAppendingPathComponent(self.imagesUUID[i])).path!)!
+                        self.cachedImages[i] = image
                         self.imagesCollectionView.reloadItemsAtIndexPaths([NSIndexPath(forItem: i, inSection: 0)])
                     }else{//TODO: download image fail
                         
@@ -63,6 +69,7 @@ class PreviewImagesViewController: UIViewController,UICollectionViewDataSource,U
             }
         }
     }
+
     
     func detailBtnPressed(){
         detailCallBack(productid)
@@ -82,24 +89,24 @@ class PreviewImagesViewController: UIViewController,UICollectionViewDataSource,U
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        style = self.navigationController?.navigationBar.barStyle
         tintColor = self.navigationController?.navigationBar.tintColor
         barTintColor = self.navigationController?.navigationBar.barTintColor
         
         self.navigationController?.setNavigationBarHidden(false, animated: false)
-        self.navigationController?.navigationBar.barStyle = UIBarStyle.Black
         self.navigationController?.navigationBar.translucent = false
         self.navigationController?.edgesForExtendedLayout = .None
         self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
         self.navigationController?.navigationBar.barTintColor = UIColor.blackColor()
     }
-    var style:UIBarStyle!
     var tintColor:UIColor!
     var barTintColor:UIColor!
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
-        self.navigationController?.navigationBar.barStyle = style
+        
+        let barbutton = UIBarButtonItem(title: "", style: .Plain, target: nil, action: nil)
+        self.navigationItem.backBarButtonItem = barbutton
+        
         self.navigationController?.navigationBar.tintColor = tintColor
         self.navigationController?.navigationBar.barTintColor = barTintColor
     }
@@ -108,10 +115,17 @@ class PreviewImagesViewController: UIViewController,UICollectionViewDataSource,U
         return imagesUUID.count
     }
     
+    
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("PreviewImagesCollectionViewCell", forIndexPath: indexPath) as! PreviewImagesCollectionViewCell
         if downloadPercentage[indexPath.row]==100{
-            cell.setupCell(UIImage(contentsOfFile: (LocalDownloadDirectory.URLByAppendingPathComponent(imagesUUID[indexPath.row])).path!)!)
+            if let image = cachedImages[indexPath.row]{
+                cell.setupCell(image)
+            }else{
+                let image = UIImage(contentsOfFile: (LocalDownloadDirectory.URLByAppendingPathComponent(imagesUUID[indexPath.row])).path!)!
+                cachedImages[indexPath.row] = image
+                cell.setupCell(image)
+            }
         }else{
             cell.setupProgressIndicator(downloadPercentage[indexPath.row])
         }

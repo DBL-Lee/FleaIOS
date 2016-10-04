@@ -163,10 +163,12 @@ class CustomInputToolBar: JSQMessagesInputToolbar,JSQMessagesInputToolbarDelegat
     
     func moveBarUp(sender:CustomToolBarButton){
         let leftBarButton = self.contentView.leftBarButtonItem
-        if leftBarButton.selected{
-            self.contentView.textView.text = tempTextViewText
-            leftBarButton.selected = false
-            recordButton.hidden = true
+        if let leftBarButton = leftBarButton{
+            if leftBarButton.selected{
+                self.contentView.textView.text = tempTextViewText
+                leftBarButton.selected = false
+                recordButton.hidden = true
+            }
         }
         if !barisUp{
             barisUp = true

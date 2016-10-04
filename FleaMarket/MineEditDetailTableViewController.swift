@@ -24,6 +24,7 @@ class MineEditDetailTableViewController: UITableViewController, TOCropViewContro
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.title = "修改资料"
         self.tableView.rowHeight = UITableViewAutomaticDimension
         self.tableView.estimatedRowHeight = 40
         self.tableView.tableFooterView = UIView()
@@ -33,7 +34,7 @@ class MineEditDetailTableViewController: UITableViewController, TOCropViewContro
         
         let hud = MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
         hud.mode = .Indeterminate
-        hud.labelText = "正在加载用户信息"
+        hud.label.text = "正在加载用户信息"
         CoreDataHandler.instance.getUserFromCoreData(UserLoginHandler.instance.userid, emusername: nil){
             user in
             self.user = user
@@ -113,8 +114,8 @@ class MineEditDetailTableViewController: UITableViewController, TOCropViewContro
     
     func cropImage(images:[UIImage]){
         let vc = TOCropViewController(image: images.first!)
-        vc.defaultAspectRatio = .RatioSquare
-        vc.aspectRatioLocked = true
+        vc.aspectRatioPreset = .PresetSquare
+        vc.aspectRatioLockEnabled = true
         vc.delegate = self
         
         self.presentViewController(vc, animated: true, completion: nil)
@@ -131,10 +132,10 @@ class MineEditDetailTableViewController: UITableViewController, TOCropViewContro
     func changeAvatar(images:[UIImage]){
         let hud = MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
         hud.mode = .Determinate
-        hud.labelText = "上传头像中"
+        hud.label.text = "上传头像中"
         
         //first upload avatar
-        let uuid = UserLoginHandler.instance.nickname
+        let uuid = NSUUID().UUIDString+".png"
         let uploadRequest = AWSS3TransferManagerUploadRequest()
         let fileName = "large-"+uuid+".png"
         let fileURL = LocalUploadDirectory.URLByAppendingPathComponent(fileName)
@@ -215,7 +216,7 @@ class MineEditDetailTableViewController: UITableViewController, TOCropViewContro
                     if task.result != nil{
                         
                         hud.mode = .Indeterminate
-                        hud.labelText = "与服务器同步中"
+                        hud.label.text = "与服务器同步中"
                         
                         do{ //copy to download directory
                             try NSFileManager.defaultManager().copyItemAtPath(filePath, toPath: LocalDownloadDirectory.URLByAppendingPathComponent(fileName).path!)
@@ -225,7 +226,7 @@ class MineEditDetailTableViewController: UITableViewController, TOCropViewContro
                         UserLoginHandler.instance.editDetailOfCurrentUser(uuid+".png"){ //change info on server
                             success in
                             
-                            hud.hide(true)
+                            hud.hideAnimated(true)
                             
                             if success{
                                 if let user = self.user{
@@ -253,10 +254,10 @@ class MineEditDetailTableViewController: UITableViewController, TOCropViewContro
     
     func changeLocation(currentCity:String,currentCountry:String,currentCountryCode:String,currentPlacemark:CLPlacemark){
         let hud = MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
-        hud.labelText = "与服务器同步中"
+        hud.label.text = "与服务器同步中"
         UserLoginHandler.instance.editDetailOfCurrentUser(location: currentCity+","+currentCountry){
             success in
-            hud.hide(true)
+            hud.hideAnimated(true)
             if success{
                 if let user = self.user{
                     self.user = CoreDataHandler.instance.updateUserToCoreData(user.id, emusername: user.emusername, nickname: user.nickname, avatar: user.avatar, transaction: user.transaction, goodfeedback: user.goodfeedback, posted: user.posted, gender: user.gender == nil ? "" : user.gender!, location: currentCity+","+currentCountry, introduction: user.introduction == nil ? "" : user.introduction!)

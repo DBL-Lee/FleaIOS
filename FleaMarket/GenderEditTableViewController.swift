@@ -42,7 +42,7 @@ class GenderEditTableViewController: UITableViewController {
         if indexPath.row == 0{
             UserLoginHandler.instance.editDetailOfCurrentUser(gender: 1){
                 success in
-                hud.hide(true)
+                hud.hideAnimated(true)
                 if success{
                     self.callback("男")
                     self.navigationController?.popViewControllerAnimated(true)
@@ -53,7 +53,7 @@ class GenderEditTableViewController: UITableViewController {
         }else{
             UserLoginHandler.instance.editDetailOfCurrentUser(gender: 0){
                 success in
-                hud.hide(true)
+                hud.hideAnimated(true)
                 if success{
                     self.callback("女")
                     self.navigationController?.popViewControllerAnimated(true)

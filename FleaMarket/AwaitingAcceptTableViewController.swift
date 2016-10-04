@@ -51,11 +51,8 @@ class AwaitingAcceptTableViewController: UITableViewController {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        self.navigationController?.navigationBar.barStyle = .Default
-        self.navigationController?.navigationBar.translucent = false
         self.edgesForExtendedLayout = .None
         self.navigationItem.title = header
-        self.navigationController?.navigationBar.tintColor = UIColor.blackColor()
         
         reload()
     }

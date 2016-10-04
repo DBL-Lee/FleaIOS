@@ -42,7 +42,7 @@ class FInishedViewController: UIViewController,UITableViewDataSource,UITableView
         self.tableView.mj_footer = refreshFooter
         
         
-        topPanel.addButtons(["全部","等待评价","已互评"])
+        topPanel.addButtons(["等待评价","已互评","全部"])
         topPanel.delegate = self
         
     }
@@ -65,11 +65,11 @@ class FInishedViewController: UIViewController,UITableViewDataSource,UITableView
     func didChangeToButtonNumber(number: Int) {
         switch number{
         case 0:
-            reload(nil)
-        case 1:
             reload(true)
-        case 2:
+        case 1:
             reload(false)
+        case 2:
+            reload(nil)
         default:
             break
         }
@@ -78,11 +78,8 @@ class FInishedViewController: UIViewController,UITableViewDataSource,UITableView
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        self.navigationController?.navigationBar.barStyle = .Default
-        self.navigationController?.navigationBar.translucent = false
         self.edgesForExtendedLayout = .None
         self.navigationItem.title = header
-        self.navigationController?.navigationBar.tintColor = UIColor.blackColor()
         
         didChangeToButtonNumber(topPanel.currentSelected)
     }

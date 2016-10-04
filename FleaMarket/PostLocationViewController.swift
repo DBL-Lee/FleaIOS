@@ -28,6 +28,9 @@ class PostLocationViewController: UIViewController,UITableViewDelegate,UITableVi
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.title = "位置"
+        
         self.tableView.delegate = self
         self.tableView.dataSource = self
         self.searchBar.delegate = self
@@ -49,8 +52,17 @@ class PostLocationViewController: UIViewController,UITableViewDelegate,UITableVi
         }else{
             currentLocation = " 定位失败，未开启定位服务"
         }
+        
+        if self.navigationController!.viewControllers[0] == self {
+            let button = UIBarButtonItem(title: "取消", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(dismiss))
+            button.tintColor = UIColor.whiteColor()
+            self.navigationItem.leftBarButtonItem = button
+        }
     }
 
+    func dismiss(){
+        self.dismissViewControllerAnimated(true, completion: nil)
+    }
 
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 2

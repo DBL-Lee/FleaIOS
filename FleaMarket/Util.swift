@@ -247,9 +247,9 @@ class OverlaySingleton{
     static func addToView(view:UIView,text:String,duration:Double = 1){
         let hud = MBProgressHUD.showHUDAddedTo(view, animated: true)
         hud.mode = .Text
-        hud.labelText = text
+        hud.label.text = text
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(duration * Double(NSEC_PER_SEC))), dispatch_get_main_queue()){
-            hud.hide(true)
+            hud.hideAnimated(true)
         }
     }
 }

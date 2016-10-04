@@ -18,6 +18,7 @@ class ImageWithDeletionView: UIView,UIGestureRecognizerDelegate {
     let button = UIButton(type: .Custom)
     var uploadOverlay:UIView!
     var roundIndicator:KDCircularProgress!
+    var imageView:UIImageView!
     
     init(frame: CGRect,image:UIImage,callback:Int->Void,index:Int,mainIm:Bool = false, overlay:Bool = false) {
         self.index = index
@@ -36,7 +37,7 @@ class ImageWithDeletionView: UIView,UIGestureRecognizerDelegate {
         label.textAlignment = .Center
         
         super.init(frame: frame)
-        let imageView = UIImageView(frame: CGRect(x: buttonSide/2, y: buttonSide/2, width: width-buttonSide/2, height: height-buttonSide/2))
+        imageView = UIImageView(frame: CGRect(x: buttonSide/2, y: buttonSide/2, width: width-buttonSide/2, height: height-buttonSide/2))
         button.frame = CGRect(x: 0, y: 0, width: buttonSide, height: buttonSide)
         button.setBackgroundImage(UIImage(named: "delete.png"), forState: .Normal)
         button.addTarget(self, action: #selector(ImageWithDeletionView.delete as (ImageWithDeletionView) -> () -> ()), forControlEvents: .TouchUpInside)

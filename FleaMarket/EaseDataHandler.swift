@@ -11,7 +11,6 @@ class EaseDataHandler:NSObject,EMChatManagerDelegate{
     
     func didReceiveMessages(aMessages: [AnyObject]!) {
         
-        //let notification = NSNotification(name: <#T##String#>, object: <#T##AnyObject?#>, userInfo: <#T##[NSObject : AnyObject]?#>)
         var idset:[String] = []
         for m in aMessages{
             let message = m as! EMMessage
@@ -21,8 +20,9 @@ class EaseDataHandler:NSObject,EMChatManagerDelegate{
             if UIApplication.sharedApplication().applicationState == .Background{ //push notification if in background
                 let notification = UILocalNotification()
                 let ext = message.ext
-                let title = ext["em_apns_ext"]!["em_push_title"]! as! NSArray
-                notification.alertBody = title[0] as? String
+                print(ext["em_apns_ext"]!["em_push_title"])
+                let title = ext["em_apns_ext"]!["em_push_title"]! as! String
+                notification.alertBody = title
                 notification.applicationIconBadgeNumber = UIApplication.sharedApplication().applicationIconBadgeNumber+1
                 notification.fireDate = NSDate()
                 UIApplication.sharedApplication().scheduleLocalNotification(notification)
@@ -31,7 +31,13 @@ class EaseDataHandler:NSObject,EMChatManagerDelegate{
         var userInfo:[NSObject:AnyObject] = [:]
         userInfo["id"] = idset
         userInfo["count"] = aMessages.count
-        NSNotificationCenter.defaultCenter().postNotificationName("ReceiveNewMessageNotification", object: nil,userInfo: userInfo)
+        let lastMsg = aMessages.last as! EMMessage
+        print(lastMsg.ext["em_apns_ext"])
+        print(lastMsg.ext["em_apns_ext"]!["em_push_title"])
+        let title = lastMsg.ext["em_apns_ext"]!["em_push_title"]! as! String
+        userInfo["lastMsg"] = title
+        NSUserDefaults.standardUserDefaults().setValue(title, forKey: "LastUserMessage")
+        NSNotificationCenter.defaultCenter().postNotificationName(ReceiveNewMessageNotificationName, object: nil,userInfo: userInfo)
     }
     
 }

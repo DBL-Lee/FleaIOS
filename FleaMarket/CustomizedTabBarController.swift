@@ -11,19 +11,35 @@ import MBProgressHUD
 class CustomizedTabBarController: UITabBarController,UITabBarControllerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.tabBar.tintColor = UIColor.orangeColor()
+        
         self.tabBar.translucent = false
         let height = self.tabBar.frame.height
-        let button = UIButton(frame: CGRect(x: 0, y: 0, width: height, height: height))
+        button = UIButton(type: .Custom)
+        button.frame = CGRect(x: 0, y: 0, width: height, height: height)
         button.setBackgroundImage(UIImage(named: "post.png"), forState: .Normal)
+        
+
         button.center = CGPoint(x: self.tabBar.center.x, y: height/4)
         self.delegate = self
         button.addTarget(self, action: #selector(CustomizedTabBarController.postNewItem), forControlEvents: .TouchUpInside)
         self.tabBar.addSubview(button)
+        button.layer.zPosition = 999999999
         
+        let home = tabBar.items![0]
+        home.image = UIImage(named: "home.png")?.imageWithRenderingMode(.AlwaysTemplate)
         
+        let follow = tabBar.items![1]
+        follow.image = UIImage(named: "follow.png")?.imageWithRenderingMode(.AlwaysTemplate)
         
+        let message = tabBar.items![3]
+        message.image = UIImage(named: "message.png")?.imageWithRenderingMode(.AlwaysTemplate)
+        
+        let mine = tabBar.items![4]
+        mine.image = UIImage(named: "mine.png")?.imageWithRenderingMode(.AlwaysTemplate)
     }
-    
+    var button:UIButton!
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         let conversations = EMClient.sharedClient().chatManager.getAllConversations()
@@ -38,7 +54,7 @@ class CustomizedTabBarController: UITabBarController,UITabBarControllerDelegate 
             self.tabBar.items![3].badgeValue = "\(unread)"
         }
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(didReceiveMessages), name: "ReceiveNewMessageNotification", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(didReceiveMessages), name: ReceiveNewMessageNotificationName, object: nil)
         
     }
     
@@ -47,13 +63,18 @@ class CustomizedTabBarController: UITabBarController,UITabBarControllerDelegate 
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        self.view.bringSubviewToFront(button)
+    }
+    
     func didReceiveMessages(notification:NSNotification) {
         let userinfo = notification.userInfo!
         let count = userinfo["count"] as! Int
         if let badge = self.tabBar.items![3].badgeValue{
             self.tabBar.items![3].badgeValue = "\(Int(badge)!+count)"
         }else{
-            self.tabBar.items![3].badgeValue = "1"
+            self.tabBar.items![3].badgeValue = "\(count)"
         }
     }
     
@@ -112,7 +133,7 @@ class CustomizedTabBarController: UITabBarController,UITabBarControllerDelegate 
     
     func presentPostView(images:[UIImage]){
         let hud = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-        hud.labelText = "处理图片中"
+        hud.label.text = "处理图片中"
         let vc = PostItemTableViewController()
         let vc2 = UINavigationController(rootViewController: vc)
         vc.images = images

@@ -11,7 +11,7 @@ import Alamofire
 import SwiftyJSON
 import MBProgressHUD
 
-class ProductDetailTableViewController: UITableViewController {
+class ProductDetailTableViewController: UITableViewController,UIGestureRecognizerDelegate {
     
     var product:Product!
     var targetEMUsername:String = ""
@@ -27,28 +27,118 @@ class ProductDetailTableViewController: UITableViewController {
         self.tableView.registerNib(UINib(nibName: "ProductDetailDescriptionTableViewCell", bundle: nil), forCellReuseIdentifier: "ProductDetailDescriptionTableViewCell")
         self.tableView.rowHeight = UITableViewAutomaticDimension
         self.tableView.estimatedRowHeight = 44
+        
+        if UserLoginHandler.instance.loggedIn(){
+            if UserLoginHandler.instance.userid == product.userid {
+                let button = UIButton(type: .Custom)
+                let image = UIImage(named: "editproduct@2x.png")?.imageWithRenderingMode(.AlwaysTemplate)
+                button.setImage(image, forState: .Normal)
+                button.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+                button.addTarget(self, action: #selector(editProduct), forControlEvents: .TouchUpInside)
+                self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: button)
+            }
+        }
     }
     
     override func viewWillAppear(animated: Bool) {
-        self.navigationController?.navigationBar.barStyle = UIBarStyle.Default
-        self.navigationController?.navigationBar.translucent = false
+        super.viewWillAppear(animated)
         self.edgesForExtendedLayout = .None
-        self.navigationController?.navigationBar.tintColor = UIColor.blackColor()
-        self.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
-        
-        self.navigationItem.hidesBackButton = true
-        let image = UIImage(named: "backButton.png")
-        let button = UIButton(type: .Custom)
-        button.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
-        button.setImage(image, forState: .Normal)
-        button.addTarget(self, action: #selector(ProductDetailTableViewController.dismiss), forControlEvents: .TouchUpInside)
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: button)
-        
-        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .Plain, target: nil, action: nil)
+        self.navigationController?.setNavigationBarHidden(false, animated: true)
     }
     
-    func dismiss(){
-        self.navigationController?.popViewControllerAnimated(true)
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        if editView != nil{
+            editView.removeFromSuperview()
+            editView = nil
+        }
+    }
+    
+    var editView:UIView!
+    var postView:UIView!
+    func editProduct(){
+        if editView == nil{
+            editView = UIView(frame: CGRect(x: 0, y: self.navigationController!.navigationBar.frame.height+20, width: self.navigationController!.view.frame.width, height: self.navigationController!.view.frame.height))
+            
+            let width:CGFloat = 100
+            let height:CGFloat = 80
+            postView = UIView(frame: CGRect(x: self.view.frame.width-width-10, y: 10, width: width, height: height))
+            
+            postView.backgroundColor = UIColor.whiteColor()
+            postView.layer.cornerRadius = 2
+            
+            let btn1 = UIButton(type: .Custom)
+            btn1.frame = CGRect(x: 0, y: 0, width: width, height: height/2)
+            btn1.setTitleColor(UIColor.blackColor(), forState: .Normal)
+            btn1.addBorder(edges: .Bottom, colour: UIColor.lightGrayColor(), thickness: 0.5)
+            
+            let btn2 = UIButton(type: .Custom)
+            btn2.frame = CGRect(x: 0, y: height/2, width: width, height: height/2)
+            btn2.setTitleColor(UIColor.blackColor(), forState: .Normal)
+            
+            btn1.setTitle("修改商品", forState: .Normal)
+            btn1.addTarget(self, action: #selector(presentEditView), forControlEvents: .TouchUpInside)
+            btn1.titleLabel!.font = UIFont.systemFontOfSize(13)
+            
+            btn2.setTitle("下架商品", forState: .Normal)
+            btn2.addTarget(self, action: #selector(deleteProduct), forControlEvents: .TouchUpInside)
+            btn2.titleLabel!.font = UIFont.systemFontOfSize(13)
+            
+            postView.addSubview(btn1)
+            postView.addSubview(btn2)
+            
+            editView.addSubview(postView)
+            self.navigationController!.view.addSubview(editView)
+            
+            let tap = UITapGestureRecognizer(target: self, action: #selector(editProduct))
+            editView.addGestureRecognizer(tap)
+            tap.delegate = self
+            
+            editView.hidden = true
+        }
+        if editView.hidden{
+            editView.alpha = 0
+            editView.hidden = false
+            UIView.animateWithDuration(0.2, animations: {
+                self.editView.alpha = 1
+            })
+        }else{
+            UIView.animateWithDuration(0.2, animations: {
+                self.editView.alpha = 0
+                }, completion: {
+                    success in
+                    self.editView.hidden = true
+            })
+            
+        }
+        
+    }
+    
+//    func gestureRecognizerShouldBegin(gestureRecognizer: UIGestureRecognizer) -> Bool {
+//        if gestureRecognizer is UITapGestureRecognizer{
+//            if gestureRecognizer.view == postView{
+//                return false
+//            }
+//        }
+//        return true
+//    }
+    
+    func presentEditView(){
+        self.editView.hidden = true
+        let vc = PostItemTableViewController(product: product,editProductCallback: finishEditingProduct)
+        
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func deleteProduct(){
+        self.editView.hidden = true
+    }
+    
+    
+    
+    func finishEditingProduct(product:Product){
+        self.product = product
+        self.tableView.reloadData()
     }
 
     // MARK: - Table view data source
@@ -90,7 +180,7 @@ class ProductDetailTableViewController: UITableViewController {
             let cell = tableView.dequeueReusableCellWithIdentifier("ProductDetailSellerTableViewCell", forIndexPath: indexPath) as!
             ProductDetailSellerTableViewCell
             UserLoginHandler.instance.getUserDetailFromCloud(product.userid, emusername: nil){
-                user in
+                user,bool in
                 if let user = user{
                     let avatar = user.avatar
                     let nickname = user.nickname
@@ -177,6 +267,9 @@ class ProductDetailTableViewController: UITableViewController {
     }
     override func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         if section == numberOfSectionsInTableView(self.tableView)-1{
+            if UserLoginHandler.instance.loggedIn() && UserLoginHandler.instance.userid == product.userid {
+                    return 0
+            }
             return 44
         }
         return 0
@@ -184,6 +277,11 @@ class ProductDetailTableViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         if section == numberOfSectionsInTableView(self.tableView)-1{
+            if UserLoginHandler.instance.loggedIn(){
+                if UserLoginHandler.instance.userid == product.userid {
+                    return nil
+                }
+            }
             let view = UIView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 44))
             let postBtn = UIButton(frame: view.frame)
             postBtn.backgroundColor = UIColor.orangeColor()

@@ -99,6 +99,21 @@ class TopTabBarView: UIView {
         moveBarTo(index)
     }
     
+    func startWithIndex(i:Int){
+        let button = buttons[i]
+        if button.selected{
+            return
+        }
+        for btn in self.buttons{
+            btn.selected = false
+        }
+        button.selected = true
+        
+        currentSelected = i
+        
+        moveBarTo(i)
+    }
+    
     func moveBarTo(index:Int){
         self.layoutIfNeeded()
         self.removeConstraint(centerConstraint)

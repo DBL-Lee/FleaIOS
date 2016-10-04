@@ -30,6 +30,7 @@ class UserLoginHandler:NSObject,EMClientDelegate{
     override init() {
         super.init()
         EMClient.sharedClient().addDelegate(self, delegateQueue: nil)
+        print("UserLoginHandler finished\n")
     }
     
     func login(username:String,password:String,completion:Bool->Void){
@@ -98,7 +99,7 @@ class UserLoginHandler:NSObject,EMClientDelegate{
             let error = EMClient.sharedClient().loginWithUsername(username, password: password)
             if (error == nil){ //login success
                 EMClient.sharedClient().options.isAutoLogin = true
-                EMClient.sharedClient().chatManager.loadAllConversationsFromDB()
+                EMClient.sharedClient().chatManager.getAllConversations()
             }else{ //login fail
                 print(error)
             }
@@ -107,7 +108,7 @@ class UserLoginHandler:NSObject,EMClientDelegate{
 
     func didAutoLoginWithError(aError: EMError!) {
         if aError == nil{
-            EMClient.sharedClient().chatManager.loadAllConversationsFromDB()
+            EMClient.sharedClient().chatManager.getAllConversations()
         }
     }
     
@@ -130,7 +131,7 @@ class UserLoginHandler:NSObject,EMClientDelegate{
         }
     }
     
-    func getUserDetailFromCloud(userid:Int?,emusername:String?,completion:User?->Void){
+    func getUserDetailFromCloud(userid:Int?,emusername:String?,completion:(User?,Bool)->Void){
         var parameter:[String:AnyObject] = [:]
         if userid != nil{
             parameter["userid"] = userid!
@@ -152,13 +153,13 @@ class UserLoginHandler:NSObject,EMClientDelegate{
                         gender = ""
                     }
                     let user = CoreDataHandler.instance.updateUserToCoreData(json["id"].intValue, emusername: json["emusername"].stringValue, nickname: json["nickname"].stringValue, avatar: json["avatar"].stringValue, transaction: json["transaction"].intValue, goodfeedback: json["goodfeedback"].intValue, posted: json["posted"].intValue, gender: gender, location: json["location"].stringValue, introduction: json["introduction"].stringValue)
-                    completion(user)
+                    completion(user,json["following"].boolValue)
                     
                 }else{
-                    completion(nil)
+                    completion(nil,false)
                 }
             case .Failure:
-                completion(nil)
+                completion(nil,false)
             }
         }
     }

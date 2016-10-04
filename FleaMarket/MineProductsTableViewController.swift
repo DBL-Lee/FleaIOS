@@ -10,10 +10,12 @@ import UIKit
 import Alamofire
 import SwiftyJSON
 import MJRefresh
+import MBProgressHUD
 
 class MineProductsTableViewController: UITableViewController {
 
-    var nextURL:String = ""
+    var requestURL:String = ""
+    private var nextURL:String = ""
     var refreshFooter:MJRefreshBackFooter!
     var products:[Product] = []
     var header = ""
@@ -30,17 +32,22 @@ class MineProductsTableViewController: UITableViewController {
         
         refreshFooter = MJRefreshBackFooter(refreshingTarget: self, refreshingAction: #selector(loadMore))
         self.tableView.mj_footer = refreshFooter
-        loadMore()
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        self.navigationController?.navigationBar.barStyle = .Default
-        self.navigationController?.navigationBar.translucent = false
         self.edgesForExtendedLayout = .None
         self.navigationItem.title = header
-        self.navigationController?.navigationBar.tintColor = UIColor.blackColor()
+        reload()
+    }
+    
+    func reload() {
+        nextURL = requestURL
+        products = []
+        let hud = MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
+        loadMore()
+        
     }
     
     
@@ -48,6 +55,7 @@ class MineProductsTableViewController: UITableViewController {
         if nextURL != ""{
             Alamofire.request(.GET, nextURL, parameters: nil, encoding: .JSON, headers: UserLoginHandler.instance.authorizationHeader()).responseJSON{
                 response in
+                MBProgressHUD.hideAllHUDsForView(self.navigationController!.view, animated: true)
                 switch response.result{
                 case .Success:
                     let json = JSON(response.result.value!)
@@ -63,11 +71,16 @@ class MineProductsTableViewController: UITableViewController {
                         indexPaths.append(NSIndexPath(forRow: current, inSection: 0))
                         current += 1
                     }
-                    self.products.appendContentsOf(products)
                     
-                    UIView.setAnimationsEnabled(false)
-                    self.tableView.insertRowsAtIndexPaths(indexPaths, withRowAnimation: UITableViewRowAnimation.None)
-                    UIView.setAnimationsEnabled(true)
+                    if self.products.count == 0{
+                        self.products.appendContentsOf(products)
+                        self.tableView.reloadData()
+                    }else{
+                        self.products.appendContentsOf(products)
+                        UIView.setAnimationsEnabled(false)
+                        self.tableView.insertRowsAtIndexPaths(indexPaths, withRowAnimation: UITableViewRowAnimation.None)
+                        UIView.setAnimationsEnabled(true)
+                    }
                     
                     if next == ""{
                         self.refreshFooter.endRefreshingWithNoMoreData()

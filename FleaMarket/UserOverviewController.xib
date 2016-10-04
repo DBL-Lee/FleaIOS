@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10116" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -7,7 +7,9 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="UserOverviewController" customModule="FleaMarket" customModuleProvider="target">
             <connections>
+                <outlet property="bottomBar" destination="ECU-AH-jyJ" id="U3X-Bp-a42"/>
                 <outlet property="tableView" destination="FuJ-m1-r6S" id="tts-X8-7RS"/>
+                <outlet property="transparentBar" destination="a3k-f1-3d8" id="ELI-M1-VOI"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -16,24 +18,55 @@
             <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="FuJ-m1-r6S">
-                    <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="FuJ-m1-r6S">
+                    <rect key="frame" x="0.0" y="52" width="600" height="548"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                 </tableView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ECU-AH-jyJ" customClass="CustomBottomButtonBar" customModule="FleaMarket" customModuleProvider="target">
+                    <rect key="frame" x="0.0" y="556" width="600" height="44"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="44" id="vlS-pw-fNz"/>
+                    </constraints>
+                </view>
+                <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="a3k-f1-3d8">
+                    <rect key="frame" x="0.0" y="20" width="600" height="44"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="44" id="iNB-Ga-INU"/>
+                    </constraints>
+                    <items>
+                        <navigationItem title="Title" id="b8H-Bb-WT1"/>
+                    </items>
+                </navigationBar>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstItem="FuJ-m1-r6S" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="BSg-ZW-t1N"/>
+                <constraint firstItem="FuJ-m1-r6S" firstAttribute="top" secondItem="a3k-f1-3d8" secondAttribute="bottom" id="DWq-Jn-cS9"/>
                 <constraint firstItem="FuJ-m1-r6S" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="G1Y-Lf-cQd"/>
+                <constraint firstItem="ECU-AH-jyJ" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="QF3-Nc-QWe"/>
+                <constraint firstItem="a3k-f1-3d8" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="20" id="SmU-Np-KD4"/>
+                <constraint firstItem="FuJ-m1-r6S" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="Ztw-U3-zti"/>
+                <constraint firstAttribute="trailing" secondItem="a3k-f1-3d8" secondAttribute="trailing" id="bUP-gD-5UP"/>
                 <constraint firstAttribute="bottom" secondItem="FuJ-m1-r6S" secondAttribute="bottom" id="c7H-4W-SAl"/>
                 <constraint firstItem="FuJ-m1-r6S" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="eEI-Fs-Nzf"/>
+                <constraint firstItem="FuJ-m1-r6S" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="fkI-4E-uvx"/>
+                <constraint firstAttribute="trailing" secondItem="ECU-AH-jyJ" secondAttribute="trailing" id="fuw-Y6-YGv"/>
+                <constraint firstItem="a3k-f1-3d8" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="hrS-nU-DPd"/>
+                <constraint firstItem="FuJ-m1-r6S" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="qX8-NP-Zc6"/>
                 <constraint firstAttribute="trailing" secondItem="FuJ-m1-r6S" secondAttribute="trailing" id="yKP-j0-y3y"/>
+                <constraint firstAttribute="bottom" secondItem="ECU-AH-jyJ" secondAttribute="bottom" id="yiS-Gu-Sha"/>
             </constraints>
             <variation key="default">
                 <mask key="constraints">
+                    <exclude reference="DWq-Jn-cS9"/>
                     <exclude reference="G1Y-Lf-cQd"/>
+                    <exclude reference="eEI-Fs-Nzf"/>
+                    <exclude reference="fkI-4E-uvx"/>
+                    <exclude reference="qX8-NP-Zc6"/>
                 </mask>
             </variation>
+            <point key="canvasLocation" x="259" y="242"/>
         </view>
     </objects>
 </document>

@@ -143,8 +143,12 @@ class SearchResultViewController: UIViewController,UITableViewDataSource,UITable
         refreshFooter = MJRefreshBackNormalFooter(refreshingTarget: self, refreshingAction: #selector(loadMore))
         self.tableView.mj_footer = refreshFooter
         
+        
         self.tableView.emptyDataSetSource = self
         self.tableView.emptyDataSetDelegate = self
+        
+        
+        searchController.searchBar.backgroundImage = UIImage()
         
     }
     
@@ -156,10 +160,7 @@ class SearchResultViewController: UIViewController,UITableViewDataSource,UITable
         return true
     }
     
-    func titleForEmptyDataSet(scrollView: UIScrollView!) -> NSAttributedString! {
-        let string = "没有搜索到你要的商品!"
-        return NSAttributedString(string: string)
-    }
+
     
     func tapOnOverlay(tap:UITapGestureRecognizer){
         if categorySubviewShowing{
@@ -276,11 +277,37 @@ class SearchResultViewController: UIViewController,UITableViewDataSource,UITable
         tapSort()
     }
 
+    func previousViewController()-> UIViewController? {
+        guard let viewControllers = navigationController?.viewControllers else {
+            return nil
+        }
+        var previous: UIViewController?
+        for vc in viewControllers{
+            if vc == self {
+                break
+            }
+            previous = vc
+        }
+        return previous
+    }
     
     func searchBarShouldBeginEditing(searchBar: UISearchBar) -> Bool {
-        let vc = SearchViewController()
-        vc.fetchRequest = self.fetchRequest
-        self.navigationController?.pushViewController(vc, animated: false)
+        if let vc = self.previousViewController(){
+            if vc is SearchViewController { //just pop
+                let searchVC = vc as! SearchViewController
+                searchVC.fetchRequest = self.fetchRequest
+                self.navigationController?.popViewControllerAnimated(true)
+            }else{ // insert vc before then pop
+                let vc = SearchViewController()
+                vc.hidesBottomBarWhenPushed = true
+                vc.fetchRequest = self.fetchRequest
+                var vcs = self.navigationController?.viewControllers
+                vcs?.insert(vc, atIndex: vcs!.count-1)
+                self.navigationController?.setViewControllers(vcs!, animated: false)
+                self.navigationController?.popViewControllerAnimated(true)
+            }
+        }
+        
         return false
     }
     
@@ -290,23 +317,10 @@ class SearchResultViewController: UIViewController,UITableViewDataSource,UITable
         self.navigationController?.navigationBar.barStyle = .Default
         self.navigationController?.navigationBar.translucent = false
         self.edgesForExtendedLayout = .None
-        self.navigationItem.hidesBackButton = true
-        let image = UIImage(named: "backButton.png")
-        let button = UIButton(type: .Custom)
-        button.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
-        button.setImage(image, forState: .Normal)
-        button.addTarget(self, action: #selector(SearchResultViewController.dismiss), forControlEvents: .TouchUpInside)
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: button)
-        self.navigationController?.navigationBar.barTintColor = UIColor(white: 0.95, alpha: 1)
-        self.navigationController?.navigationBar.tintColor = UIColor.blackColor()
         
         self.dropDownOverlay.hidden = true
         
         
-    }
-    
-    func dismiss(){
-        self.navigationController?.popToRootViewControllerAnimated(true)
     }
     
     override func viewDidAppear(animated: Bool) {

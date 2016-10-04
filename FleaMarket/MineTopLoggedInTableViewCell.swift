@@ -9,7 +9,7 @@
 import UIKit
 
 class MineTopLoggedInTableViewCell: UITableViewCell {
-
+    
     @IBOutlet weak var avatarImageView: UIImageView!
     @IBOutlet weak var nicknameLabel: UILabel!
     @IBOutlet weak var auxiLabel: UILabel!
@@ -25,6 +25,7 @@ class MineTopLoggedInTableViewCell: UITableViewCell {
         
         self.nicknameLabel.text = nickname
         self.auxiLabel.text = auxistr
+        
     }
 
     

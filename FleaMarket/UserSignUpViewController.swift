@@ -40,25 +40,23 @@ class UserSignUpViewController: UIViewController,UITableViewDataSource,UITableVi
     }
     
     override func viewWillAppear(animated: Bool) {
-        self.navigationController?.navigationBar.barStyle = .Default
-        self.navigationController?.navigationBar.translucent = false
         self.edgesForExtendedLayout = .None
         self.navigationItem.title = "注册"
-        let image = UIImage(named: "backButton.png")
-        let button = UIButton(type: .Custom)
-        button.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
-        button.setImage(image, forState: .Normal)
-        button.addTarget(self, action: #selector(UserSignUpViewController.dismiss), forControlEvents: .TouchUpInside)
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: button)
+//        let image = UIImage(named: "backButton.png")
+//        let button = UIButton(type: .Custom)
+//        button.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
+//        button.setImage(image, forState: .Normal)
+//        button.addTarget(self, action: #selector(UserSignUpViewController.dismiss), forControlEvents: .TouchUpInside)
+//        self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: button)
     }
     
-    func dismiss(){
-        if self.navigationController?.viewControllers[0] == self{
-            self.navigationController?.dismissViewControllerAnimated(true, completion: nil)
-        }else{
-            self.navigationController?.popViewControllerAnimated(true)
-        }
-    }
+//    func dismiss(){
+//        if self.navigationController?.viewControllers[0] == self{
+//            self.navigationController?.dismissViewControllerAnimated(true, completion: nil)
+//        }else{
+//            self.navigationController?.popViewControllerAnimated(true)
+//        }
+//    }
     var emailTextField:UITextField!
     var passwordTextField:UITextField!
     var confirmPasswordTextField:UITextField!
@@ -102,7 +100,7 @@ class UserSignUpViewController: UIViewController,UITableViewDataSource,UITableVi
     var time = 60
     func sendVerificationEmail(){
         let hud = MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
-        hud.labelText = "正在发送邮件"
+        hud.label.text = "正在发送邮件"
         UserLoginHandler.instance.sendVerificationEmail(emailTextField.text!){
             id in
             MBProgressHUD.hideHUDForView(self.navigationController!.view, animated: true)
@@ -224,7 +222,7 @@ class UserSignUpViewController: UIViewController,UITableViewDataSource,UITableVi
             let alert = UIAlertController(title: nil, message: nil, preferredStyle: .Alert)
             alert.addAction(UIAlertAction(title: "好的", style: .Cancel, handler: nil))
             if result{
-                self.dismiss()
+                self.navigationController?.popViewControllerAnimated(true)
             }else{
                 alert.message = errorStr!
             }

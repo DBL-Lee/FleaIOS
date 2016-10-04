@@ -23,6 +23,11 @@
 #import <UIKit/UIKit.h>
 #import "TOCropOverlayView.h"
 
+typedef NS_ENUM(NSInteger, TOCropViewCroppingStyle) {
+    TOCropViewCroppingStyleDefault,     // The regular, rectangular crop box
+    TOCropViewCroppingStyleCircular     // A fixed, circular crop box
+};
+
 @class TOCropView;
 
 @protocol TOCropViewDelegate <NSObject>
@@ -40,15 +45,14 @@
 @property (nonatomic, strong, readonly) UIImage *image;
 
 /**
+ The cropping style of the crop view (eg, rectangular or circular)
+ */
+@property (nonatomic, assign, readonly) TOCropViewCroppingStyle croppingStyle;
+
+/**
  A grid view overlaid on top of the foreground image view's container.
  */
 @property (nonatomic, strong, readonly) TOCropOverlayView *gridOverlayView;
-
-/**
- If false, the user cannot resize the crop box frame using a pan gesture from a corner.
- Default vaue is true.
- */
-@property (nonatomic, assign) BOOL cropBoxResizeEnabled;
 
 /**
  A delegate object that receives notifications from the crop view
@@ -56,12 +60,18 @@
 @property (nonatomic, weak) id<TOCropViewDelegate> delegate;
 
 /**
+ If false, the user cannot resize the crop box frame using a pan gesture from a corner.
+ Default vaue is YES.
+ */
+@property (nonatomic, assign) BOOL cropBoxResizeEnabled;
+
+/**
  Whether the user has manipulated the crop view to the point where it can be reset
  */
-@property (nonatomic, readonly) BOOL canReset;
+@property (nonatomic, readonly) BOOL canBeReset;
 
 /** 
- The frame of the cropping box on the crop view
+ The frame of the cropping box in the coordinate space of the crop view
  */
 @property (nonatomic, readonly) CGRect cropBoxFrame;
 
@@ -78,12 +88,24 @@
 /**
  Disable the dynamic translucency in order to smoothly relayout the view
  */
-@property (nonatomic, assign) BOOL simpleMode;
+@property (nonatomic, assign) BOOL simpleRenderMode;
 
 /**
- When the cropping box is locked to its current size
+ A width x height ratio that the crop box will be rescaled to (eg 4:3 is {4.0f, 3.0f})
+ Setting it to CGSizeZero will reset the aspect ratio to the image's own ratio.
  */
-@property (nonatomic, assign) BOOL aspectRatioLocked;
+@property (nonatomic, assign) CGSize aspectRatio;
+
+/**
+ When the cropping box is locked to its current aspect ratio (But can still be resized)
+ */
+@property (nonatomic, assign) BOOL aspectRatioLockEnabled;
+
+/**
+ When the user taps 'reset', whether the aspect ratio will also be reset as well
+ Default is YES
+ */
+@property (nonatomic, assign) BOOL resetAspectRatioEnabled;
 
 /**
  True when the height of the crop box is bigger than the width
@@ -93,7 +115,7 @@
 /**
  The rotation angle of the crop view (Will always be negative as it rotates in a counter-clockwise direction)
  */
-@property (nonatomic, assign, readonly) NSInteger angle;
+@property (nonatomic, assign) NSInteger angle;
 
 /**
  Hide all of the crop elements for transition animations 
@@ -101,9 +123,9 @@
 @property (nonatomic, assign) BOOL croppingViewsHidden;
 
 /**
- In relation to the coordinate space of the image, the frame that the crop view is focussing on
+ In relation to the coordinate space of the image, the frame that the crop view is focusing on
  */
-@property (nonatomic, readonly) CGRect croppedImageFrame;
+@property (nonatomic, assign) CGRect imageCropFrame;
 
 /**
  Set the grid overlay graphic to be hidden
@@ -111,9 +133,14 @@
 @property (nonatomic, assign) BOOL gridOverlayHidden;
 
 /**
- Create a new instance of the crop view with the supplied image
+ Create a default instance of the crop view with the supplied image
  */
 - (instancetype)initWithImage:(UIImage *)image;
+
+/**
+ Create a new instance of the crop view with the specified image and cropping
+ */
+- (instancetype)initWithCroppingStyle:(TOCropViewCroppingStyle)style image:(UIImage *)image;
 
 /**
  When performing large size transitions (eg, orientation rotation),
@@ -122,7 +149,7 @@
  @param simpleMode Whether simple mode is enabled or not
  
  */
-- (void)setSimpleMode:(BOOL)simpleMode animated:(BOOL)animated;
+- (void)setSimpleRenderMode:(BOOL)simpleMode animated:(BOOL)animated;
 
 /**
  When performing a screen rotation that will change the size of the scroll view, this takes 
@@ -145,12 +172,12 @@
 - (void)resetLayoutToDefaultAnimated:(BOOL)animated;
 
 /**
- Enables an aspect ratio lock where the crop box will always scale at a specific ratio.
+ Changes the aspect ratio of the crop box to match the one specified
  
- @param aspectRatio The aspect ratio (For example 16:9 is 16.0f/9.0f). Specify 0.0f to lock to the image's original aspect ratio
+ @param aspectRatio The aspect ratio (For example 16:9 is 16.0f/9.0f). 'CGSizeZero' will reset it to the image's own ratio
  @param animated Whether the locking effect is animated
  */
-- (void)setAspectLockEnabledWithAspectRatio:(CGSize)aspectRatio animated:(BOOL)animated;
+- (void)setAspectRatio:(CGSize)aspectRatio animated:(BOOL)animated;
 
 /**
  Rotates the entire canvas to a 90-degree angle. The default rotation is counterclockwise.
@@ -177,6 +204,11 @@
  Animate the cropping component views to become visible
  */
 - (void)setCroppingViewsHidden:(BOOL)hidden animated:(BOOL)animated;
+
+/**
+ Animate the background image view to become visible
+ */
+- (void)setBackgroundImageViewHidden:(BOOL)hidden animated:(BOOL)animated;
 
 /**
  When triggered, the crop view will perform a relayout to ensure the crop box

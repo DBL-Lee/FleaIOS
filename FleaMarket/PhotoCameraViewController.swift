@@ -154,7 +154,7 @@ class PhotoCameraViewController: UIViewController,FastttCameraDelegate,UICollect
     @IBAction func takePhoto(sender: AnyObject) {
         if self.images.count<self.MAXPHOTO{
             let hud = MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
-            hud.labelText = "处理照片中"
+            hud.label.text = "处理照片中"
             
             fastVC.takePicture()
             self.previewView.backgroundColor = UIColor.blackColor()

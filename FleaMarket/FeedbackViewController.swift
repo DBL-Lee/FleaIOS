@@ -41,7 +41,10 @@ class FeedbackViewController: UIViewController,UITextViewDelegate,TopTabBarViewD
         self.wordCountLabel.text = "\(textView.text.characters.count)/\(limit)"
         self.confirmBtn.setBackgroundImage(UIColor.orangeColor().toImage(), forState: .Normal)
         self.confirmBtn.setTitle("提交评价", forState: .Normal)
+        
+        self.edgesForExtendedLayout = .None
     }
+    
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
@@ -82,7 +85,7 @@ class FeedbackViewController: UIViewController,UITextViewDelegate,TopTabBarViewD
             
             Alamofire.request(.POST, postFeedbackURL, parameters: parameter, encoding: .JSON, headers: UserLoginHandler.instance.authorizationHeader()).responseJSON{
                 response in
-                hud.hide(false)
+                hud.hideAnimated(false)
                 switch response.result{
                 case .Success:
                     if response.response?.statusCode < 400{

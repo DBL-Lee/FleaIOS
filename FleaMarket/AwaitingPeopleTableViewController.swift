@@ -103,7 +103,7 @@ class AwaitingPeopleTableViewController: UITableViewController {
         parameter["userid"] = userid
         Alamofire.request(.POST, acceptBuyRequestURL, parameters: parameter, encoding: .JSON, headers: UserLoginHandler.instance.authorizationHeader()).responseJSON{
             response in
-            hud.hide(true)
+            hud.hideAnimated(true)
             switch response.result{
             case .Success:
                 if response.response?.statusCode<400{

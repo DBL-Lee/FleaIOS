@@ -11,13 +11,16 @@ import CoreData
 import Alamofire
 import SwiftyJSON
 import MJRefresh
+import CoreLocation
 
-class FirstScreenViewController: UIViewController,UITableViewDelegate,UITableViewDataSource,UIScrollViewDelegate {
-
+class FirstScreenViewController: UIViewController,UITableViewDelegate,UITableViewDataSource,UIScrollViewDelegate,UISearchBarDelegate,DropDownButtonDelegate {
+    var currentLocation = "伦敦"
+    var locationBtn:DropDownButton!
+    
     var products:[Product] = []
     var productCategory:[NSManagedObject] = []
     var nextPageURL:String = ""
-    
+    var searchController:UISearchController!
     var fetchRequest = FetchProductRequest()
     
     //static cell to hold categories
@@ -26,12 +29,27 @@ class FirstScreenViewController: UIViewController,UITableViewDelegate,UITableVie
     @IBOutlet weak var tableView: UITableView!
     var refControl = UIRefreshControl()
     var refreshHeader:MJRefreshNormalHeader!
-    var refreshFooter:MJRefreshBackFooter!
+    var refreshFooter:MJRefreshBackNormalFooter!
+    
+    let LatitudeDefaultName = "LatitudeDefaultName"
+    let LongitudeDefaultName = "LongitudeDefaultName"
+    let CityDefaultName = "CityDefaultName"
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        let latitude = NSUserDefaults.standardUserDefaults().doubleForKey(LatitudeDefaultName)
+        let longitude = NSUserDefaults.standardUserDefaults().doubleForKey(LongitudeDefaultName)
+        if let city = NSUserDefaults.standardUserDefaults().stringForKey(CityDefaultName){
+            currentLocation = city
+        }
+        
+        if latitude != 0 {
+            fetchRequest.setLocation(latitude, longitude: longitude)
+        }
+        
         fetchRequest.maxdistance = 100
+        
         
         self.tableView.backgroundColor = UIColor.groupTableViewBackgroundColor()
         
@@ -64,7 +82,7 @@ class FirstScreenViewController: UIViewController,UITableViewDelegate,UITableVie
                             NSUserDefaults.standardUserDefaults().setValue(currentVersion, forKey: "CategoryVersion")
                             self.productCategory = CoreDataHandler.instance.getPrimaryCategoryList()
                             self.categoryCell.setUpCollectionView(self.productCategory, callback: self.categoryChosen)
-                            self.tableView.reloadRowsAtIndexPaths([NSIndexPath(forRow: 0, inSection: 1)], withRowAnimation: .None)
+                            self.tableView.reloadRowsAtIndexPaths([NSIndexPath(forRow: 0, inSection: 0)], withRowAnimation: .None)
                         }
                     case .Failure(let error):
                         print(error)
@@ -79,24 +97,98 @@ class FirstScreenViewController: UIViewController,UITableViewDelegate,UITableVie
         categoryCell.selectionStyle = .None
         categoryCell.setUpCollectionView(productCategory, callback: categoryChosen)
         
+        
         refreshHeader = MJRefreshNormalHeader(refreshingTarget: self, refreshingAction: #selector(refresh))
+        refreshHeader.stateLabel.font = UIFont.systemFontOfSize(13)
+        refreshHeader.lastUpdatedTimeLabel.font = UIFont.systemFontOfSize(13)
         self.tableView.mj_header = refreshHeader
+        
         refreshFooter = MJRefreshBackNormalFooter(refreshingTarget: self, refreshingAction: #selector(loadMore))
+        refreshFooter.stateLabel.font = UIFont.systemFontOfSize(13)
         self.tableView.mj_footer = refreshFooter
+        
+        searchController = CustomSearchController(searchViewController: nil)
+        searchController.searchBar.placeholder = "请输入宝贝关键字或@卖家名"
+        
+        searchController.searchBar.backgroundImage = UIImage()
+
+        
+        searchController.searchBar.delegate = self
+        searchController.dimsBackgroundDuringPresentation = false
+        searchController.hidesNavigationBarDuringPresentation = false
+        navigationItem.titleView = searchController.searchBar
+        
+        locationBtn = DropDownButton(frame: CGRect(x: 0, y:0,width: 68,height: 20), text: currentLocation)
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: locationBtn)
+        
+        locationBtn.delegate = self
         
         refreshHeader.beginRefreshing()
     }
-
+    
     override func viewWillAppear(animated: Bool) {
-        self.navigationController!.setNavigationBarHidden(true, animated: animated)
         super.viewWillAppear(animated)
-        
+        self.navigationController?.setNavigationBarHidden(false, animated: true)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(cityChanged), name: CityChangeNotificationName, object: nil)
+    }
+    
+    var cityChangeAlertShown = false
+    
+    func cityChanged(notification:NSNotification){
+        let userinfo = notification.userInfo!
+        let longitude = userinfo["longitude"] as! Double
+        let latitude = userinfo["latitude"] as! Double
+        let city = userinfo["name"] as! String
+        if !cityChangeAlertShown{
+            cityChangeAlertShown = true
+            let alert = UIAlertController(title: "定位", message: nil, preferredStyle: .Alert)
+            alert.message = "定位到您现在处在 "+city+"\n是否切换到当前位置?"
+            let action = UIAlertAction(title: "好的", style: .Default, handler: {
+                action in
+                self.changeLocationToCountry(city, latitude: latitude, longitude: longitude)
+            })
+            let cancelaction = UIAlertAction(title: "不切换", style: .Cancel, handler: nil)
+            alert.addAction(action)
+            alert.addAction(cancelaction)
+            self.presentViewController(alert, animated: true, completion: nil)
+        }
     }
     
     override func viewWillDisappear(animated: Bool) {
-        self.navigationController!.setNavigationBarHidden(false, animated: animated)
-        super.viewWillDisappear(animated)
+        NSNotificationCenter.defaultCenter().removeObserver(self)
     }
+    
+    var locationNaviVC:UINavigationController!
+    func dropDownButtonTapped() {
+        let vc = PostLocationViewController()
+        vc.callback = finishChoosingLocation
+        locationNaviVC = UINavigationController(rootViewController: vc)
+        self.presentViewController(locationNaviVC, animated: true, completion: nil)
+    }
+
+    
+    func finishChoosingLocation(city:String,country:String,ISOCode:String,placemark:CLPlacemark){
+        self.locationNaviVC.dismissViewControllerAnimated(true, completion: nil)
+        self.changeLocationToCountry(city, latitude: placemark.location!.coordinate.latitude, longitude: placemark.location!.coordinate.longitude)
+    }
+    
+    func changeLocationToCountry(city:String,latitude:Double,longitude:Double){
+        NSUserDefaults.standardUserDefaults().setDouble(latitude, forKey: LatitudeDefaultName)
+        NSUserDefaults.standardUserDefaults().setDouble(longitude, forKey: LongitudeDefaultName)
+        NSUserDefaults.standardUserDefaults().setObject(city, forKey: CityDefaultName)
+        currentLocation = city
+        self.locationBtn.setlabel(city)
+        self.fetchRequest.setLocation(latitude, longitude: longitude)
+        self.refreshHeader.beginRefreshing()
+    }
+
+    func searchBarShouldBeginEditing(searchBar: UISearchBar) -> Bool {
+        let searchVC = SearchViewController()
+        searchVC.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(searchVC, animated: true)
+        return false
+    }
+
     
     func refresh(){
         fetchRequest.request{
@@ -123,7 +215,7 @@ class FirstScreenViewController: UIViewController,UITableViewDelegate,UITableVie
                     self.nextPageURL = json["next"].stringValue
                     var indexPaths:[NSIndexPath] = []
                     for (_,productjson) in json["results"] {
-                        indexPaths.append(NSIndexPath(forRow: self.products.count, inSection: 2))
+                        indexPaths.append(NSIndexPath(forRow: self.products.count, inSection: 1))
                         self.products.append(Product.deserialize(productjson))
                     }
                     
@@ -146,25 +238,26 @@ class FirstScreenViewController: UIViewController,UITableViewDelegate,UITableVie
             self.refreshFooter.endRefreshingWithNoMoreData()
         }
     }
-
+    
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         switch indexPath.section{
         case 0:
-            let cell = tableView.dequeueReusableCellWithIdentifier("FirstScreenSearchTableViewCell", forIndexPath: indexPath) as! FirstScreenSearchTableViewCell
-            cell.setSearchCallBack(searchButtonPressed)
-            cell.selectionStyle = .None
-            return cell
-        case 1:
             return categoryCell
-        case 2:
+        case 1:
             let cell = tableView.dequeueReusableCellWithIdentifier("LookAroundTableViewCell", forIndexPath: indexPath) as! LookAroundTableViewCell
             cell.tag = indexPath.row
-            cell.setUpLookAroundCell(products[indexPath.row], row: indexPath.row ,callback: presentPreviewVC)
+            cell.setUpLookAroundCell(products[indexPath.row], row: indexPath.row ,callback: presentPreviewVC, usercallback: showUserDetail)
             return cell
         default:
             let cell = UITableViewCell()
             return cell
         }
+    }
+
+    func showUserDetail(id:Int){
+        let vc = UserOverviewController(userid: id)
+        vc.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(vc, animated: true)
     }
     
     func searchButtonPressed(){
@@ -176,9 +269,9 @@ class FirstScreenViewController: UIViewController,UITableViewDelegate,UITableVie
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section{
+        //case 0: return 1
         case 0: return 1
-        case 1: return 1
-        case 2: return products.count
+        case 1: return products.count
         default:return 0
         }
     }
@@ -188,37 +281,34 @@ class FirstScreenViewController: UIViewController,UITableViewDelegate,UITableVie
     //2.分类
     //3.随便看看
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 3
+        return 2
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         switch indexPath.section{
-        case 0: return self.view.frame.height/3
-        case 1: return self.view.frame.width*2/5+50
-        case 2: return -1
+        //case 0: return self.view.frame.height/3
+        case 0: return self.view.frame.width*2/5+50
+        case 1: return -1
         default: return 0
         }
     }
     let HEADERHEIGHT:CGFloat = 10
     
     
-    func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section==1{
-            return 10
-        }
-        if section==2{
+    func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        if section==0{
             return HEADERHEIGHT
         }
         return 0
     }
     
     func showProductDetail(id:Int){
-        tableView(self.tableView, didSelectRowAtIndexPath: NSIndexPath(forRow: id, inSection: 2))
+        tableView(self.tableView, didSelectRowAtIndexPath: NSIndexPath(forRow: id, inSection: 1))
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
-        if indexPath.section==2{
+        if indexPath.section==1{
             let vc = ProductDetailTableViewController()
             vc.product = products[indexPath.row]
             vc.hidesBottomBarWhenPushed = true

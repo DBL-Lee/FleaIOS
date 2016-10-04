@@ -34,6 +34,8 @@ class CategoryTableViewCell: UITableViewCell,UIScrollViewDelegate,UICollectionVi
         collectionView.dataSource = self
         collectionView.backgroundColor = UIColor.whiteColor()
         collectionView.pagingEnabled = true
+        
+        self.contentView.addBorder(edges: .Bottom, colour: UIColor.lightGrayColor(), thickness: 0.5)
     }
     
     func setUpCollectionView(btnNames:[NSManagedObject],callback:(Int,String)->Void){

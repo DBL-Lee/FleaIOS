@@ -16,10 +16,10 @@ class CustomJSQPhotoMediaItem: JSQPhotoMediaItem {
     
     func updateProgress(progress:Float){
         if progress == 1.0{
-            overlay.hide(true)
+            overlay.hideAnimated(true)
         }
         if progress == 0.0{
-            overlay.show(true)
+            overlay.showAnimated(true)
         }
         overlay.progress = progress
     }
@@ -29,7 +29,6 @@ class CustomJSQPhotoMediaItem: JSQPhotoMediaItem {
         
 
         overlay.mode = .AnnularDeterminate
-        overlay.removeFromSuperViewOnHide = true
         overlay.translatesAutoresizingMaskIntoConstraints = false
         overlay.progress = 0
         view.addSubview(overlay)

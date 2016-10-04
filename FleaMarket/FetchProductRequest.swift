@@ -8,7 +8,6 @@
 import Foundation
 import Alamofire
 import SwiftyJSON
-import CoreLocation
 
 enum FetchRequestSortType:String{
     case DEFAULT = "default"
@@ -18,7 +17,7 @@ enum FetchRequestSortType:String{
     case pricedesc = "-price"
 }
 
-class FetchProductRequest:NSObject,CLLocationManagerDelegate{
+class FetchProductRequest:NSObject{
     var title:String?
     var primarycategory:Int?
     var secondarycategory:Int?
@@ -27,82 +26,75 @@ class FetchProductRequest:NSObject,CLLocationManagerDelegate{
     var brandNew:Bool?
     var exchange:Bool?
     var bargain:Bool?
-    var locationManager:CLLocationManager!
     var latitude:Double!
     var longitude:Double!
     var maxdistance:Int?
     
+    var url:String = getProductURL
+    
     var sortType:FetchRequestSortType = .DEFAULT
     
     override init(){
-        locationManager = CLLocationManager()
+        //default to london
+        latitude = 51.5133
+        longitude = -0.1585
         super.init()
-        // Ask for Authorisation from the User.
-        self.locationManager.requestAlwaysAuthorization()
-        
-        // For use in foreground
-        self.locationManager.requestWhenInUseAuthorization()
-        
-        if CLLocationManager.locationServicesEnabled() {
-            locationManager.delegate = self
-            locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
-            locationManager.startUpdatingLocation()
-        }
+        print("productrequest finished\n")
+
     }
     
-    @objc func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        let locValue:CLLocation = locations.first!
-        latitude = locValue.coordinate.latitude
-        longitude = locValue.coordinate.longitude
+    func setLocation(latitude:Double,longitude:Double){
+        self.latitude = latitude
+        self.longitude = longitude
+    }
+    
+    func setLocationAsCurrentLocation(){
+        self.latitude = LocationManager.instance.latitude
+        self.longitude = LocationManager.instance.longitude
     }
     
     func request(completion:(String,String,[Product],Bool)->Void){
         dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)){ //run in background thread to prevent blocking UI
-            var url = getProductURL
-            
+            var url = self.url
             url+="?"
-            
-    //        if title != nil || primarycategory != nil || secondarycategory != nil || minprice != nil || maxprice != nil || brandNew != nil || exchange != nil || bargain != nil{
-                if let title = self.title{
-                    url+="title="+title+"&"
-                }
-                if let p = self.primarycategory {
-                    url+="primarycategory=\(p)&"
-                }
-                if let s = self.secondarycategory {
-                    url+="secondarycategory=\(s)&"
-                }
-                if let min = self.minprice{
-                    url+="min_price="+"\(min)&"
-                }
-                if let max = self.maxprice{
-                    url+="max_price="+"\(max)&"
-                }
-                if let brandNew = self.brandNew{
-                    url+="brandNew="+(brandNew ? "True" : "False" )+"&"
-                }
-                if let exchange = self.exchange{
-                    url+="exchange="+(exchange ? "True" : "False" )+"&"
-                }
-                if let bargain = self.bargain{
-                    url+="bargain="+(bargain ? "True" : "False" )+"&"
-                }
-                if let distance = self.maxdistance{
-                    url+="distance=\(distance)&"
-                }
-                
-                url = url.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!
-    //        }
-            
-            let rl = NSRunLoop.currentRunLoop()
-            while(self.longitude==nil||self.latitude==nil){
-                print("waiting")
+
+            if let title = self.title{
+                url+="title="+title+"&"
             }
-            url+="latitude=\(self.latitude)&longitude=\(self.longitude)&"
+            if let p = self.primarycategory {
+                url+="primarycategory=\(p)&"
+            }
+            if let s = self.secondarycategory {
+                url+="secondarycategory=\(s)&"
+            }
+            if let min = self.minprice{
+                url+="min_price="+"\(min)&"
+            }
+            if let max = self.maxprice{
+                url+="max_price="+"\(max)&"
+            }
+            if let brandNew = self.brandNew{
+                url+="brandNew="+(brandNew ? "True" : "False" )+"&"
+            }
+            if let exchange = self.exchange{
+                url+="exchange="+(exchange ? "True" : "False" )+"&"
+            }
+            if let bargain = self.bargain{
+                url+="bargain="+(bargain ? "True" : "False" )+"&"
+            }
+            if let distance = self.maxdistance{
+                url+="distance=\(distance)&"
+            }
             
-            url+="sorttype="+self.sortType.rawValue
+            url = url.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!
+
+            if self.url == getProductURL{
+                url+="latitude=\(self.latitude)&longitude=\(self.longitude)&"
+                
+                url+="sorttype="+self.sortType.rawValue
+            }
             
-            Alamofire.request(.GET, url).responseJSON{
+            Alamofire.request(.GET, url, parameters: nil, encoding: .JSON, headers: UserLoginHandler.instance.authorizationHeader()).responseJSON{
                 response in
                 switch response.result{
                 case .Success:

@@ -17,14 +17,13 @@ class SearchViewController: UITableViewController,UISearchBarDelegate,UISearchRe
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        history = CoreDataHandler.instance.getSearchHistory()
-        
         tableView.keyboardDismissMode = .OnDrag
         
         tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
         
         searchController = CustomSearchController(searchViewController: nil)
         searchController.searchBar.placeholder = "请输入宝贝关键字或@卖家名"
+        searchController.searchBar.backgroundImage = UIImage()
         
         searchController.searchResultsUpdater = self
         searchController.delegate = self
@@ -35,15 +34,6 @@ class SearchViewController: UITableViewController,UISearchBarDelegate,UISearchRe
         
         self.navigationItem.hidesBackButton = true
         
-//        let rightBtn = UIButton(type: .Custom)
-//        rightBtn.setTitle("取消", forState: .Normal)
-//        rightBtn.setTitleColor(UIColor.blackColor(), forState: .Normal)
-//        rightBtn.addTarget(self, action: "dismiss", forControlEvents: .TouchUpInside)
-//        rightBtn.titleLabel!.font = UIFont.systemFontOfSize(15)
-//        rightBtn.frame = CGRect(x: 0, y: 0, width: 60, height: 40)
-//        
-//        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: rightBtn)
-        
         let rightBtn = UIBarButtonItem(title: "取消", style: UIBarButtonItemStyle.Done, target: self, action: #selector(SearchViewController.dismiss))
         rightBtn.setTitleTextAttributes([NSFontAttributeName:UIFont.systemFontOfSize(15)], forState: .Normal)
 
@@ -52,6 +42,8 @@ class SearchViewController: UITableViewController,UISearchBarDelegate,UISearchRe
         clearButton = UIButton(type: .Custom)
         clearButton.setTitle("清楚搜索历史记录", forState: .Normal)
         clearButton.addTarget(self, action: #selector(SearchViewController.clearHistory), forControlEvents: .TouchUpInside)
+        
+        self.edgesForExtendedLayout = .None
     }
     
     func clearHistory(){
@@ -72,19 +64,25 @@ class SearchViewController: UITableViewController,UISearchBarDelegate,UISearchRe
         self.tableView.tableFooterView = view
         clearButton.autoresizingMask = [.FlexibleTopMargin,.FlexibleBottomMargin]
         
-        self.navigationController?.navigationBar.barStyle = .Default
-        self.navigationController?.navigationBar.barTintColor = UIColor(white: 0.95, alpha: 1)
+        previousTintColor = self.navigationController?.navigationBar.tintColor
+        previousBarTintColor = self.navigationController?.navigationBar.barTintColor
+        self.navigationController?.navigationBar.barTintColor = UIColor(white: 0.90, alpha: 1)
         self.navigationController?.navigationBar.tintColor = UIColor.blackColor()
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .Plain, target: nil, action: nil)
-        self.navigationController?.edgesForExtendedLayout = .None
         self.navigationItem.titleView?.tintColor = UIColor.blueColor().colorWithAlphaComponent(0.5)
         
         self.definesPresentationContext = true
+        
+        history = CoreDataHandler.instance.getSearchHistory()
     }
+    
+    var previousBarTintColor:UIColor!
+    var previousTintColor:UIColor!
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         searchController.active = true
+        self.tableView.reloadData()
     }
     
     func didPresentSearchController(searchController: UISearchController) {
@@ -95,6 +93,8 @@ class SearchViewController: UITableViewController,UISearchBarDelegate,UISearchRe
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.barTintColor = previousBarTintColor
+        self.navigationController?.navigationBar.tintColor = previousTintColor
         self.definesPresentationContext = false
     }
     
@@ -106,12 +106,22 @@ class SearchViewController: UITableViewController,UISearchBarDelegate,UISearchRe
     
     func continueSearching(searchText:String){
         CoreDataHandler.instance.addSearchHistoryToCoreData(searchText)
-        let vc = SearchResultViewController()
-        fetchRequest.title = searchText
-        fetchRequest.maxdistance = 10
-        vc.fetchRequest = fetchRequest
-        vc.searchText = searchText
-        self.navigationController?.pushViewController(vc, animated: true)
+        if searchText[searchText.startIndex] == "@" {
+            let text:String = String(searchText.characters.dropFirst())
+            let vc = SearchUserTableViewController()
+            vc.nextURL = searchUserURL+"?title="+text
+            vc.searchText = text
+            self.navigationController?.pushViewController(vc, animated: true)
+        }else{
+            
+            let vc = SearchResultViewController()
+            fetchRequest.title = searchText
+            fetchRequest.maxdistance = 10
+            vc.fetchRequest = fetchRequest
+            vc.searchText = searchText
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
+    
         
     }
     

@@ -117,6 +117,23 @@ class PhotoAlbumViewController: UIViewController,UICollectionViewDataSource,UICo
         self.photosAsset = PHAsset.fetchAssetsInAssetCollection(self.assetCollection, options: fetchOption)
         
         self.imageCollectionView.reloadData()
+        
+        tintColor = self.navigationController?.navigationBar.tintColor
+        barTintColor = self.navigationController?.navigationBar.barTintColor
+        
+        self.navigationController?.setNavigationBarHidden(false, animated: false)
+        self.navigationController?.navigationBar.translucent = false
+        self.navigationController?.edgesForExtendedLayout = .None
+        self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
+        self.navigationController?.navigationBar.barTintColor = UIColor.blackColor()
+    }
+    var tintColor:UIColor!
+    var barTintColor:UIColor!
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.navigationController?.navigationBar.tintColor = tintColor
+        self.navigationController?.navigationBar.barTintColor = barTintColor
     }
 
     func dismiss(){

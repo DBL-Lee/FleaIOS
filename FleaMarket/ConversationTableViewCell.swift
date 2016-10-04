@@ -50,7 +50,6 @@ class ConversationTableViewCell: UITableViewCell {
         let color = UIColor.redColor()
         super.setSelected(selected, animated: animated)
         
-//        TIPBadgeManager.sharedInstance.setBadgeValue(uuid, value: 0)
         
         if(selected) {
             for view in imageViewWithBadge.subviews{

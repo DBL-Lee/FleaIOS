@@ -19,6 +19,7 @@ class MineTopTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         unloginBtn.setBackgroundImage(UIColor.orangeColor().toImage(), forState: .Normal)
+        unloginBtn.setTitleColor(UIColor.whiteColor(), forState: .Normal)
         let square = UIImage(named: "defaultavatar.png")
         avatarImageView.image = JSQMessagesAvatarImageFactory.avatarImageWithImage(square, diameter: UInt(avatarImageView.frame.width)).avatarImage
         
